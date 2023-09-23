@@ -55,7 +55,7 @@ public class CommonUtil {
     }
 
     /**
-     * Method for checking if the collection is empty or not.
+     * Method for checking if the collection is empty or not
      *
      * @param p_collection to check the collection
      * @return true if collection is empty else false
