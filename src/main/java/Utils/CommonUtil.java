@@ -8,6 +8,9 @@ import Constants.ApplicationConstants;
 
 /**
  * Common Utility class that checks all null/empty strings, objects and collections.
+ *
+ * @author Yatish Chutani
+ * @version 1.0.0
  */
 public class CommonUtil {
 
@@ -42,23 +45,23 @@ public class CommonUtil {
     }
 
     /**
-     * Method for checking if the collection is empty or not.
-     *
-     * @param p_collection to check the collection
-     * @return true if collection is empty else false
-     */
-    public static boolean isCollectionEmpty(Collection<?> p_collection){
-        return(p_collection == null || p_collection.isEmpty());
-    }
-
-    /**
      * Method for checking if the map is empty or not.
      *
      * @param p_map to check the Map
      * @return true if map is empty else false
      */
-    public static boolean isMapEmpty(Map<?, ?> p_map){
+    public static boolean isEmptyMap(Map<?, ?> p_map){
         return(p_map == null || p_map.isEmpty());
+    }
+
+    /**
+     * Method for checking if the collection is empty or not.
+     *
+     * @param p_collection to check the collection
+     * @return true if collection is empty else false
+     */
+    public static boolean isEmptyCollection(Collection<?> p_collection){
+        return(p_collection == null || p_collection.isEmpty());
     }
 
     /**
