@@ -6,7 +6,6 @@ import java.util.Scanner;
 public class GameEngine {
 
     public static void main(String[] args) {
-
         GameEngine l_game = new GameEngine();
         l_game.initGame();
     }
