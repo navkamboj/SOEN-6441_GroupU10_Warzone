@@ -32,7 +32,7 @@ public class PlayerService{
            boolean l_checkunique = true;
            if(!CommomnUtil.isCollectionEmpty(p_allexistingplayerslist)){
              for(Player l_player : p_allexistingplayerslist){
-                if(l_player getPlayerName().equalsIgnoreCase(p_playerName)){
+                if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
                    l_checkunique=true;
                    break;
                  }
@@ -234,7 +234,7 @@ public class PlayerService{
         String l_totalNoOfArmies = p_enteredCommand.split(" ")[2];
         if (deployOrderValidation (p_player, l_totalNoOfArmies)) {
             System.out.println("Number of armies in deploy order are greater than player's allocated armies " +
-                            "for that reason given deploy order can not be executed"
+                            "for that reason given deploy order can not be executed");
         } else {
             Order l_objectOrder = new Order(p_enteredCommand.split(" ")[0], l_nameOfCountry,
                     Integer.parseInt(l_totalNoOfArmies));
