@@ -304,4 +304,67 @@ public class Map {
         }
     }
 
+    public void addContinent(String p_continentName, Integer p_value) throws InvalidMap{
+        int l_continentId;
+
+        if (d_continents!=null) {
+            l_continentId=d_continents.size()>0?Collections.max(getContinentIdList())+1:1;
+            if(CommonUtil.isNull(getContinent(p_continentName))){
+                d_continents.add(new Continent(l_continentId, p_continentName, p_value));
+            }else{
+                throw new InvalidMap("Continent already exists so it can't be added");
+            }
+        }else{
+            d_continents= new ArrayList<Continent>();
+            d_continents.add(new Continent(1, p_continentName, p_value));
+        }
+    }
+
+    public void removeContinent(String p_continentName) throws InvalidMap{
+        if (d_continents!=null) {
+            if(!CommonUtil.isNull(getContinent(p_continentName))){
+
+                // To delete the continent and updates neighbours count
+                if (getContinent(p_continentName).getD_countries()!=null) {
+                    for(Country country: getContinent(p_continentName).getD_countries()){
+                        removeNeighboringCountriesFromAll(country.getD_countryID());
+                        updateNeighboursCount(country.getD_countryID());
+                        d_countries.remove(country);
+                    }
+                }
+                d_continents.remove(getContinent(p_continentName));
+            }else{
+                throw new InvalidMap("This continent does not exist!");
+            }
+        } else{
+            throw new InvalidMap("There are no continents in the Map that can be removed");
+        }
+    }
+
+    public void updateNeighboursCount(Integer p_countryID){
+        for(Continent country: d_continents){
+            country.removeCountryNeighboursFromAll(p_countryID);
+        }
+    }
+
+    public void addCountryNeighbor(String p_countryName, String p_neighborName) throws InvalidMap{
+        if(d_countries!=null){
+            if(!CommonUtil.isNull(getCountryByName(p_countryName)) && !CommonUtil.isNull(getCountryByName(p_neighborName))){
+                d_countries.get(d_countries.indexOf(getCountryByName(p_countryName))).addingNeighbor(getCountryByName(p_neighborName).getD_countryID());
+            } else{
+                throw new InvalidMap("Invalid Neighbour Pair! Either of the Countries Doesn't exist!");
+            }
+        }
+    }
+
+    public void removeCountryNeighbor(String p_countryName, String p_neighborName) throws InvalidMap{
+        if(d_countries!=null){
+            if(!CommonUtil.isNull(getCountryByName(p_countryName)) && !CommonUtil.isNull(getCountryByName(p_neighborName))) {
+                d_countries.get(d_countries.indexOf(getCountryByName(p_countryName))).removingNeighbor(getCountryByName(p_neighborName).getD_countryID());
+            } else{
+                throw new InvalidMap("Invalid Neighbour Pair !!! Either of the countries don't exist");
+            }
+        }
+    }
+
 }
