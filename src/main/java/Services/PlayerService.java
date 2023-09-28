@@ -1,11 +1,11 @@
 package Services;
 
-import Models.player;
-import Models.Continent;
+import Models.Player;
 import Models.Country;
 import Models.GameState;
 import Models.Map;
 import Models.Order;
+import Models.Continent;
 
 import Constants.ApplicationConstants;
 import Controller.GameEngine;
@@ -30,7 +30,7 @@ public class PlayerService{
 
        public boolean checkPlayerNameUniqueness(List<Player> p_allexistingplayerslist, String p_playerName){
            boolean l_checkunique = true;
-           if(!CommomnUtil.isCollectionEmpty(p_allexistingplayerslist)){
+           if(!CommonUtil.isEmptyCollection(p_allexistingplayerslist)){
              for(Player l_player : p_allexistingplayerslist){
                 if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
                    l_checkunique=true;
@@ -49,7 +49,7 @@ public class PlayerService{
        * @return updated playerlist will be returned from this method
        */
       public List<Player> addingRemovingPlayers(List<Player> p_allexistingPlayerslist,String p_operationTask, String p_argumentTask){
-          List<Player> l_updatePlayers = new Player<>();
+          List<Player> l_updatePlayers = new ArrayList<>();
           if(!CommonUtil.isEmptyCollection(p_allexistingPlayerslist))
               l_updatePlayers.addAll(p_allexistingPlayerslist);
 
@@ -58,7 +58,7 @@ public class PlayerService{
 
           switch(p_operationTask.toLowerCase()){
               case "remove":
-                  removingGamePlayer(p_allexistingPlayerslist,l_updatePlayers,l_newPlayerName,l_playerNameExist);
+                  playerRemoving(p_allexistingPlayerslist,l_updatePlayers,l_newPlayerName,l_playerNameExist);
                   break;
               case "add":
                   insertGamePlayer(l_updatePlayers,l_newPlayerName,l_playerNameExist);
@@ -88,7 +88,7 @@ public class PlayerService{
               }
           }
           else{
-              System.out.print("Player: " + p_enteredPlayerName + " does not Exist.");
+              System.out.print("Player: " + p_newPlayerName + " does not Exist.");
           }
     }
 
@@ -101,12 +101,12 @@ public class PlayerService{
     private void insertGamePlayer(List<Player> p_updatePlayers,String p_newPlayerName,
                   boolean p_playerNameExist){
                   if(p_playerNameExist){
-                      System.out.print("Player: " + p_enteredPlayerName + " already Exists.");
+                      System.out.print("Player: " + p_newPlayerName + " already Exists.");
                   }
                   else{
-                     Player l_addPlayer = new Playe(p_newPlayerName);
+                     Player l_addPlayer = new Player(p_newPlayerName);
                      p_updatePlayers.add(l_addPlayer);
-                     System.out.println("Player: " + p_enteredPlayerName + " has been added successfully.");
+                     System.out.println("Player: " + p_newPlayerName + " has been added successfully.");
                   }
     }
 
@@ -179,8 +179,8 @@ public class PlayerService{
                             l_player.setD_ownedContinents(new ArrayList<>());
 
                         l_player.getD_ownedContinents().add(l_continent);
-                        System.out.println("Player : " + l_pl.getPlayerName() + " is assigned continent : "
-                                + l_cont.getD_continentName());
+                        System.out.println("Player : " + l_player.getPlayerName() + " is assigned continent : "
+                                + l_continent.getD_continentName());
                     }
                 }
             }
@@ -203,20 +203,20 @@ public class PlayerService{
 
             for (int i = 0; i < p_countriesForPlayer; i++) {
                 Random l_random = new Random();
-                int l_indexRandom = l_random.nextInt(p_countriesForPlayer.size());
-                Country l_countryRandom = l_notAssignedCountries.get(l_indexRandom);
+                int l_indexRandom = l_random.nextInt(l_notAssignedCountries.size());
+                Country l_countryListRandom = l_notAssignedCountries.get(l_indexRandom);
 
                 if (l_player.getD_ownedCountries() == null)
                     l_player.setD_ownedCountries(new ArrayList<>());
-                l_player.setD_ownedCountries().add(l_countryRandom);
+                l_player.getD_ownedCountries().add(l_countryListRandom);
                 System.out.println("Player : " + l_player.getPlayerName() + " is assigned  : "
-                        + l_randomCountry.getD_countryName());
-                l_notAssignedCountries.remove(l_randomCountry);
+                        + l_countryListRandom.getD_countryName());
+                l_notAssignedCountries.remove(l_countryListRandom);
             }
         }
         //If some countries are left in the list then it will be assigned to players
         if (!l_notAssignedCountries.isEmpty()) {
-            performRandomCountryAssignment(1, l_notAssignedCountries,p_playerList );
+            assignmentOfCountries(1, l_notAssignedCountries,p_playerList );
         }
     }
 
@@ -276,7 +276,7 @@ public class PlayerService{
             for (Continent l_continent : p_player.getD_ownedContinents()) {
                 l_valueOfContinents = l_valueOfContinents + l_continent.getD_continentValue();
             }
-            l_armies = l_armies + l_continentValue;
+            l_armies = l_armies + l_valueOfContinents;
         }
         return l_armies;
     }
@@ -289,7 +289,7 @@ public class PlayerService{
     public void armiesAssign(GameState p_gameState) {
         for (Player l_player : p_gameState.getD_playerList()) {
             Integer l_armies = this.armiesCountForPlayer(l_player);
-            System.out.println("Player : " + l_pl.getPlayerName() + " has assigned" + l_armies + " armies");
+            System.out.println("Player : " + l_player.getPlayerName() + " has assigned" + l_armies + " armies");
 
             l_player.setD_noOfAllocatedArmies(l_armies);
         }
@@ -304,13 +304,13 @@ public class PlayerService{
      */
     public void playerListUpdation(GameState p_gameState, String p_operationTask, String p_argumentTask) {
         if (!mapLoadedOrNot(p_gameState)) {
-            System.out.println("Load the map before adding or removing any player  " + p_argument);
+            System.out.println("Load the map before adding or removing any player  " + p_argumentTask);
             return;
         }
-        List<Player> l_playersListUpdation = this.addingremovingplayers(p_gameState.getD_playerList(), p_operationTask, p_argumentTask);
+        List<Player> l_playersListUpdation = this.addingRemovingPlayers(p_gameState.getD_playerList(), p_operationTask, p_argumentTask);
 
         if (!CommonUtil.isNull(l_playersListUpdation)) {
-            p_gameState.setD_players(l_playersListUpdation);
+            p_gameState.setD_playerList(l_playersListUpdation);
         }
 
     }
@@ -335,11 +335,11 @@ public class PlayerService{
      * @return boolean true if any players has unassigned armies otherwise it will returns false
      */
     public boolean existanceOfUnassignedArmies(List<Player> p_playersList) {
-        int l_armiesUnassigned = 0;
+        int l_armyUnassigned = 0;
         for (Player l_player : p_playersList) {
-            l_armiesUnassigned = l_armiesUnassigned + l_player.getD_noOfAllocatedArmies();
+            l_armyUnassigned = l_armyUnassigned + l_player.getD_noOfAllocatedArmies();
         }
-        return l_unassignedArmies != 0;
+        return  l_armyUnassigned!= 0;
     }
 
     /**
