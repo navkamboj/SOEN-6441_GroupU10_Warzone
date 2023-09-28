@@ -33,7 +33,7 @@ public class Player {
     List<Country> d_ownedCountries;
 
     /**
-     * List of Continents owned by player.
+     * List of Continents owned by the player.
      */
     List<Continent> d_ownedContinents;
 
