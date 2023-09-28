@@ -1,10 +1,20 @@
 package Models;
 
+import Constants.ApplicationConstants;
+import Services.PlayerService;
+import Utils.Command;
+import Utils.CommonUtil;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This class depicts the player information and services.
+ *
+ * @author Pranjalesh Ghansiyal
+ * @version 1.0.0
  */
 public class Player {
     /**
@@ -23,7 +33,7 @@ public class Player {
     List<Country> d_ownedCountries;
 
     /**
-     * List of Continents owned by player.
+     * List of Continents owned by the player.
      */
     List<Continent> d_ownedContinents;
 
@@ -158,4 +168,70 @@ public class Player {
         this.d_executeOrders = p_executeOrders;
     }
 
+    /**
+     * Extracts the list of names of countries owned by the player.
+     *
+     * @return list of country names
+     */
+    public List<String> getNamesOfCountries(){
+        List<String> l_countryNames=new ArrayList<String>();
+        for(Country c: d_ownedCountries){
+            l_countryNames.add(c.getD_countryName());
+        }
+        return l_countryNames;
+    }
+
+    /**
+     * Retrieves the list of continent names owned by the player.
+     *
+     * @return list of continent names
+     */
+    public List<String> getNamesOfContinents(){
+        List<String> l_continentNames = new ArrayList<String>();
+        if (d_ownedContinents != null) {
+            for(Continent c: d_ownedContinents){
+                l_continentNames.add(c.getD_continentName());
+            }
+            return l_continentNames;
+        }
+        return null;
+    }
+
+    /**
+     * It takes order as an input and adds it to players unassigned
+     * orders pool.
+     *
+     * @throws IOException exception in reading inputs from user
+     */
+    public void issue_order() throws IOException {
+        Scanner l_scannerObject = new Scanner(System.in);
+
+        System.out.println("\nPlease input the command to deploy reinforcement forces onto the game map for the " +
+                "player : " + this.getPlayerName());
+
+        String l_enteredCommand = l_scannerObject.nextLine();
+        PlayerService l_playerService = new PlayerService();
+        Command l_command = new Command(l_enteredCommand);
+
+        if (l_command.getBaseCommand().equalsIgnoreCase("deploy") && l_enteredCommand.split(" ").length == 3) {
+            l_playerService.deployOrderCreation(l_enteredCommand, this);
+        } else {
+            System.out.println(ApplicationConstants.INVALID_COMMAND_ERROR_DEPLOY_ORDER);;
+        }
+    }
+
+    /**
+     * Gives the first order from the list of orders by the player and then removes it from the given
+     * list.
+     *
+     * @return First order from the list of orders given by the player.
+     */
+    public Order next_order() {
+        if (CommonUtil.isEmptyCollection(this.d_executeOrders)) {
+            return null;
+        }
+        Order l_order = this.d_executeOrders.get(0);
+        this.d_executeOrders.remove(l_order);
+        return l_order;
+    }
 }
