@@ -17,7 +17,6 @@ public class GameEngine {
      * @param p_args the program doesn't use default command line arguments
      */
     public static void main(String[] p_args) {
-
         GameEngine l_game = new GameEngine();
         l_game.initGame();
     }
