@@ -1,6 +1,7 @@
 package Models;
 
 import Constants.ApplicationConstants;
+import Services.PlayerService;
 import Utils.Command;
 import Utils.CommonUtil;
 
@@ -194,6 +195,29 @@ public class Player {
             return l_continentNames;
         }
         return null;
+    }
+
+    /**
+     * It takes order as an input and adds it to players unassigned
+     * orders pool.
+     *
+     * @throws IOException exception in reading inputs from user
+     */
+    public void issue_order() throws IOException {
+        Scanner l_scannerObject = new Scanner(System.in);
+
+        System.out.println("\nPlease input the command to deploy reinforcement forces onto the game map for the " +
+                "player : " + this.getPlayerName());
+
+        String l_enteredCommand = l_scannerObject.nextLine();
+        PlayerService l_playerService = new PlayerService();
+        Command l_command = new Command(l_enteredCommand);
+
+        if (l_command.getBaseCommand().equalsIgnoreCase("deploy") && l_enteredCommand.split(" ").length == 3) {
+            l_playerService.deployOrderCreation(l_enteredCommand, this);
+        } else {
+            System.out.println(ApplicationConstants.INVALID_COMMAND_ERROR_DEPLOY_ORDER);;
+        }
     }
 
     /**
