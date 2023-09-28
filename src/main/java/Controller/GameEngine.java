@@ -1,22 +1,38 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * This is the entry point for the Game and keeps track of the current Game State.
+ */
 public class GameEngine {
 
-    public static void main(String[] args) {
+    /**
+     * The main method responsible for accepting commands from users and redirecting
+     * them to their respective logical flow.
+     *
+     * @param p_args the program doesn't use default command line arguments
+     */
+    public static void main(String[] p_args) {
         GameEngine l_game = new GameEngine();
         l_game.initGame();
     }
 
+    /**
+     * Handles the commands.
+     *
+     * @param p_enteredCommand
+     * @throws IOException
+     */
     public void handleCommand(String p_enteredCommand) throws IOException {
 
         String l_command = "", l_rootCommand = "";
 
         switch (l_rootCommand) {
             case "editmap" : {
-                //editmap functionality
                 break;
             }
             case "editcontinent" : {
@@ -58,6 +74,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * This method initiates the CommandLineInterface to accept commands from the user and maps them to their respective
+     * action handler.
+     */
     public void initGame() {
         Scanner l_scannerObject = new Scanner(System.in);
 
@@ -71,8 +91,6 @@ public class GameEngine {
             catch (IOException l_ioException) {
                 l_ioException.printStackTrace();
             }
-
         }
-
     }
 }
