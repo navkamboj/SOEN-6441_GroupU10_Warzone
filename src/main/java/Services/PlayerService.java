@@ -43,22 +43,22 @@ public class PlayerService{
 
       /**
        *Method is used for adding and removing the player.
-       * @param p_allexistingplayerslist list of existing player
+       * @param p_allExistingPlayersList list of existing player
        * @param p_operationTask operation which should be performed either add or remove
        * @param p_argumentTask name of player which should be remove or add
        * @return updated playerlist will be returned from this method
        */
-      public List<Player> addingRemovingPlayers(List<Player> p_allexistingPlayerslist,String p_operationTask, String p_argumentTask){
+      public List<Player> addingRemovingPlayers(List<Player> p_allExistingPlayersList,String p_operationTask, String p_argumentTask){
           List<Player> l_updatePlayers = new ArrayList<>();
-          if(!CommonUtil.isEmptyCollection(p_allexistingPlayerslist))
-              l_updatePlayers.addAll(p_allexistingPlayerslist);
+          if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList))
+              l_updatePlayers.addAll(p_allExistingPlayersList);
 
           String l_newPlayerName = p_argumentTask.split(" ")[0];
-          boolean l_playerNameExist =!checkPlayerNameUniqueness(p_allexistingPlayerslist,l_newPlayerName);
+          boolean l_playerNameExist =!checkPlayerNameUniqueness(p_allExistingPlayersList,l_newPlayerName);
 
           switch(p_operationTask.toLowerCase()){
               case "remove":
-                  playerRemoving(p_allexistingPlayerslist,l_updatePlayers,l_newPlayerName,l_playerNameExist);
+                  playerRemoving(p_allExistingPlayersList,l_updatePlayers,l_newPlayerName,l_playerNameExist);
                   break;
               case "add":
                   insertGamePlayer(l_updatePlayers,l_newPlayerName,l_playerNameExist);
@@ -71,15 +71,15 @@ public class PlayerService{
 
     /**
      *Process of removing the player if it exists
-     * @param p_allexistingplayerslist list of existing player
+     * @param p_allExistingPlayersList list of existing player
      * @param p_updatePlayers updated list of player with removal of player name
      * @param p_newPlayerName the player name which should be remove
-     * @param p_playerNameExistif if player already its value will be true otherwise its value will be false
+     * @param p_playerNameExist if player already its value will be true otherwise its value will be false
      */
-    private void playerRemoving(List<Player> p_allexistingPlayerslist, List<Player> p_updatePlayers, String p_newPlayerName,
+    private void playerRemoving(List<Player> p_allExistingPlayersList, List<Player> p_updatePlayers, String p_newPlayerName,
                                boolean p_playerNameExist){
           if(p_playerNameExist){
-              for(Player l_player:p_allexistingPlayerslist){
+              for(Player l_player:p_allExistingPlayersList){
                  if(l_player.getPlayerName().equalsIgnoreCase(p_newPlayerName))
                  {
                      p_updatePlayers.remove(l_player);
