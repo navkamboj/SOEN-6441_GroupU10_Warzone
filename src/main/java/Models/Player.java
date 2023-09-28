@@ -95,9 +95,7 @@ public class Player {
      *
      * @return return countries owned by player.
      */
-    public List<Country> getD_ownedCountries() {
-        return d_ownedCountries;
-    }
+    public List<Country> getD_ownedCountries() { return d_ownedCountries; }
 
     /**
      * This setter is used to set list of countries owned by player.
@@ -131,9 +129,7 @@ public class Player {
      *
      * @return return allocated armies of player.
      */
-    public Integer getD_noOfAllocatedArmies() {
-        return d_noOfAllocatedArmies;
-    }
+    public Integer getD_noOfAllocatedArmies() {return d_noOfAllocatedArmies;}
 
     /**
      * This setter is used to set number of allocated armies to player.
