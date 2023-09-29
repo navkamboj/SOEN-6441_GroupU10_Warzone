@@ -23,7 +23,7 @@ public class PlayerService{
        /**
         *Method is used to check if a player name is exist or not.
         *
-        * @param p_allexistingplayerslist list of existing player
+        * @param p_allExistingPlayersList list of existing player
         * @param p_playerName name on which operation needs to be performed
         * @return boolean true if player name is unique otherwise return false if its not unique
         */
