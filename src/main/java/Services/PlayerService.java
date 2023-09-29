@@ -28,10 +28,10 @@ public class PlayerService{
         * @return boolean true if player name is unique otherwise return false if its not unique
         */
 
-       public boolean checkPlayerNameUniqueness(List<Player> p_allexistingplayerslist, String p_playerName){
+       public boolean checkPlayerNameUniqueness(List<Player> p_allExistingPlayersList, String p_playerName){
            boolean l_checkunique = true;
-           if(!CommonUtil.isEmptyCollection(p_allexistingplayerslist)){
-             for(Player l_player : p_allexistingplayerslist){
+           if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList)){
+             for(Player l_player : p_allExistingPlayersList){
                 if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
                    l_checkunique=true;
                    break;
@@ -153,7 +153,7 @@ public class PlayerService{
         List<Player> l_players = p_gameState.getD_playerList();
 
         for(int i = 0; i< l_players.size(); i++){
-            l_players.get(i).setD_color(ApplicationConstants.COLORS.get(i));
+            l_players.get(i).setD_color(ApplicationConstants.COLORS_LIST.get(i));
         }
     }
 
