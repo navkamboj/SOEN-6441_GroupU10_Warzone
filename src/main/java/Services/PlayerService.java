@@ -27,7 +27,6 @@ public class PlayerService{
         * @param p_playerName name on which operation needs to be performed
         * @return boolean true if player name is unique otherwise return false if its not unique
         */
-
        public boolean checkPlayerNameUniqueness(List<Player> p_allExistingPlayersList, String p_playerName){
            boolean l_checkunique = true;
            if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList)){
