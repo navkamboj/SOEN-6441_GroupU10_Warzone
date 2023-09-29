@@ -24,5 +24,5 @@ public class ApplicationConstants {
     public static final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
     public static final String WHITE_BOLD = "\033[1;37m";  // WHITE
     public static final String CYAN_BOLD = "\033[1;36m";   // CYAN
-    public static final List<String> COLORSLIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
+    public static final List<String> COLORS_LIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
 }
