@@ -23,15 +23,15 @@ public class PlayerService{
        /**
         *Method is used to check if a player name is exist or not.
         *
-        * @param p_allexistingplayerslist list of existing player
+        * @param p_allExistingPlayersList list of existing player
         * @param p_playerName name on which operation needs to be performed
         * @return boolean true if player name is unique otherwise return false if its not unique
         */
 
-       public boolean checkPlayerNameUniqueness(List<Player> p_allexistingplayerslist, String p_playerName){
+       public boolean checkPlayerNameUniqueness(List<Player> p_allExistingPlayersList, String p_playerName){
            boolean l_checkunique = true;
-           if(!CommonUtil.isEmptyCollection(p_allexistingplayerslist)){
-             for(Player l_player : p_allexistingplayerslist){
+           if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList)){
+             for(Player l_player : p_allExistingPlayersList){
                 if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
                    l_checkunique=true;
                    break;
