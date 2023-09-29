@@ -75,6 +75,30 @@ public class MapView {
         getSeparator();
      }
 
+     private String getFormattedNameOfCountry(int p_index, String p_nameCountry){
+        String l_indexString = String.format("%02d. %s", p_index, p_nameCountry);
+
+        if(d_players != null){
+            String l_armies = " ( " + ApplicationConstants.ARMIES + " : " + getArmiesOfCountries(p_nameCountry) + " ) ";
+            l_indexString = String.format("%02d. %s", p_index, p_nameCountry, l_armies);
+        }
+        return getColorfulString(getColorCountry(p_nameCountry), String.format("%-30s", l_indexString));
+     }
+
+     private void getFormattedNeighborNameOfCountry(String p_nameCountry, List<Country> p_nghCountries){
+        StringBuilder l_commaDistinguishedCountries = new StringBuilder();
+
+        for(int i = 0; i < p_nghCountries.size(); i++){
+            l_commaDistinguishedCountries.append(p_nghCountries.get(i).getD_countryName());
+            if(i < p_nghCountries.size() - 1){
+                l_commaDistinguishedCountries.append(" , ");
+            }
+        }
+        String l_neighborCountry = ApplicationConstants.CONNECTIVITY + " : " + WordWrap.from(l_commaDistinguishedCountries.toString()).maxWidth(ApplicationConstants.CONSOLE_WIDTH).wrap();
+        System.out.println(getColorfulString(getColorCountry(p_nameCountry), l_neighborCountry));
+        System.out.println();
+     }
+
      private String getColorCountry(String p_nameCountry){
         if(getCountryHolder(p_nameCountry) != null){
             return getCountryHolder(p_nameCountry).getD_color();
@@ -139,5 +163,39 @@ public class MapView {
         if(l_armies == null)
             return 0;
         return l_armies;
+     }
+
+     public void showMap(){
+        if(d_players != null){
+            getPlayers();
+        }
+
+        if(!CommonUtil.isNull(d_continents)){
+            d_continents.forEach(l_continent ->{
+                getNameContinent(l_continent.getD_continentName());
+
+                List<Country> l_countriesOfContinents = l_continent.getD_countries();
+                final int[] l_indexCountry ={1};
+
+                if(!CommonUtil.isEmptyCollection(l_countriesOfContinents)){
+                    l_countriesOfContinents.forEach(l_country -> {
+                        String l_formattedNameOfCountry = getFormattedNameOfCountry(l_indexCountry[0]++, l_country.getD_countryName());
+                        System.out.println(l_formattedNameOfCountry);
+                        try{
+                            List<Country> l_nghCountries = d_map.getNeighborCountry(l_country);
+                            getFormattedNeighborNameOfCountry(l_country.getD_countryName(), l_nghCountries);
+                        }catch(InvalidMap l_invalidMap){
+                            System.out.println(l_invalidMap.getMessage());
+                        }
+                    });
+                }
+                else{
+                    System.out.println("There are no countries available in the continent!!");
+                }
+            });
+        }
+        else{
+            System.out.println("There are no continents to show!!");
+        }
      }
 }
