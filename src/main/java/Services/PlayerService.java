@@ -41,7 +41,6 @@ public class PlayerService{
          return l_checkunique;
        }
 
-
       /**
        *Method is used for adding and removing the player.
        * @param p_allExistingPlayersList list of existing player
