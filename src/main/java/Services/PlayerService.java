@@ -153,7 +153,7 @@ public class PlayerService{
         List<Player> l_players = p_gameState.getD_playerList();
 
         for(int i = 0; i< l_players.size(); i++){
-            l_players.get(i).setD_color(ApplicationConstants.COLORS_LIST.get(i));
+             l_players.get(i).setD_color(ApplicationConstants.COLORS_LIST.get(i));
         }
     }
 
