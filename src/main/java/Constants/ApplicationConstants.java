@@ -13,7 +13,7 @@ public class ApplicationConstants {
     public static final String INVALID_COMMAND_ERROR_DEPLOY_ORDER = "Invalid command. Please submit your command in the format of : deploy countryID <CountryName> <num> (until every augmentation has been deployed)";
     public static final String INVALID_COMMAND_ERROR_EDITMAP = "Invalid command. Please submit your command in the Format of : editmap filename";
     public static final String INVALID_COMMAND_ERROR_EDITCONTINENT = "Invalid command. Please submit your command in the Format of : editcontinent -add continentID continentvalue -remove continentID";
-
+    public static final String INVALID_COMMAND_ERROR_SAVEMAP = "Invalid command. Please submit your command in the Format of : savemap filename";
     public static final int CONSOLE_WIDTH = 80;
     public static final String ARGUMENTS = "arguments";
     public static final String OPERATION = "operation";
