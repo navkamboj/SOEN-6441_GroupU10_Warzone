@@ -228,7 +228,7 @@ public class MapService {
 
                         if (null != p_gameState.getD_map().getD_continents()
                                 && !p_gameState.getD_map().getD_continents().isEmpty()) {
-                            writeContinentMetaData(p_gameState, l_fileWriter);
+                            continentMetaData(p_gameState, l_fileWriter);
                         }
                         if (null != p_gameState.getD_map().getD_countries()
                                 && !p_gameState.getD_map().getD_countries().isEmpty()) {
@@ -250,13 +250,50 @@ public class MapService {
     }
 
     /**
+     * this method retrieves country and boarder data from the game state and writes it to file writer.
+     *
+     * @param p_gameState this is the current GameState Object
+     * @param p_writer this is the writer object for file
+     * @throws IOException handles I/0
+     */
+    private void countryAndBorderMeteData(GameState p_gameState, FileWriter p_writer) throws IOException{
+        String l_countryMetaData = new String();
+        String l_bordersMetaData = new String();
+        List<String> l_bordersList = new ArrayList<>();
+
+        p_writer.write(System.lineSeparator() + ApplicationConstants.COUNTRIES + System.lineSeparator());
+        for(Country l_country : p_gameState.getD_map().getD_countries()){
+            l_countryMetaData = new String();
+            l_countryMetaData = l_country.getD_countryID().toString().concat(" ").concat(l_country.getD_countryName())
+                    .concat(" ").concat(l_country.getD_continentID().toString());
+            p_writer.write(l_countryMetaData + System.lineSeparator());
+
+            if(null != l_country.getD_neighborCountryIDs() && !l_country.getD_neighborCountryIDs().isEmpty()){
+                l_bordersMetaData = new String();
+                l_bordersMetaData = l_country.getD_countryID().toString();
+                for(Integer l_nghCountry : l_country.getD_neighborCountryIDs()){
+                    l_bordersMetaData = l_bordersMetaData.concat(" ").concat(l_nghCountry.toString());
+                }
+                l_bordersList.add(l_bordersMetaData);
+            }
+        }
+
+        if(null != l_bordersList && !l_bordersList.isEmpty()){
+            p_writer.write(System.lineSeparator() + ApplicationConstants.BORDERS + System.lineSeparator());
+            for(String l_borderString : l_bordersList){
+                p_writer.write(l_borderString + System.lineSeparator());
+            }
+        }
+    }
+
+    /**
      * this method retrieves continents' data from game state and writes it to file.
      *
      * @param p_gameState this is the current GameState
      * @param p_writer this is the writer object for file
      * @throws IOException handles I/O
      */
-    private void writeContinentMetaData(GameState p_gameState, FileWriter p_writer) throws IOException {
+    private void continentMetaData(GameState p_gameState, FileWriter p_writer) throws IOException {
         p_writer.write(System.lineSeparator() + ApplicationConstants.CONTINENTS + System.lineSeparator());
         for(Continent l_continent : p_gameState.getD_map().getD_continents()){
             p_writer.write(
