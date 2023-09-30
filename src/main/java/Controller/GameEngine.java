@@ -1,5 +1,13 @@
 package Controller;
 
+import Constants.ApplicationConstants;
+import Exceptions.InvalidMap;
+import Exceptions.InvalidCommand;
+import Models.GameState;
+import Services.MapService;
+import Services.PlayerService;
+import Utils.Command;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +17,30 @@ import java.util.Scanner;
  * This is the entry point for the Game and keeps track of the current Game State.
  */
 public class GameEngine {
+
+    /**
+     * d_gameState stores the information about current GamePlay.
+     */
+    GameState d_gameState = new GameState();
+
+    /**
+     * d_mapService instance is used to handle load, read, parse, edit, and save map file.
+     */
+    MapService d_mapService = new MapService();
+
+    /**
+     * Player Service instance to edit players and issue orders.
+     */
+    PlayerService d_playerService = new PlayerService();
+
+    /**
+     * getD_gameState is a getter method to get current game state.
+     *
+     * @return the current game state
+     */
+    public GameState getD_gameState() {
+        return d_gameState;
+    }
 
     /**
      * The main method responsible for accepting commands from users and redirecting
@@ -27,25 +59,45 @@ public class GameEngine {
      * @param p_enteredCommand
      * @throws IOException
      */
-    public void handleCommand(String p_enteredCommand) throws IOException {
+    public void handleCommand(String p_enteredCommand) throws IOException, InvalidMap, InvalidCommand {
 
-        String l_command = "", l_rootCommand = "";
+        Command l_command = new Command(p_enteredCommand);
+        String l_baseCommand = l_command.getBaseCommand();
+        boolean l_isMapLoaded = d_gameState.getD_map() != null;
 
-        switch (l_rootCommand) {
+        switch (l_baseCommand) {
             case "editmap" : {
+                performMapEdit(l_command);
                 break;
             }
             case "editcontinent" : {
-                //editcontinent functionality
+                if (!l_isMapLoaded) {
+                    System.out.println("Can not Edit Continent, please perform `editmap` first");
+                    break;
+                }
+                performContinentEdit(l_command);
+                break;
             }
             case "savemap" : {
-                //savemap functionality
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to perform save operation, Please `editmap` first");
+                    break;
+                }
+
+                performMapSave(l_command);
+                break;
             }
             case "loadmap" : {
-                //loadmap functionality
+                performMapLoad(l_command);
+                break;
             }
             case "validatemap" : {
-                //validatemap func
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to perform validate operation, Please `loadmap` & `editmap` first");
+                    break;
+                }
+                performMapValidation(l_command);
+                break;
             }
             case "editcountry" : {
                 //editcountry func
@@ -75,8 +127,8 @@ public class GameEngine {
     }
 
     /**
-     * This method initiates the CommandLineInterface to accept commands from the user and maps them to their respective
-     * action handler.
+     * This function triggers the CommandLineInterface to receive user commands and links them to their corresponding
+     * action handlers.
      */
     public void initGame() {
         Scanner l_scannerObject = new Scanner(System.in);
@@ -90,7 +142,151 @@ public class GameEngine {
             }
             catch (IOException l_ioException) {
                 l_ioException.printStackTrace();
+            } catch (InvalidMap l_invalidMapException) {
+                l_invalidMapException.printStackTrace();
+            } catch (InvalidCommand l_invalidCommandException) {
+                l_invalidCommandException.printStackTrace();
             }
+        }
+    }
+    /**
+     * Validation of the "editmap" command involves checking for the necessary arguments and directing control to the
+     * model for actual execution.
+     *
+     * @param p_command command entered by the user on CLI
+     * @throws IOException indicates when failure in I/O operation
+     * @throws InvalidCommand indicates when command is invalid
+     */
+    public void performMapEdit(Command p_command) throws IOException, InvalidCommand {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+
+        if (l_operations_list == null || l_operations_list.isEmpty()) {
+            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_EDITMAP);
+        } else {
+            for (Map<String, String> l_map : l_operations_list) {
+                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
+                    d_mapService.mapModify(d_gameState, l_map.get(ApplicationConstants.ARGUMENTS));
+                } else {
+                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_EDITMAP);
+                }
+            }
+        }
+    }
+
+    /**
+     * Validation of the "editcontinent" command entails verifying the presence of essential arguments and directing
+     * control to the model for the actual processing.
+     *
+     * @param p_command command entered by the user
+     * @throws IOException indicates failure in I/O operation
+     * @throws InvalidCommand indicates an invalid command
+     * @throws InvalidMap indicates an invalid map
+     */
+    public void performContinentEdit(Command p_command) throws IOException, InvalidCommand, InvalidMap {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+
+        if (l_operations_list == null || l_operations_list.isEmpty()) {
+            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_EDITCONTINENT);
+        } else {
+            for (Map<String, String> l_map : l_operations_list) {
+                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(ApplicationConstants.OPERATION, l_map)) {
+                    d_mapService.modifyContinent(d_gameState, l_map.get(ApplicationConstants.ARGUMENTS),
+                            l_map.get(ApplicationConstants.OPERATION));
+                } else {
+                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_EDITCONTINENT);
+                }
+            }
+        }
+    }
+
+    /**
+     * Validation of the "savemap" command involves verifying the presence of the necessary arguments and then
+     * redirecting control to the model for the actual processing.
+     *
+     * @param p_command command entered by the user.
+     * @throws InvalidMap indicates when map is invalid
+     * @throws InvalidCommand indicates when command is invalid
+     */
+    public void performMapSave(Command p_command) throws InvalidCommand, InvalidMap {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+
+        if (null == l_operations_list || l_operations_list.isEmpty()) {
+            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_SAVEMAP);
+        } else {
+            for (Map<String, String> l_map : l_operations_list) {
+                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
+                    boolean l_fileUpdateStatus = d_mapService.mapSave(d_gameState,
+                            l_map.get(ApplicationConstants.ARGUMENTS));
+                    if (l_fileUpdateStatus)
+                        System.out.println("Necessary changes have been made to the map file.");
+                    else
+                        System.out.println(d_gameState.getD_errorMessage());
+                } else {
+                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_SAVEMAP);
+                }
+            }
+        }
+    }
+
+    /**
+     * Validation for the "loadmap" command includes confirming the presence of the required arguments and then
+     * directing control to the model for the actual processing.
+     *
+     * @param p_command command entered by the user
+     * @throws InvalidCommand indicates when command is invalid
+     */
+    private void performMapLoad(Command p_command) throws InvalidCommand {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+
+        if (null == l_operations_list || l_operations_list.isEmpty()) {
+            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_LOADMAP);
+        } else {
+            for (Map<String, String> l_map : l_operations_list) {
+                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
+                    try {
+
+                        // Loads the map if it is valid otherwise resets the game state
+                        Models.Map l_mapToLoad = d_mapService.mapLoad(d_gameState,
+                                l_map.get(ApplicationConstants.ARGUMENTS));
+                        if (l_mapToLoad.Validate()) {
+                            System.out.println("Map has been successfully loaded. \n");
+                        } else {
+                            d_mapService.mapReset(d_gameState);
+                        }
+                    } catch (InvalidMap l_e) {
+                        d_mapService.mapReset(d_gameState);
+                    }
+                } else {
+                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_LOADMAP);
+                }
+            }
+        }
+    }
+
+    /**
+     * Validation of the "validatemap" command involves checking for the necessary arguments and then directing
+     * control to the model for the actual processing.
+     *
+     * @param p_command command entered by the user
+     * @throws InvalidCommand indicates when command is invalid
+     * @throws InvalidMap indicates when map is invalid
+     */
+    private void performMapValidation(Command p_command) throws InvalidMap, InvalidCommand {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+        if (null == l_operations_list || l_operations_list.isEmpty()) {
+            Models.Map l_currentMap = d_gameState.getD_map();
+            if (l_currentMap == null) {
+                throw new InvalidMap(ApplicationConstants.INVALID_MAP_ERROR_EMPTY);
+            } else {
+                if (l_currentMap.Validate()) {
+                    System.out.println(ApplicationConstants.VALID_MAP);
+                } else {
+                    System.out.println("Failed! Map could not be validated.");
+                }
+            }
+        } else {
+            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_ERROR_VALIDATEMAP);
         }
     }
 }
