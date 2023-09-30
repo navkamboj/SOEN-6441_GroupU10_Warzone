@@ -7,6 +7,8 @@ import Models.GameState;
 import Services.MapService;
 import Services.PlayerService;
 import Utils.Command;
+import Utils.CommonUtil;
+import Views.MapView;
 
 import java.io.IOException;
 import java.util.List;
@@ -116,13 +118,21 @@ public class GameEngine {
                 break;
             }
             case "gameplayer" : {
-                //gameplayer func
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to execute Game Player operation, please execute `loadmap` first" +
+                            " before adding game players");
+                    break;
+                }
+                modifyPlayers(l_command);
+                break;
             }
             case "assigncountries" : {
                 //assigncountries func
             }
             case "showmap" : {
-                //showmap func
+                MapView l_mapView = new MapView(d_gameState);
+                l_mapView.showMap();
+                break;
             }
             case "exit" : {
                 System.out.println("Exit Command Entered");
@@ -346,6 +356,30 @@ public class GameEngine {
                             l_temp_map.get(GameConstants.ARGUMENTS));
                 } else {
                     throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCOUNTRY);
+                }
+            }
+        }
+    }
+
+    /**
+     * Validation of the "gameplayer" command includes checking for the necessary arguments and then directing
+     * control to the model for the addition or removal of players.
+     *
+     * @param p_command command entered by the user.
+     * @throws InvalidCommand throws exception if command is invalid.
+     */
+    private void modifyPlayers(Command p_command) throws InvalidCommand {
+        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
+        if (CommonUtil.isEmptyCollection(l_operations_list)) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
+        } else {
+            for (Map<String, String> l_map : l_operations_list) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_playerService.playerListUpdation(d_gameState, l_map.get(GameConstants.OPERATION),
+                            l_map.get(GameConstants.ARGUMENTS));
+                } else {
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
                 }
             }
         }
