@@ -12,7 +12,7 @@ public class ApplicationConstants {
     public static final String SRC_MAIN_RESOURCES = "src/main/resources";
     public static final String INVALID_COMMAND_ERROR_DEPLOY_ORDER = "Invalid command. Please submit your command in the format of : deploy countryID <CountryName> <num> (until every augmentation has been deployed)";
     public static final String INVALID_COMMAND_ERROR_EDITMAP = "Invalid command. Please submit your command in the Format of : editmap filename";
-    public static final String INVALID_COMMAND_ERROR_EDITCONTINENT = "Invalid command. Please submit your command in the Format of : editcontinent -add continentID continentvalue -remove continentID";
+    public static final String INVALID_CMD_ERR_FOR_EDITCONTINENT = "Invalid command. Please submit your command in the Format of : editcontinent -add continentID continentvalue -remove continentID";
     public static final String INVALID_COMMAND_ERROR_SAVEMAP = "Invalid command. Please submit your command in the Format of : savemap filename";
     public static final String INVALID_COMMAND_ERROR_LOADMAP = "Invalid command. Please submit your command in the Format of : loadmap filename";
     public static final String INVALID_COMMAND_ERROR_VALIDATEMAP = "Invalid command!Please load a valid map for verification.";
