@@ -100,10 +100,20 @@ public class GameEngine {
                 break;
             }
             case "editcountry" : {
-                //editcountry func
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to perform Edit Country operation, please perform `editmap` first");
+                    break;
+                }
+                executeCountryEdit(l_command);
+                break;
             }
             case "editneighbor" : {
-                //editneighbor func
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to perform Edit Neighbors operation, please perform `editmap` first");
+                    break;
+                }
+                executeNeighbourEdit(l_command);
+                break;
             }
             case "gameplayer" : {
                 //gameplayer func
@@ -291,18 +301,44 @@ public class GameEngine {
     }
 
     /**
-     * Validation of "editcountry" command facilitates the functionality to check for necessary argument
-     * and transfer control to model for further computation.
+     * Validation of "editneighbor" command facilitates the functionality to check for necessary argument,
+     * not null checks and transfer control to model for further computation.
      *
      * @param p_entered_command command input entered by player
      * @throws InvalidCommand throws exception if command is invalid
      * @throws InvalidMap throws exception if map is invalid
      */
-    public void performCountryEdit(Command p_entered_command) throws InvalidMap,InvalidCommand {
+    public void executeNeighbourEdit(Command p_entered_command) throws InvalidCommand, InvalidMap {
+        List<Map<String, String>> l_operation_records = p_entered_command.getParametersAndOperations();
+        if (l_operation_records.isEmpty() == true || l_operation_records == null) {
+            throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITNEIGHBOUR);
+        } else {
+            for (Map<String, String> l_temp_map : l_operation_records) {
+                if (p_entered_command.isKeywordAvailable(ApplicationConstants.OPERATION, l_temp_map)
+                        && p_entered_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_temp_map)) {
+                    d_mapService.modifyNeighbor(d_gameState, l_temp_map.get(ApplicationConstants.OPERATION),
+                            l_temp_map.get(ApplicationConstants.ARGUMENTS));
+                } else {
+                    throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITNEIGHBOUR);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Validation of "editcountry" command facilitates the functionality to check for necessary argument,
+     * not null checks and transfer control to model for further computation.
+     *
+     * @param p_entered_command command input entered by player
+     * @throws InvalidCommand throws exception if command is invalid
+     * @throws InvalidMap throws exception if map is invalid
+     */
+    public void executeCountryEdit(Command p_entered_command) throws InvalidMap,InvalidCommand {
         List<Map<String, String>> l_operation_records = p_entered_command.getParametersAndOperations();
 
         if (l_operation_records.isEmpty() == true || l_operation_records == null) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITCONTINENT);
+            throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITCOUNTRY);
         } else {
             for (Map<String, String> l_temp_map : l_operation_records) {
                 if (p_entered_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_temp_map)
@@ -310,7 +346,7 @@ public class GameEngine {
                     d_mapService.modifyCountry(d_gameState, l_temp_map.get(ApplicationConstants.OPERATION),
                             l_temp_map.get(ApplicationConstants.ARGUMENTS));
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITCONTINENT);
+                    throw new InvalidCommand(ApplicationConstants.INVALID_CMD_ERR_FOR_EDITCOUNTRY);
                 }
             }
         }
