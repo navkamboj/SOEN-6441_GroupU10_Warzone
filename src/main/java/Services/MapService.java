@@ -34,6 +34,18 @@ public class MapService {
         List<String> l_linesOfFile = mapFile(p_mapFileName);
         if (null != l_linesOfFile && !l_linesOfFile.isEmpty()) {
             // Parses the file and stores information in objects
+            List<String> l_continentData = retrieveMetaData(l_linesOfFile, "continent");
+            List<Continent> l_continentObjects = loadContinentsMetaData(l_continentData);
+            List<String> l_countryData = retrieveMetaData(l_linesOfFile, "country");
+            List<String> l_bordersMetaData = retrieveMetaData(l_linesOfFile, "border");
+            List<Country> l_countryObjects = loadCountriesMetaData(l_countryData);
+
+            // Updates the neighbour of countries in Objects
+            l_countryObjects = loadBorderMetaData(l_countryObjects, l_bordersMetaData);
+            l_continentObjects = connectContinentsCountry(l_countryObjects, l_continentObjects);
+            l_map.setD_continents(l_continentObjects);
+            l_map.setD_countries(l_countryObjects);
+            p_gameState.setD_map(l_map);
         }
         return l_map;
     }
