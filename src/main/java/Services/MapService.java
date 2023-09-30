@@ -1,6 +1,6 @@
 package Services;
 
-import Constants.ApplicationConstants;
+import Constants.GameConstants;
 import Exceptions.InvalidMap;
 import Models.Continent;
 import Models.Country;
@@ -49,19 +49,19 @@ public class MapService {
         switch (p_switchCaseParameter) {
             case "continent":
                 List<String> l_linesOfContinents = p_fileLines.subList(
-                        p_fileLines.indexOf(ApplicationConstants.CONTINENTS) + 1,
-                        p_fileLines.indexOf(ApplicationConstants.COUNTRIES) - 1
+                        p_fileLines.indexOf(GameConstants.CONTINENTS) + 1,
+                        p_fileLines.indexOf(GameConstants.COUNTRIES) - 1
                 );
                 return l_linesOfContinents;
             case "country":
                 List<String> l_linesOfCountries = p_fileLines.subList(
-                        p_fileLines.indexOf(ApplicationConstants.COUNTRIES) + 1,
-                        p_fileLines.indexOf(ApplicationConstants.BORDERS) - 1
+                        p_fileLines.indexOf(GameConstants.COUNTRIES) + 1,
+                        p_fileLines.indexOf(GameConstants.BORDERS) - 1
                 );
                 return l_linesOfCountries;
             case "border":
                 List<String> l_linesOfBorders = p_fileLines.subList(
-                        p_fileLines.indexOf(ApplicationConstants.BORDERS) + 1,
+                        p_fileLines.indexOf(GameConstants.BORDERS) + 1,
                         p_fileLines.size()
                 );
                 return l_linesOfBorders;
@@ -261,7 +261,7 @@ public class MapService {
         String l_bordersMetaData = new String();
         List<String> l_bordersList = new ArrayList<>();
 
-        p_writer.write(System.lineSeparator() + ApplicationConstants.COUNTRIES + System.lineSeparator());
+        p_writer.write(System.lineSeparator() + GameConstants.COUNTRIES + System.lineSeparator());
         for(Country l_country : p_gameState.getD_map().getD_countries()){
             l_countryMetaData = new String();
             l_countryMetaData = l_country.getD_countryID().toString().concat(" ").concat(l_country.getD_countryName())
@@ -279,7 +279,7 @@ public class MapService {
         }
 
         if(null != l_bordersList && !l_bordersList.isEmpty()){
-            p_writer.write(System.lineSeparator() + ApplicationConstants.BORDERS + System.lineSeparator());
+            p_writer.write(System.lineSeparator() + GameConstants.BORDERS + System.lineSeparator());
             for(String l_borderString : l_bordersList){
                 p_writer.write(l_borderString + System.lineSeparator());
             }
@@ -294,7 +294,7 @@ public class MapService {
      * @throws IOException handles I/O
      */
     private void continentMetaData(GameState p_gameState, FileWriter p_writer) throws IOException {
-        p_writer.write(System.lineSeparator() + ApplicationConstants.CONTINENTS + System.lineSeparator());
+        p_writer.write(System.lineSeparator() + GameConstants.CONTINENTS + System.lineSeparator());
         for(Continent l_continent : p_gameState.getD_map().getD_continents()){
             p_writer.write(
                     l_continent.getD_continentName().concat(" ").concat(l_continent.getD_continentValue().toString())

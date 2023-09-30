@@ -1,12 +1,10 @@
 package Views;
 
-import java.util.*;
-import Constants.ApplicationConstants;
+import Constants.GameConstants;
 import Exceptions.InvalidMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.Map.Entry;
+
 import Models.Continent;
 import Models.Country;
 import Models.GameState;
@@ -111,7 +109,7 @@ public class MapView {
     private void retrieveSeparator(){
         StringBuilder l_separator = new StringBuilder();
 
-        for(int i = 0; i < ApplicationConstants.CONSOLE_WIDTH - 2; i++){
+        for(int i = 0; i < GameConstants.CONSOLE_WIDTH - 2; i++){
             l_separator.append("-");
         }
         System.out.format("+%s+%n", l_separator.toString());
@@ -123,13 +121,13 @@ public class MapView {
      * @param p_nameContinent Continent Name to be rendered.
      */
     private void retrieveNameContinent(String p_nameContinent){
-        String l_nameContinent =p_nameContinent + " ( " + ApplicationConstants.CONTROL_VALUE + " : " + d_gameState.getD_map().getContinent(p_nameContinent).getD_continentValue() + " ) ";
+        String l_nameContinent =p_nameContinent + " ( " + GameConstants.CONTROL_VALUE + " : " + d_gameState.getD_map().getContinent(p_nameContinent).getD_continentValue() + " ) ";
 
         retrieveSeparator();
         if(d_players == null){
             l_nameContinent = getColorfulString(retrieveColorContinent(p_nameContinent), l_nameContinent);
         }
-        getCenterString(ApplicationConstants.CONSOLE_WIDTH, l_nameContinent);
+        getCenterString(GameConstants.CONSOLE_WIDTH, l_nameContinent);
         retrieveSeparator();
     }
 
@@ -144,7 +142,7 @@ public class MapView {
         String l_indexString = String.format("%02d. %s", p_index, p_nameCountry);
 
         if(d_players != null){
-            String l_armies = " ( " + ApplicationConstants.ARMIES + " : " + retrieveArmiesOfCountries(p_nameCountry) + " ) ";
+            String l_armies = " ( " + GameConstants.ARMIES + " : " + retrieveArmiesOfCountries(p_nameCountry) + " ) ";
             l_indexString = String.format("%02d. %s", p_index, p_nameCountry, l_armies);
         }
         return getColorfulString(retrieveColorCountry(p_nameCountry), String.format("%-30s", l_indexString));
@@ -165,7 +163,7 @@ public class MapView {
                 l_commaDistinguishedCountries.append(" , ");
             }
         }
-        String l_neighborCountry = ApplicationConstants.CONNECTIVITY + " : " + WordWrap.from(l_commaDistinguishedCountries.toString()).maxWidth(ApplicationConstants.CONSOLE_WIDTH).wrap();
+        String l_neighborCountry = GameConstants.CONNECTIVITY + " : " + WordWrap.from(l_commaDistinguishedCountries.toString()).maxWidth(GameConstants.CONSOLE_WIDTH).wrap();
         System.out.println(getColorfulString(retrieveColorCountry(p_nameCountry), l_neighborCountry));
         System.out.println();
     }
@@ -253,7 +251,7 @@ public class MapView {
         int l_counter = 0;
 
         retrieveSeparator();
-        getCenterString(ApplicationConstants.CONSOLE_WIDTH, "GAME PLAYERS");
+        getCenterString(GameConstants.CONSOLE_WIDTH, "GAME PLAYERS");
         retrieveSeparator();
 
         for(Player p : d_players){

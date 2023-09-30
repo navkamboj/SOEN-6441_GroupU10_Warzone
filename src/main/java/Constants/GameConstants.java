@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @version 1.0.0
  */
-public class ApplicationConstants {
+public class GameConstants {
     public static final String SRC_MAIN_RESOURCES = "src/main/resources";
     public static final String INVALID_COMMAND_DEPLOY_ORDER = "Invalid command. Please submit your command in the format of : deploy countryID <CountryName> <num> (until every augmentation has been deployed)";
     public static final String INVALID_COMMAND_EDITCOUNTRY = "Invalid command. Please submit your command in Appropriate Format like : editcountry -add countrytID continentID -remove countryID";

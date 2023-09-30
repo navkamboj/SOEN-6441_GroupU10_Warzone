@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
-import Constants.ApplicationConstants;
+import Constants.GameConstants;
 
 /**
  * Common Utility class that checks all null/empty strings, objects and collections.
@@ -72,6 +72,6 @@ public class CommonUtil {
      */
     public static String getMapFilePath(String p_fileName){
         String l_absolutePath =new File("").getAbsolutePath();
-        return l_absolutePath + File.separator + ApplicationConstants.SRC_MAIN_RESOURCES + File.separator + p_fileName;
+        return l_absolutePath + File.separator + GameConstants.SRC_MAIN_RESOURCES + File.separator + p_fileName;
     }
 }

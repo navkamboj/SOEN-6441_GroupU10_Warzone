@@ -1,6 +1,6 @@
 package Controller;
 
-import Constants.ApplicationConstants;
+import Constants.GameConstants;
 import Exceptions.InvalidMap;
 import Exceptions.InvalidCommand;
 import Models.GameState;
@@ -170,13 +170,13 @@ public class GameEngine {
         List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
 
         if (l_operations_list == null || l_operations_list.isEmpty()) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITMAP);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITMAP);
         } else {
             for (Map<String, String> l_map : l_operations_list) {
-                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
-                    d_mapService.mapModify(d_gameState, l_map.get(ApplicationConstants.ARGUMENTS));
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
+                    d_mapService.mapModify(d_gameState, l_map.get(GameConstants.ARGUMENTS));
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITMAP);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITMAP);
                 }
             }
         }
@@ -195,15 +195,15 @@ public class GameEngine {
         List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
 
         if (l_operations_list == null || l_operations_list.isEmpty()) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITCONTINENT);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCONTINENT);
         } else {
             for (Map<String, String> l_map : l_operations_list) {
-                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)
-                        && p_command.isKeywordAvailable(ApplicationConstants.OPERATION, l_map)) {
-                    d_mapService.modifyContinent(d_gameState, l_map.get(ApplicationConstants.ARGUMENTS),
-                            l_map.get(ApplicationConstants.OPERATION));
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_mapService.modifyContinent(d_gameState, l_map.get(GameConstants.ARGUMENTS),
+                            l_map.get(GameConstants.OPERATION));
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITCONTINENT);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCONTINENT);
                 }
             }
         }
@@ -221,18 +221,18 @@ public class GameEngine {
         List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
 
         if (null == l_operations_list || l_operations_list.isEmpty()) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_SAVEMAP);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEMAP);
         } else {
             for (Map<String, String> l_map : l_operations_list) {
-                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
                     boolean l_fileUpdateStatus = d_mapService.mapSave(d_gameState,
-                            l_map.get(ApplicationConstants.ARGUMENTS));
+                            l_map.get(GameConstants.ARGUMENTS));
                     if (l_fileUpdateStatus)
                         System.out.println("Necessary changes have been made to the map file.");
                     else
                         System.out.println(d_gameState.getD_errorMessage());
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_SAVEMAP);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEMAP);
                 }
             }
         }
@@ -249,15 +249,15 @@ public class GameEngine {
         List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
 
         if (null == l_operations_list || l_operations_list.isEmpty()) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_LOADMAP);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_LOADMAP);
         } else {
             for (Map<String, String> l_map : l_operations_list) {
-                if (p_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_map)) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
                     try {
 
                         // Loads the map if it is valid otherwise resets the game state
                         Models.Map l_mapToLoad = d_mapService.mapLoad(d_gameState,
-                                l_map.get(ApplicationConstants.ARGUMENTS));
+                                l_map.get(GameConstants.ARGUMENTS));
                         if (l_mapToLoad.Validate()) {
                             System.out.println("Map has been successfully loaded. \n");
                         } else {
@@ -267,7 +267,7 @@ public class GameEngine {
                         d_mapService.mapReset(d_gameState);
                     }
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_LOADMAP);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_LOADMAP);
                 }
             }
         }
@@ -286,16 +286,16 @@ public class GameEngine {
         if (null == l_operations_list || l_operations_list.isEmpty()) {
             Models.Map l_currentMap = d_gameState.getD_map();
             if (l_currentMap == null) {
-                throw new InvalidMap(ApplicationConstants.INVALID_MAP_EMPTY);
+                throw new InvalidMap(GameConstants.INVALID_MAP_EMPTY);
             } else {
                 if (l_currentMap.Validate()) {
-                    System.out.println(ApplicationConstants.VALID_MAP);
+                    System.out.println(GameConstants.VALID_MAP);
                 } else {
                     System.out.println("Failed! Map could not be validated.");
                 }
             }
         } else {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_VALIDATEMAP);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_VALIDATEMAP);
         }
     }
 
@@ -310,15 +310,15 @@ public class GameEngine {
     public void executeNeighbourEdit(Command p_entered_command) throws InvalidCommand, InvalidMap {
         List<Map<String, String>> l_operation_records = p_entered_command.getParametersAndOperations();
         if (l_operation_records.isEmpty() == true || l_operation_records == null) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITNEIGHBOUR);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITNEIGHBOUR);
         } else {
             for (Map<String, String> l_temp_map : l_operation_records) {
-                if (p_entered_command.isKeywordAvailable(ApplicationConstants.OPERATION, l_temp_map)
-                        && p_entered_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_temp_map)) {
-                    d_mapService.modifyNeighbor(d_gameState, l_temp_map.get(ApplicationConstants.OPERATION),
-                            l_temp_map.get(ApplicationConstants.ARGUMENTS));
+                if (p_entered_command.isKeywordAvailable(GameConstants.OPERATION, l_temp_map)
+                        && p_entered_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_temp_map)) {
+                    d_mapService.modifyNeighbor(d_gameState, l_temp_map.get(GameConstants.OPERATION),
+                            l_temp_map.get(GameConstants.ARGUMENTS));
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITNEIGHBOUR);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITNEIGHBOUR);
                 }
             }
         }
@@ -337,15 +337,15 @@ public class GameEngine {
         List<Map<String, String>> l_operation_records = p_entered_command.getParametersAndOperations();
 
         if (l_operation_records.isEmpty() == true || l_operation_records == null) {
-            throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITCOUNTRY);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCOUNTRY);
         } else {
             for (Map<String, String> l_temp_map : l_operation_records) {
-                if (p_entered_command.isKeywordAvailable(ApplicationConstants.ARGUMENTS, l_temp_map)
-                        && p_entered_command.isKeywordAvailable(ApplicationConstants.OPERATION, l_temp_map)) {
-                    d_mapService.modifyCountry(d_gameState, l_temp_map.get(ApplicationConstants.OPERATION),
-                            l_temp_map.get(ApplicationConstants.ARGUMENTS));
+                if (p_entered_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_temp_map)
+                        && p_entered_command.isKeywordAvailable(GameConstants.OPERATION, l_temp_map)) {
+                    d_mapService.modifyCountry(d_gameState, l_temp_map.get(GameConstants.OPERATION),
+                            l_temp_map.get(GameConstants.ARGUMENTS));
                 } else {
-                    throw new InvalidCommand(ApplicationConstants.INVALID_COMMAND_EDITCOUNTRY);
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCOUNTRY);
                 }
             }
         }

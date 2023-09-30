@@ -3,12 +3,11 @@ package Services;
 import Models.Player;
 import Models.Country;
 import Models.GameState;
-import Models.Map;
 import Models.Order;
 import Models.Continent;
 
-import Constants.ApplicationConstants;
-import Controller.GameEngine;
+import Constants.GameConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -152,7 +151,7 @@ public class PlayerService{
         List<Player> l_players = p_gameState.getD_playerList();
 
         for(int i = 0; i< l_players.size(); i++){
-             l_players.get(i).setD_color(ApplicationConstants.COLORS_LIST.get(i));
+             l_players.get(i).setD_color(GameConstants.COLORS_LIST.get(i));
         }
     }
 
