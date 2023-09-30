@@ -84,4 +84,125 @@ public class MapService {
             p_gameState.getD_map().setD_mapFile(p_editMapPath);
         }
     }
+
+    /**
+     * Method to modify Map based on the operation type ( add/remove) and arguments
+     * @param p_mapToBeModified Map under modification
+     * @param p_operationType Add/Remove operation
+     * @param p_argument Arguments
+     * @return Map object with updated continents
+     * @throws InvalidMap exception
+     */
+    public Map addOrRemoveContinents(Map p_mapToBeModified, String p_operationType,
+                                     String p_argument) throws InvalidMap {
+
+        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2) {
+            p_mapToBeModified.addContinent(p_argument.split(" ")[0], Integer.parseInt(p_argument.split(" ")[1]));
+        } else if (p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==1) {
+            p_mapToBeModified.removeContinent(p_argument.split(" ")[0]);
+        } else {
+            System.out.println("Couldn't "+p_operationType+" the continent");
+        }
+
+        return p_mapToBeModified;
+    }
+    /**
+     * Method for modifying a chosen map by adding or removing continents using commands within the editmap function
+     * @param p_gameState Gamestate model class object
+     * @param p_argument Arguments provided for the command operation
+     * @param p_operationType Add/remove type operation
+     * @throws IOException given when the filename is not valid / it doesn't exist.
+     * @throws InvalidMap Exception
+     */
+    public void modifyContinent(GameState p_gameState, String p_argument, String p_operationType) throws IOException, InvalidMap {
+        String l_mapName = p_gameState.getD_map().getD_mapFile();
+        Map l_mapToBeModified = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
+                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.loadMap(p_gameState, l_mapName)
+                : p_gameState.getD_map();
+
+        if(!CommonUtil.isNull(l_mapToBeModified)) {
+            Map l_modifiedMap = addOrRemoveContinents(l_mapToBeModified, p_operationType, p_argument);
+            p_gameState.setD_map(l_modifiedMap);
+            p_gameState.getD_map().setD_mapFile(l_mapName);
+        }
+    }
+
+    /**
+     * Method to add/remove countries in the map
+     * @param p_mapToBeModified Map to be modified
+     * @param p_operationType Add/Remove type operation
+     * @param p_argument Arguments provided for the command operation
+     * @return Modified map object
+     * @throws InvalidMap
+     */
+    public Map addOrRemoveCountry(Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
+        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
+            p_mapToBeModified.addCountry(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+        }else if(p_operationType.equalsIgnoreCase("remove")&& p_argument.split(" ").length==1){
+            p_mapToBeModified.removeCountry(p_argument.split(" ")[0]);
+        }else{
+            System.out.println("Changes can't be saved !!");
+        }
+        return p_mapToBeModified;
+    }
+
+    /**
+     * Method to control modify country command flow i.e. to Add/Remove a country
+     * @param p_gameState Gamestate model class object
+     * @param p_operation Add/Remove operation
+     * @param p_argument Arguments provided for the command operation
+     * @throws InvalidMap exception
+     */
+    public void modifyCountry(GameState p_gameState, String p_operation, String p_argument) throws InvalidMap{
+        String l_mapName= p_gameState.getD_map().getD_mapFile();
+        Map l_mapToBeModified = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
+                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.loadMap(p_gameState, l_mapName)
+                : p_gameState.getD_map();
+
+        if(!CommonUtil.isNull(l_mapToBeModified)) {
+            Map l_modifiedMap = addOrRemoveCountry(l_mapToBeModified, p_operation, p_argument);
+            p_gameState.setD_map(l_modifiedMap);
+            p_gameState.getD_map().setD_mapFile(l_mapName);
+        }
+    }
+
+    /**
+     * Method to add/remove neighbor on Map object
+     * @param p_mapToBeModified Map object to be modified
+     * @param p_operationType Add/remove operation
+     * @param p_argument Arguments provided for the command operation
+     * @return modified map object
+     * @throws InvalidMap exception
+     */
+    public Map addOrRemoveNeighbor(Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
+        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
+            p_mapToBeModified.addCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+        }else if(p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==2){
+            p_mapToBeModified.removeCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+        }else{
+            System.out.println("Changes can't be saved !!");
+        }
+        return p_mapToBeModified;
+    }
+
+    /**
+     * Method for modifying a chosen map by adding or removing neighbors using commands
+     * @param p_gameState Gamestate object
+     * @param p_operation Add/Remove operation type
+     * @param p_argument Arguments provided for the command operation
+     * @throws InvalidMap exception
+     */
+    public void modifyNeighbor(GameState p_gameState, String p_operation, String p_argument) throws InvalidMap{
+        String l_mapFileName= p_gameState.getD_map().getD_mapFile();
+        Map l_mapToBeUpdated = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
+                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.loadMap(p_gameState, l_mapFileName)
+                : p_gameState.getD_map();
+
+        if(!CommonUtil.isNull(l_mapToBeUpdated)) {
+            Map l_updatedMap = addOrRemoveNeighbor(l_mapToBeUpdated, p_operation, p_argument);
+            p_gameState.setD_map(l_updatedMap);
+            p_gameState.getD_map().setD_mapFile(l_mapFileName);
+        }
+    }
+
 }
