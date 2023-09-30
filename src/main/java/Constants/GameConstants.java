@@ -18,6 +18,7 @@ public class GameConstants {
     public static final String INVALID_COMMAND_SAVEMAP = "Invalid command. Please submit your command in the Format of : savemap filename";
     public static final String INVALID_COMMAND_LOADMAP = "Invalid command. Please submit your command in the Format of : loadmap filename";
     public static final String INVALID_COMMAND_VALIDATEMAP = "Invalid command!Please load a valid map for verification.";
+    public static final String INVALID_COMMAND_GAMEPLAYER = "Invalid command. Please submit your command in the Format of : gameplayer -add playername -remove playername";
     public static final String INVALID_MAP_EMPTY = "A valid map is not present. Please load a valid map to perform a check.";
     public static final String VALID_MAP = "The loaded map is valid!";
     public static final int CONSOLE_WIDTH = 80;
