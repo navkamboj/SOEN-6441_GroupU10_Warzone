@@ -24,7 +24,9 @@ public class ApplicationConstants {
     public static final String CONTROL_VALUE = "Control Value";
     public static final String CONNECTIVITY = "Connections";
     public static final String ARMIES = "Armies";
-
+    public static final String CONTINENTS = "[continents]";
+    public static final String COUNTRIES = "[countries]";
+    public static final String BORDERS = "[borders]";
     public static final String RED_BOLD = "\033[1;31m";    // RED
     public static final String GREEN_BOLD = "\033[1;32m";  // GREEN
     public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
