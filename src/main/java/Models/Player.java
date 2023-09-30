@@ -216,7 +216,7 @@ public class Player {
         if (l_command.getBaseCommand().equalsIgnoreCase("deploy") && l_enteredCommand.split(" ").length == 3) {
             l_playerService.deployOrderCreation(l_enteredCommand, this);
         } else {
-            System.out.println(ApplicationConstants.INVALID_COMMAND_ERROR_DEPLOY_ORDER);;
+            System.out.println(ApplicationConstants.INVALID_COMMAND_DEPLOY_ORDER);;
         }
     }
 
