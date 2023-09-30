@@ -93,7 +93,7 @@ public class MapService {
         List<Continent> l_continents = new ArrayList<Continent>();
 
         for(String cont : p_listOfContinents){
-            String[] l_metaData = cont.split("");
+            String[] l_metaData = cont.split(" ");
             l_continents.add(new Continent(l_continentID, l_metaData[0], Integer.parseInt(l_metaData[1])));
             l_continentID++;
         }
@@ -111,7 +111,7 @@ public class MapService {
         List<Country> l_listOfCountries = new ArrayList<Country>();
 
         for(String country : p_listOfCountries){
-            String[] l_metaDataCountries =country.split("");
+            String[] l_metaDataCountries =country.split(" ");
             l_listOfCountries.add(new Country(Integer.parseInt(l_metaDataCountries[0]), l_metaDataCountries[1],
                     Integer.parseInt(l_metaDataCountries[2])));
         }
@@ -132,7 +132,7 @@ public class MapService {
         for(String l_border : p_listOfBorders) {
             if(null != l_border && !l_border.isEmpty()){
                 ArrayList<Integer> l_neighbors = new ArrayList<Integer>();
-                String[] l_splitString = l_border.split("");
+                String[] l_splitString = l_border.split(" ");
                 for(int i = 1; i <= l_splitString.length - 1; i++){
                     l_neighbors.add(Integer.parseInt(l_splitString[i]));
                 }
