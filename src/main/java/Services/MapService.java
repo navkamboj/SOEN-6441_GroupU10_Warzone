@@ -232,7 +232,7 @@ public class MapService {
                         }
                         if (null != p_gameState.getD_map().getD_countries()
                                 && !p_gameState.getD_map().getD_countries().isEmpty()) {
-//                            writeCountryAndBoarderMetaData(p_gameState, l_fileWriter);
+                            countryAndBorderMetaData(p_gameState, l_fileWriter);
                         }
                         l_fileWriter.close();
                     }
@@ -256,7 +256,7 @@ public class MapService {
      * @param p_writer this is the writer object for file
      * @throws IOException handles I/0
      */
-    private void countryAndBorderMeteData(GameState p_gameState, FileWriter p_writer) throws IOException{
+    private void countryAndBorderMetaData(GameState p_gameState, FileWriter p_writer) throws IOException{
         String l_countryMetaData = new String();
         String l_bordersMetaData = new String();
         List<String> l_bordersList = new ArrayList<>();
