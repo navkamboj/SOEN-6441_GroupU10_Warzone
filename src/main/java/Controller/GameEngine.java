@@ -4,12 +4,15 @@ import Constants.GameConstants;
 import Exceptions.InvalidMap;
 import Exceptions.InvalidCommand;
 import Models.GameState;
+import Models.Order;
+import Models.Player;
 import Services.MapService;
 import Services.PlayerService;
 import Utils.Command;
 import Utils.CommonUtil;
 import Views.MapView;
 
+import javax.management.InvalidApplicationException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -126,8 +129,9 @@ public class GameEngine {
                 modifyPlayers(l_command);
                 break;
             }
-            case "assigncountries" : {
-                //assigncountries func
+            case "allocatecountries" : {
+                allocateCountries(l_command);
+                break;
             }
             case "showmap" : {
                 MapView l_mapView = new MapView(d_gameState);
@@ -385,4 +389,51 @@ public class GameEngine {
         }
     }
 
+    /**
+     * This method validates <strong>allocateCountries</strong> to ensure that the necessary arguments are in place
+     * and to transfer control to the model responsible for assigning countries to players.
+     *
+     * @param p_command user entered command
+     * @throws InvalidCommand exception for invalid commands
+     * @throws IOException for Input/Output operation failures
+     */
+    public void allocateCountries(Command p_command) throws InvalidCommand,IOException{
+        List<Map<String, String>> l_listOfOperations =p_command.getParametersAndOperations();
+        if(CommonUtil.isEmptyCollection(l_listOfOperations)){
+            d_playerService.countryAssign(d_gameState);
+            d_playerService.colorAssign(d_gameState);
+
+            while (!CommonUtil.isEmptyCollection(d_gameState.getD_playerList())) {
+                System.out.println("\n---------- Main Game Loop Starting ----------");
+
+                d_playerService.armiesAssign(d_gameState);
+
+                while (d_playerService.existanceOfUnassignedArmies(d_gameState.getD_playerList())) {
+                    for (Player l_player : d_gameState.getD_playerList()) {
+                        if (l_player.getD_noOfAllocatedArmies() != null && l_player.getD_noOfAllocatedArmies() != 0)
+                            l_player.issue_order();
+                    }
+                }
+
+                while (d_playerService.existanceOfUnexecutedOrder(d_gameState.getD_playerList())) {
+                    for (Player l_player : d_gameState.getD_playerList()) {
+                        Order l_order = l_player.next_order();
+                        if (l_order != null)
+                            l_order.execute(d_gameState, l_player);
+                    }
+                }
+                MapView l_viewOfMap = new MapView(d_gameState, d_gameState.getD_playerList());
+                l_viewOfMap.showMap();
+
+                System.out.println("Please enter 'Y/y' to proceed to the next turn, or 'N/n' to decline.");
+                Scanner l_reader = new Scanner(System.in);
+                String l_continue = l_reader.nextLine();
+                if (l_continue.equalsIgnoreCase("N"))
+                    break;
+            }
+        }
+        else {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_ASSIGNCOUNTRIES);
+        }
+    }
 }
