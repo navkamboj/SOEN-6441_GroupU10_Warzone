@@ -126,7 +126,7 @@ public class PlayerServiceTest {
      *This testing method is used to test that player removal is done or not of addingRemovingOlayers
      */
     @Test
-    public voidtestRemovalPlayers(){
+    public void testRemovalPlayers(){
     List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Pranjlesh");
     assertEquals(1, l_updatingPlayers.size());
 
