@@ -24,14 +24,14 @@ public class MapTest{
     public void mapSetup(){
       d_map=new Map();
       d_mapService= new MapService();
-      d_gameState- new GameState();
+      d_gameState= new GameState();
     }
 
     /**
      *This method is used to check for no continent in the map(@link InvalidMap)
      *This method can throws @throws InvalidMap
      */
-    @Test (expected InvalidMap.class)
+    @Test (expected = InvalidMap.class)
     public void testNoContinentValidate() throws InvalidMap{
       asserteEquals(d_map.Validate(),false);
     }
