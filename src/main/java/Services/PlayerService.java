@@ -31,7 +31,7 @@ public class PlayerService{
            if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList)){
              for(Player l_player : p_allExistingPlayersList){
                 if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
-                   l_checkunique=true;
+                   l_checkunique=false;
                    break;
                  }
              }
@@ -52,7 +52,7 @@ public class PlayerService{
               l_updatePlayers.addAll(p_allExistingPlayersList);
 
           String l_newPlayerName = p_argumentTask.split(" ")[0];
-          boolean l_playerNameExist =!checkPlayerNameUniqueness(p_allExistingPlayersList,l_newPlayerName);
+          boolean l_playerNameExist = !checkPlayerNameUniqueness(p_allExistingPlayersList,l_newPlayerName);
 
           switch(p_operationTask.toLowerCase()){
               case "remove":

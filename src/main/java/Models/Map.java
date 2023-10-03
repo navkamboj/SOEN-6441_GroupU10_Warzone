@@ -158,7 +158,7 @@ public class Map {
      * @throws InvalidMap exception for Invalid conditions
      */
     public Boolean verifyNullCountryOrContinent() throws InvalidMap {
-        if (d_continents.isEmpty() || d_continents == null) {
+        if (d_continents == null || d_continents.isEmpty()) {
             throw new InvalidMap("Upload map should contain at least one continent!");
         }
         if (d_countries.isEmpty() || d_countries == null) {

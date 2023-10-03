@@ -18,7 +18,7 @@ public class MapTest{
     MapService d_mapService;
 
     /**
-     *This method will called every time before every testcase of this MapTest file
+     *This method will call every time before every testcase of this MapTest file
      */
     @Before
     public void mapSetup(){
@@ -28,21 +28,22 @@ public class MapTest{
     }
 
     /**
-     *This method is used to check for no continent in the map(@link InvalidMap)
-     *This method can throws @throws InvalidMap
+     *This method is used to check for no continent in the map
+     *@throws InvalidMap
      */
     @Test (expected = InvalidMap.class)
     public void testNoContinentValidate() throws InvalidMap{
-      asserteEquals(d_map.Validate(),false);
+      assertEquals(d_map.Validate(),false);
     }
 
     /**
      *This method will validate the map that its valid or invalid
      * @throws InvalidMap
      */
-   public void testValidate() throws InvalidMap{
-      d_map=d_mapService.mapLoad(d_gameState,canada.map);
-      assertEquals(d_map.Validate(), true);
+   @Test( expected = InvalidMap.class)
+    public void testValidate() throws InvalidMap{
+      d_map=d_mapService.mapLoad(d_gameState,"connectivityOfContinent.map");
+      d_map.Validate();
    }
 
     /**
@@ -57,7 +58,7 @@ public class MapTest{
 
     /**
      *This method tests countries connectivity
-     * @throws Invalid Exception
+     * @throws InvalidMap Exception
      */
     @Test (expected = InvalidMap.class)
     public void testConnectivityOfCountries() throws InvalidMap{
