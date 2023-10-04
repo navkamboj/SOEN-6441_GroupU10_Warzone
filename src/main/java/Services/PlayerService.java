@@ -15,6 +15,9 @@ import Utils.CommonUtil;
 
 /**
  * This service is used for handle the players.
+ *
+ * @version 1.0.0
+ * @author Nihal Galani
  */
 
 public class PlayerService{
@@ -211,12 +214,11 @@ public class PlayerService{
                 l_notAssignedCountries.remove(l_countryListRandom);
             }
         }
-        //If some countries are left in the list then it will be assigned to players
+        // If some countries are left in the list then it will be assigned to players
         if (!l_notAssignedCountries.isEmpty()) {
             assignmentOfCountries(1, l_notAssignedCountries,p_playerList );
         }
     }
-
 
     /**
      * When player entered the command for deploy create deployorder
@@ -230,8 +232,8 @@ public class PlayerService{
         String l_nameOfCountry = p_enteredCommand.split(" ")[1];
         String l_totalNoOfArmies = p_enteredCommand.split(" ")[2];
         if (deployOrderValidation (p_player, l_totalNoOfArmies)) {
-            System.out.println("Number of armies in deploy order are greater than player's allocated armies " +
-                            "for that reason given deploy order can not be executed");
+            System.out.println("Number of armies in deploy order are greater than player's allocated armies so order" +
+                    " can not be executed");
         } else {
             Order l_objectOrder = new Order(p_enteredCommand.split(" ")[0], l_nameOfCountry,
                     Integer.parseInt(l_totalNoOfArmies));
@@ -239,7 +241,7 @@ public class PlayerService{
             p_player.setD_executeOrders(l_orderList);
             Integer l_allocatedArmies = p_player.getD_noOfAllocatedArmies() - Integer.parseInt(l_totalNoOfArmies);
             p_player.setD_noOfAllocatedArmies(l_allocatedArmies);
-            System.out.println("For execution Order is added to queue");
+            System.out.println("Order for execution has been added to queue");
         }
     }
 
@@ -286,7 +288,7 @@ public class PlayerService{
     public void armiesAssign(GameState p_gameState) {
         for (Player l_player : p_gameState.getD_playerList()) {
             Integer l_armies = this.armiesCountForPlayer(l_player);
-            System.out.println("Player : " + l_player.getPlayerName() + " has assigned" + l_armies + " armies");
+            System.out.println("Player : " + l_player.getPlayerName() + " has assigned " + l_armies + " armies");
 
             l_player.setD_noOfAllocatedArmies(l_armies);
         }

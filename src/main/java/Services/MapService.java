@@ -18,6 +18,9 @@ import java.util.Scanner;
 
 /**
  * The MapService class is used to load, read, parse, edit and the save map file.
+ *
+ * @version 1.0.0
+ * @author Navjot Kamboj, Pranjalesh Ghansiyal, Yatish Chutani
  */
 public class MapService {
 

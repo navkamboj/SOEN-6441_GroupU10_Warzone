@@ -129,8 +129,8 @@ public class GameEngine {
                 modifyPlayers(l_command);
                 break;
             }
-            case "allocatecountries" : {
-                allocateCountries(l_command);
+            case "assigncountries" : {
+                assignCountries(l_command);
                 break;
             }
             case "showmap" : {
@@ -172,6 +172,7 @@ public class GameEngine {
             }
         }
     }
+
     /**
      * Validation of the "editmap" command involves checking for the necessary arguments and directing control to the
      * model for actual execution.
@@ -338,7 +339,6 @@ public class GameEngine {
         }
     }
 
-
     /**
      * Validation of "editcountry" command facilitates the functionality to check for necessary argument,
      * not null checks and transfer control to model for further computation.
@@ -397,7 +397,7 @@ public class GameEngine {
      * @throws InvalidCommand exception for invalid commands
      * @throws IOException for Input/Output operation failures
      */
-    public void allocateCountries(Command p_command) throws InvalidCommand,IOException{
+    public void assignCountries(Command p_command) throws InvalidCommand,IOException{
         List<Map<String, String>> l_listOfOperations =p_command.getParametersAndOperations();
         if(CommonUtil.isEmptyCollection(l_listOfOperations)){
             d_playerService.countryAssign(d_gameState);
