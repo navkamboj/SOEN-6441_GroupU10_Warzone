@@ -129,8 +129,8 @@ public class Order {
             case "deploy": {
                 if (this.verifyDeployCountryOrder(p_player, this)) {
                     this.executeDeployOrder(this, p_gameState, p_player);
-                    System.out.println("\nSuccessfully executed the given order" + this.getD_armiesToDeploy()
-                            + "number of armies have been deployed to the country : " + this.getD_targetCountry());
+                    System.out.println("\nSuccessfully executed the given order : " + this.getD_armiesToDeploy()
+                            + " armies have been deployed to the country : " + this.getD_targetCountry());
                 }
                 else {
                     System.out.println("\nOrder has not been executed as target country provided in the deploy command"

@@ -159,10 +159,10 @@ public class Map {
      */
     public Boolean verifyNullCountryOrContinent() throws InvalidMap {
         if (d_continents == null || d_continents.isEmpty()) {
-            throw new InvalidMap("Upload map should contain at least one continent!");
+            throw new InvalidMap("Uploaded map should contain at least one continent!");
         }
         if (d_countries.isEmpty() || d_countries == null) {
-            throw new InvalidMap("Upload map should contain at least one country!");
+            throw new InvalidMap("Uploaded map should contain at least one country!");
         }
         for (Country country : d_countries) {
             if (country.getD_neighborCountryIDs().size() < 1) {

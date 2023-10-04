@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
 
 /**
  * This playerServiceTest class file is used to test some important functionalities of playerservice file
+ *
+ * @version 1.0.0
+ * @author Nihal Galani
  */
 
 public class PlayerServiceTest {
@@ -87,8 +90,6 @@ public class PlayerServiceTest {
         l_continents.add(new Continent(7, "Europe", 4));
 
         l_informationOfPlayer.setD_ownedContinents(l_continents);
-
-        // l_informationOfPlayer.setD_noOfAllocatedArmies(8);
 
         Integer l_countedResult = d_testPlayerService.armiesCountForPlayer(l_informationOfPlayer);
         Integer l_expectedCountResult = 7;
