@@ -12,44 +12,37 @@ import Utils.Command;
 import Utils.CommonUtil;
 import Views.MapView;
 
-import javax.management.InvalidApplicationException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 /**
- * This is the entry point for the Game and keeps track of the current Game State.
+ * This serves as the starting point for the game and manages the current state of the game.
+ *
+ * @author Harsh Tank, Pranjalesh Ghansiyal, Yatish Chutani
+ * @version 1.0.0
  */
 public class GameEngine {
 
     /**
-     * d_gameState stores the information about current GamePlay.
+     * d_gameState Records the data pertaining to the current game.
      */
     GameState d_gameState = new GameState();
 
     /**
-     * d_mapService instance is used to handle load, read, parse, edit, and save map file.
+     * d_mapService Used to manage load, read, parse, edit, and save functions of map file.
      */
     MapService d_mapService = new MapService();
 
     /**
-     * Player Service instance to edit players and issue orders.
+     * Player Service Edit players and issue orders.
      */
     PlayerService d_playerService = new PlayerService();
 
     /**
-     * getD_gameState is a getter method to get current game state.
-     *
-     * @return the current game state
-     */
-    public GameState getD_gameState() {
-        return d_gameState;
-    }
-
-    /**
-     * The main method responsible for accepting commands from users and redirecting
-     * them to their respective logical flow.
+     * The main function responsible for receiving user commands and directing them to their appropriate
+     * logical pathways.
      *
      * @param p_args the program doesn't use default command line arguments
      */
@@ -64,15 +57,32 @@ public class GameEngine {
      * @param p_enteredCommand
      * @throws IOException
      */
-    public void handleCommand(String p_enteredCommand) throws IOException, InvalidMap, InvalidCommand {
+    public void commandHandler(String p_enteredCommand) throws IOException, InvalidMap, InvalidCommand {
 
         Command l_command = new Command(p_enteredCommand);
         String l_baseCommand = l_command.getBaseCommand();
         boolean l_isMapLoaded = d_gameState.getD_map() != null;
 
         switch (l_baseCommand) {
-            case "editmap" : {
-                executeMapEdit(l_command);
+            case "gameplayer" : {
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to execute Game Player operation, please execute `loadmap` first" +
+                            " before adding game players");
+                    break;
+                }
+                modifyPlayers(l_command);
+                break;
+            }
+            case "loadmap" : {
+                executeMapLoad(l_command);
+                break;
+            }
+            case "savemap" : {
+                if (!l_isMapLoaded) {
+                    System.out.println("No map found to execute save operation, Please `editmap` first");
+                    break;
+                }
+                executeMapSave(l_command);
                 break;
             }
             case "editcontinent" : {
@@ -83,17 +93,8 @@ public class GameEngine {
                 executeContinentEdit(l_command);
                 break;
             }
-            case "savemap" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute save operation, Please `editmap` first");
-                    break;
-                }
-
-                executeMapSave(l_command);
-                break;
-            }
-            case "loadmap" : {
-                executeMapLoad(l_command);
+            case "editmap" : {
+                executeMapEdit(l_command);
                 break;
             }
             case "validatemap" : {
@@ -118,15 +119,6 @@ public class GameEngine {
                     break;
                 }
                 executeNeighbourEdit(l_command);
-                break;
-            }
-            case "gameplayer" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute Game Player operation, please execute `loadmap` first" +
-                            " before adding game players");
-                    break;
-                }
-                modifyPlayers(l_command);
                 break;
             }
             case "assigncountries" : {
@@ -161,7 +153,7 @@ public class GameEngine {
                 System.out.println("Enter the game commands or enter 'exit' to quit the game\n");
                 String l_enteredCommand = l_scannerObject.nextLine();
 
-                handleCommand(l_enteredCommand);
+                commandHandler(l_enteredCommand);
             }
             catch (IOException l_ioException) {
                 l_ioException.printStackTrace();
@@ -390,8 +382,8 @@ public class GameEngine {
     }
 
     /**
-     * This method validates <strong>allocateCountries</strong> to ensure that the necessary arguments are in place
-     * and to transfer control to the model responsible for assigning countries to players.
+     * This function validates the "assignCountries" method to ensure the presence of required arguments and
+     * delegates control to the module responsible for assigning countries to players.
      *
      * @param p_command user entered command
      * @throws InvalidCommand exception for invalid commands
