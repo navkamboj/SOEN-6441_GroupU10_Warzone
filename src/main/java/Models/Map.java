@@ -94,24 +94,6 @@ public class Map {
     }
 
     /**
-     * Method to add a country to the list of countries
-     *
-     * @param p_country
-     */
-    public void addCountry(Country p_country) {
-        d_countries.add(p_country);
-    }
-
-    /**
-     * Method to add a continent to the list of continents
-     *
-     * @param p_continent
-     */
-    public void addContinent(Continent p_continent) {
-        d_continents.add(p_continent);
-    }
-
-    /**
      * Method to return an object of type Continent for the provided continent Name.
      *
      * @param p_continentName

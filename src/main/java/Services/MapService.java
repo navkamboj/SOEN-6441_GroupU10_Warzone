@@ -391,6 +391,7 @@ public class MapService {
 
     /**
      * Method to control modify country command flow i.e. to Add/Remove a country
+     *
      * @param p_gameState Gamestate model class object
      * @param p_operation Add/Remove operation
      * @param p_argument Arguments provided for the command operation
@@ -411,6 +412,7 @@ public class MapService {
 
     /**
      * Method to add/remove neighbor on Map object
+     *
      * @param p_mapToBeModified Map object to be modified
      * @param p_operationType Add/remove operation
      * @param p_argument Arguments provided for the command operation
@@ -447,5 +449,4 @@ public class MapService {
             p_gameState.getD_map().setD_mapFile(l_mapFileName);
         }
     }
-
 }

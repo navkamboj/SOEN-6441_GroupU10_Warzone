@@ -15,11 +15,6 @@ public class GameState {
     List<Player> d_playerList;
 
     /**
-     * List of Non-executed orders.
-     */
-    List<Order> d_nonExecutedOrderList;
-
-    /**
      * Data member to store Map object
      */
     Map d_map;
@@ -77,21 +72,4 @@ public class GameState {
     public void setD_playerList(List<Player> p_playerList) {
         this.d_playerList = p_playerList;
     }
-
-    /**
-     * Getter method to retrieve non-executed order list
-     * @return Non-executed order list
-     */
-    public List<Order> getD_nonExecutedOrderList() {
-        return d_nonExecutedOrderList;
-    }
-
-    /**
-     * Setter method to set non-executed orders
-     * @param p_nonExecutedOrderList
-     */
-    public void setD_nonExecutedOrderList(List<Order> p_nonExecutedOrderList) {
-        this.d_nonExecutedOrderList = p_nonExecutedOrderList;
-    }
-
 }

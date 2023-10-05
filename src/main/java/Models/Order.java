@@ -48,24 +48,6 @@ public class Order {
     }
 
     /**
-     * getter method to get order actions.
-     *
-     * @return order action
-     */
-    public String getD_orderAction() {
-        return d_orderAction;
-    }
-
-    /**
-     * setter method to set the order actions.
-     *
-     * @param p_orderAction order action
-     */
-    public void setD_orderAction(String p_orderAction) {
-        this.d_orderAction = p_orderAction;
-    }
-
-    /**
      * getter method to get the target country name.
      * @return target country name
      */
@@ -80,24 +62,6 @@ public class Order {
      */
     public void setD_targetCountry(String p_targetCountry) {
         this.d_targetCountry = p_targetCountry;
-    }
-
-    /**
-     * getter method to get the source country name.
-     *
-     * @return source country name
-     */
-    public String getD_sourceCountry() {
-        return d_sourceCountry;
-    }
-
-    /**
-     * setter method to set the source country name.
-     *
-     * @param p_sourceCountry source country name
-     */
-    public void setD_sourceCountry(String p_sourceCountry) {
-        this.d_sourceCountry = p_sourceCountry;
     }
 
     /**
