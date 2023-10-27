@@ -48,6 +48,21 @@ public class Player {
     Integer d_noOfAllocatedArmies;
 
     /**
+     * More orders to be accepted for player.
+     */
+    boolean d_isMoreOrders;
+
+    /**
+     * If the card per turn is already assigned.
+     */
+    boolean d_oneCardPerTurn = false;
+
+    /**
+     * List of players with whom negotiation is done hence can't attack.
+     */
+    List<Player> d_negotiatedWith = new ArrayList<Player>();
+
+    /**
      * This is default constructor.
      */
     public Player() {
@@ -63,6 +78,42 @@ public class Player {
         this.d_name = p_playerName;
         this.d_noOfAllocatedArmies = 0;
         this.d_executeOrders = new ArrayList<>();
+        this.d_isMoreOrders = true;
+    }
+
+    /**
+     * Clears all the negotiations from the last turn.
+     */
+    public void clearNegotiation(){
+        d_negotiatedWith.clear();
+    }
+
+    /**
+     * Sets the Card per turn to the allocated bool.
+     *
+     * @param p_value Bool to Set.
+     */
+    public void setD_oneCardPerTurn(Boolean p_value){
+        this.d_oneCardPerTurn = p_value;
+    }
+
+    /**
+     * Gets info if more orders from player are to be accepted or not.
+     *
+     * @return boolean true if player wants to give more orders or else false
+     */
+    public boolean getD_moreOrders() {
+        return d_isMoreOrders;
+    }
+
+    /**
+     * Sets info if more orders from player are to be accepted or not.
+     *
+     * @param p_moreOrders Boolean true if player wants to give more order or else
+     *                     false
+     */
+    public void setD_moreOrders(boolean p_moreOrders) {
+        this.d_isMoreOrders = p_moreOrders;
     }
 
     /**
