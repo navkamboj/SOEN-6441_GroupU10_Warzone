@@ -354,4 +354,18 @@ public class PlayerService{
         }
         return l_differentunexecutedOrder != 0;
     }
+
+    /**
+     * Resets each players information for accepting further orders.
+     *
+     * @param p_playersList players involved in game
+     */
+    public void resetPlayerFlag(List<Player> p_playersList) {
+        for (Player l_player : p_playersList) {
+            if (!l_player.getPlayerName().equalsIgnoreCase("Neutral"))
+                l_player.setD_moreOrders(true);
+            l_player.setD_oneCardPerTurn(false);
+            l_player.clearNegotiation();
+        }
+    }
 }
