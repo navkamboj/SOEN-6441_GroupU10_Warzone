@@ -33,7 +33,7 @@ public class PlayerService{
            boolean l_checkunique = true;
            if(!CommonUtil.isEmptyCollection(p_allExistingPlayersList)){
              for(Player l_player : p_allExistingPlayersList){
-                if(l_player.getPlayerName().equalsIgnoreCase(p_playerName)){
+                if(l_player.getD_playerName().equalsIgnoreCase(p_playerName)){
                    l_checkunique=false;
                    break;
                  }
@@ -81,7 +81,7 @@ public class PlayerService{
                                boolean p_playerNameExist){
           if(p_playerNameExist){
               for(Player l_player:p_allExistingPlayersList){
-                 if(l_player.getPlayerName().equalsIgnoreCase(p_newPlayerName))
+                 if(l_player.getD_playerName().equalsIgnoreCase(p_newPlayerName))
                  {
                      p_updatePlayers.remove(l_player);
                      System.out.println("Player: " + p_newPlayerName + " has been removed successfully.");
@@ -179,7 +179,7 @@ public class PlayerService{
                             l_player.setD_ownedContinents(new ArrayList<>());
 
                         l_player.getD_ownedContinents().add(l_continent);
-                        System.out.println("Player : " + l_player.getPlayerName() + " is assigned continent : "
+                        System.out.println("Player : " + l_player.getD_playerName() + " is assigned continent : "
                                 + l_continent.getD_continentName());
                     }
                 }
@@ -209,7 +209,7 @@ public class PlayerService{
                 if (l_player.getD_ownedCountries() == null)
                     l_player.setD_ownedCountries(new ArrayList<>());
                 l_player.getD_ownedCountries().add(l_countryListRandom);
-                System.out.println("Player : " + l_player.getPlayerName() + " is assigned  : "
+                System.out.println("Player : " + l_player.getD_playerName() + " is assigned  : "
                         + l_countryListRandom.getD_countryName());
                 l_notAssignedCountries.remove(l_countryListRandom);
             }
@@ -288,7 +288,7 @@ public class PlayerService{
     public void armiesAssign(GameState p_gameState) {
         for (Player l_player : p_gameState.getD_playerList()) {
             Integer l_armies = this.armiesCountForPlayer(l_player);
-            System.out.println("Player : " + l_player.getPlayerName() + " has assigned " + l_armies + " armies");
+            System.out.println("Player : " + l_player.getD_playerName() + " has assigned " + l_armies + " armies");
 
             l_player.setD_noOfAllocatedArmies(l_armies);
         }
@@ -362,10 +362,24 @@ public class PlayerService{
      */
     public void resetPlayerFlag(List<Player> p_playersList) {
         for (Player l_player : p_playersList) {
-            if (!l_player.getPlayerName().equalsIgnoreCase("Neutral"))
+            if (!l_player.getD_playerName().equalsIgnoreCase("Neutral"))
                 l_player.setD_moreOrders(true);
             l_player.setD_oneCardPerTurn(false);
             l_player.clearNegotiation();
         }
+    }
+
+    /**
+     * Verify if the player wants to give further order.
+     *
+     * @param p_playersList Players in game
+     * @return boolean if there are more orders to execute
+     */
+    public boolean checkForMoreOrders(List<Player> p_playersList) {
+        for (Player l_player : p_playersList) {
+            if(l_player.getD_moreOrders())
+                return true;
+        }
+        return false;
     }
 }

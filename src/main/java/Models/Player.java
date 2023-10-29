@@ -1,8 +1,7 @@
 package Models;
 
-import Constants.GameConstants;
-import Services.PlayerService;
-import Utils.Command;
+import Exceptions.InvalidCommand;
+import Exceptions.InvalidMap;
 import Utils.CommonUtil;
 
 import java.io.IOException;
@@ -61,6 +60,16 @@ public class Player {
      * List of players with whom negotiation is done hence can't attack.
      */
     List<Player> d_negotiatedWith = new ArrayList<Player>();
+
+    /**
+     * Name of the card owned by player
+     */
+    List<String> d_cardsOwned = new ArrayList<String>();
+
+    /**
+     * String to store log for individual Player methods.
+     */
+    String d_playerLog;
 
     /**
      * This is default constructor.
@@ -138,7 +147,7 @@ public class Player {
      *
      * @return player name.
      */
-    public String getPlayerName() {
+    public String getD_playerName() {
         return d_name;
     }
 
@@ -147,8 +156,17 @@ public class Player {
      *
      * @param p_name set player name.
      */
-    public void setPlayerName(String p_name) {
+    public void setD_playerName(String p_name) {
         this.d_name = p_name;
+    }
+
+    /**
+     * Retrieves the player logs.
+     *
+     * @return Logs of player.
+     */
+    public String getD_playerLog(){
+        return this.d_playerLog;
     }
 
     /**
@@ -254,21 +272,8 @@ public class Player {
      *
      * @throws IOException exception in reading inputs from user
      */
-    public void issue_order() throws IOException {
-        Scanner l_scannerObject = new Scanner(System.in);
-
-        System.out.println("\nPlease input the command to deploy reinforcement forces onto the game map for the " +
-                "player : " + this.getPlayerName());
-
-        String l_enteredCommand = l_scannerObject.nextLine();
-        PlayerService l_playerService = new PlayerService();
-        Command l_command = new Command(l_enteredCommand);
-
-        if (l_command.getBaseCommand().equalsIgnoreCase("deploy") && l_enteredCommand.split(" ").length == 3) {
-            l_playerService.deployOrderCreation(l_enteredCommand, this);
-        } else {
-            System.out.println(GameConstants.INVALID_COMMAND_DEPLOY_ORDER);;
-        }
+    public void issue_order(IssueOrderPhase p_issueOrderPhase) throws InvalidCommand, IOException, InvalidMap {
+        p_issueOrderPhase.inputOrder(this);
     }
 
     /**
@@ -284,5 +289,32 @@ public class Player {
         Order l_order = this.d_executeOrders.get(0);
         this.d_executeOrders.remove(l_order);
         return l_order;
+    }
+
+    /**
+     * Returns the cards owned by the game player.
+     *
+     * @return List of cards of string type
+     */
+    public List<String> getD_cardsOwned(){
+        return this.d_cardsOwned;
+    }
+
+    /**
+     * Verifies if more orders are to be accepted for player in further turn.
+     *
+     * @throws IOException exception to handle I/O operation
+     */
+    void checkForMoreOrders() {
+        Scanner l_scanner = new Scanner(System.in);
+        System.out.println("\nDo you want to give more orders for: " + this.getD_playerName()
+                + " in further turns ? \nEnter Y/N");
+        String l_checkNextOrder = l_scanner.nextLine();
+        if (l_checkNextOrder.equalsIgnoreCase("Y") || l_checkNextOrder.equalsIgnoreCase("N")) {
+            this.setD_moreOrders(l_checkNextOrder.equalsIgnoreCase("Y") ? true : false);
+        } else {
+            System.err.println("Enter a valid Input");
+            this.checkForMoreOrders();
+        }
     }
 }

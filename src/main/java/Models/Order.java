@@ -98,7 +98,7 @@ public class Order {
                 }
                 else {
                     System.out.println("\nOrder has not been executed as target country provided in the deploy command"
-                            + " does not belong to player : " + p_player.getPlayerName());
+                            + " does not belong to player : " + p_player.getD_playerName());
                 }
                 break;
             }

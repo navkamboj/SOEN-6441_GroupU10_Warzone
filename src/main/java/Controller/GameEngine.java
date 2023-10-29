@@ -42,129 +42,42 @@ public class GameEngine {
     PlayerService d_playerService = new PlayerService();
 
     /**
+     *	Current gameplay phase according to the state pattern.
+     */
+    Phase d_presentPhase = new StartUpPhase(this, d_gameState);
+
+    /**
+     * Method to set the current phase
+     *
+     * @param p_phase new Phase in Game context
+     */
+    private void setD_PresentPhase(Phase p_phase){
+        d_presentPhase = p_phase;
+    }
+
+    /**
+     * Getter method to retrieve current phase
+     *
+     * @return current Phase of Game Context
+     */
+    public Phase getD_PresentPhase(){
+        return d_presentPhase;
+    }
+
+    /**
      * The main function responsible for receiving user commands and directing them to their appropriate
      * logical pathways.
      *
      * @param p_args the program doesn't use default command line arguments
      */
     public static void main(String[] p_args) {
-        GameEngine l_game = new GameEngine();
-        l_game.initGame();
+        GameEngine l_gameEngine = new GameEngine();
+
+        l_gameEngine.getD_PresentPhase().getD_gameState().logUpdate("Loading the Game ......"+System.lineSeparator(), "start");
+        l_gameEngine.setD_logGameEngine("Game Startup Phase", "phase");
+        l_gameEngine.getD_PresentPhase().initPhase();
     }
 
-    /**
-     * Handles the commands.
-     *
-     * @param p_enteredCommand
-     * @throws IOException
-     */
-    public void commandHandler(String p_enteredCommand) throws IOException, InvalidMap, InvalidCommand {
-
-        Command l_command = new Command(p_enteredCommand);
-        String l_baseCommand = l_command.getBaseCommand();
-        boolean l_isMapLoaded = d_gameState.getD_map() != null;
-
-        switch (l_baseCommand) {
-            case "gameplayer" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute Game Player operation, please execute `loadmap` first" +
-                            " before adding game players");
-                    break;
-                }
-                modifyPlayers(l_command);
-                break;
-            }
-            case "loadmap" : {
-                executeMapLoad(l_command);
-                break;
-            }
-            case "savemap" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute save operation, Please `editmap` first");
-                    break;
-                }
-                executeMapSave(l_command);
-                break;
-            }
-            case "editcontinent" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("Can not Edit Continent, please execute `editmap` first");
-                    break;
-                }
-                executeContinentEdit(l_command);
-                break;
-            }
-            case "editmap" : {
-                executeMapEdit(l_command);
-                break;
-            }
-            case "validatemap" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute validate operation, Please `loadmap` & `editmap` first");
-                    break;
-                }
-                executeMapValidation(l_command);
-                break;
-            }
-            case "editcountry" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute Edit Country operation, please execute `editmap` first");
-                    break;
-                }
-                executeCountryEdit(l_command);
-                break;
-            }
-            case "editneighbor" : {
-                if (!l_isMapLoaded) {
-                    System.out.println("No map found to execute Edit Neighbors operation, please execute `editmap` first");
-                    break;
-                }
-                executeNeighbourEdit(l_command);
-                break;
-            }
-            case "assigncountries" : {
-                assignCountries(l_command);
-                break;
-            }
-            case "showmap" : {
-                MapView l_mapView = new MapView(d_gameState);
-                l_mapView.showMap();
-                break;
-            }
-            case "exit" : {
-                System.out.println("Exit Command Entered");
-                System.exit(0);
-                break;
-            }
-            default : {
-                System.out.println("Invalid Command");
-                break;
-            }
-        }
-    }
-
-    /**
-     * This function triggers the CommandLineInterface to receive user commands and links them to their corresponding
-     * action handlers.
-     */
-    public void initGame() {
-        Scanner l_scannerObject = new Scanner(System.in);
-        while(true) {
-            try {
-                System.out.println("Enter the game commands or enter 'exit' to quit the game\n");
-                String l_enteredCommand = l_scannerObject.nextLine();
-
-                commandHandler(l_enteredCommand);
-            }
-            catch (IOException l_ioException) {
-                l_ioException.printStackTrace();
-            } catch (InvalidMap l_invalidMapException) {
-                l_invalidMapException.printStackTrace();
-            } catch (InvalidCommand l_invalidCommandException) {
-                l_invalidCommandException.printStackTrace();
-            }
-        }
-    }
 
     public void setD_logGameEngine(String p_logGameEngine, String p_logType){}
 
@@ -383,52 +296,12 @@ public class GameEngine {
             }
         }
     }
-
     /**
-     * This function validates the "assignCountries" method to ensure the presence of required arguments and
-     * delegates control to the module responsible for assigning countries to players.
-     *
-     * @param p_command user entered command
-     * @throws InvalidCommand exception for invalid commands
-     * @throws IOException for Input/Output operation failures
+     * This methods updates the current phase to Order Execution Phase as per State Pattern.
      */
-    public void assignCountries(Command p_command) throws InvalidCommand,IOException{
-        List<Map<String, String>> l_listOfOperations =p_command.getParametersAndOperations();
-        if(CommonUtil.isEmptyCollection(l_listOfOperations)){
-            d_playerService.countryAssign(d_gameState);
-            d_playerService.colorAssign(d_gameState);
-
-            while (!CommonUtil.isEmptyCollection(d_gameState.getD_playerList())) {
-                System.out.println("\n---------- Main Game Loop Starting ----------");
-
-                d_playerService.armiesAssign(d_gameState);
-
-                while (d_playerService.existanceOfUnassignedArmies(d_gameState.getD_playerList())) {
-                    for (Player l_player : d_gameState.getD_playerList()) {
-                        if (l_player.getD_noOfAllocatedArmies() != null && l_player.getD_noOfAllocatedArmies() != 0)
-                            l_player.issue_order();
-                    }
-                }
-
-                while (d_playerService.existanceOfUnexecutedOrder(d_gameState.getD_playerList())) {
-                    for (Player l_player : d_gameState.getD_playerList()) {
-                        Order l_order = l_player.next_order();
-                        if (l_order != null)
-                            l_order.execute(d_gameState, l_player);
-                    }
-                }
-                MapView l_viewOfMap = new MapView(d_gameState, d_gameState.getD_playerList());
-                l_viewOfMap.showMap();
-
-                System.out.println("Please enter 'Y/y' to proceed to the next turn, or 'N/n' to decline.");
-                Scanner l_reader = new Scanner(System.in);
-                String l_continue = l_reader.nextLine();
-                if (l_continue.equalsIgnoreCase("N"))
-                    break;
-            }
-        }
-        else {
-            throw new InvalidCommand(GameConstants.INVALID_COMMAND_ASSIGNCOUNTRIES);
-        }
+    public void setOrderExecutionPhase(){
+        this.setD_logGameEngine("Order Execution Phase", "phase");
+//        setD_PresentPhase(new OrderExecutionPhase(this, d_gameState));
+        getD_PresentPhase().initPhase();
     }
 }
