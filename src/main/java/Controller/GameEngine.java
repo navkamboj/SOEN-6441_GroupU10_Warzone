@@ -5,6 +5,7 @@ import Exceptions.InvalidMap;
 import Exceptions.InvalidCommand;
 import Models.GameState;
 import Models.Order;
+import Models.Phase;
 import Models.Player;
 import Services.MapService;
 import Services.PlayerService;
@@ -164,6 +165,8 @@ public class GameEngine {
             }
         }
     }
+
+    public void setD_logGameEngine(String p_logGameEngine, String p_logType){}
 
     /**
      * Validation of the "editmap" command involves checking for the necessary arguments and directing control to the

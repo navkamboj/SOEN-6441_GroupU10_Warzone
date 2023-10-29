@@ -253,6 +253,13 @@ public abstract class Phase {
      */
     public abstract void initPhase();
 
+    /**
+     * This method is used to Log and Print if the command cannot be executed in current phase.
+     */
+    public void outputStateInvalidCommand(){
+        d_gameEngine.setD_logGameEngine("Invalid command for the Current State", "effect");
+    }
+
     private void commandHandler(String p_enteredCommand, Player p_player) throws InvalidMap, InvalidCommand, IOException {
         Command l_command = new Command(p_enteredCommand);
         String l_baseCommand = l_command.getBaseCommand();
