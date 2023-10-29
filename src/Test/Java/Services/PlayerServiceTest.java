@@ -3,11 +3,9 @@ package Services;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.Transient;
 import java.io.*;
 import java.util.*;
 
-import Exceptions.InvalidCommand;
 import Models.Continent;
 import Models.Country;
 import Models.GameState;
@@ -115,7 +113,7 @@ public class PlayerServiceTest {
     public void testAddingPlayers(){
      assertFalse(CommonUtil.isEmptyCollection(d_currentlyAvailablePlayersList));
      List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Yatish");
-     assertEquals("Yatish",l_updatingPlayers.get(2).getPlayerName());
+     assertEquals("Yatish",l_updatingPlayers.get(2).getD_playerName());
 
      System.setOut(new PrintStream(d_outputStreamContent));
      d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Nihal");

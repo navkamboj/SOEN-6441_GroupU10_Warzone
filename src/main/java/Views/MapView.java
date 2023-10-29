@@ -239,7 +239,7 @@ public class MapView {
      * @param p_player the player object.
      */
     private void retrieveInfoOfPlayer(Integer p_index, Player p_player){
-        String l_infoOfPlayer = String.format("%02d. %-8s %s", p_index, p_player.getPlayerName(), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
+        String l_infoOfPlayer = String.format("%02d. %-8s %s", p_index, p_player.getD_playerName(), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
         System.out.println(l_infoOfPlayer);
     }
 
