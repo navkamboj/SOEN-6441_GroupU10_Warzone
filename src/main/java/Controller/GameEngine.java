@@ -3,10 +3,7 @@ package Controller;
 import Constants.GameConstants;
 import Exceptions.InvalidMap;
 import Exceptions.InvalidCommand;
-import Models.GameState;
-import Models.Order;
-import Models.Phase;
-import Models.Player;
+import Models.*;
 import Services.MapService;
 import Services.PlayerService;
 import Utils.Command;
@@ -156,41 +153,6 @@ public class GameEngine {
                         System.out.println(d_gameState.getD_errorMessage());
                 } else {
                     throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEMAP);
-                }
-            }
-        }
-    }
-
-    /**
-     * Validation for the "loadmap" command includes confirming the presence of the required arguments and then
-     * directing control to the model for the actual processing.
-     *
-     * @param p_command command entered by the user
-     * @throws InvalidCommand indicates when command is invalid
-     */
-    private void executeMapLoad(Command p_command) throws InvalidCommand {
-        List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
-
-        if (null == l_operations_list || l_operations_list.isEmpty()) {
-            throw new InvalidCommand(GameConstants.INVALID_COMMAND_LOADMAP);
-        } else {
-            for (Map<String, String> l_map : l_operations_list) {
-                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
-                    try {
-
-                        // Loads the map if it is valid otherwise resets the game state
-                        Models.Map l_mapToLoad = d_mapService.mapLoad(d_gameState,
-                                l_map.get(GameConstants.ARGUMENTS));
-                        if (l_mapToLoad.Validate()) {
-                            System.out.println("Map has been successfully loaded. \n");
-                        } else {
-                            d_mapService.mapReset(d_gameState);
-                        }
-                    } catch (InvalidMap l_e) {
-                        d_mapService.mapReset(d_gameState);
-                    }
-                } else {
-                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_LOADMAP);
                 }
             }
         }
