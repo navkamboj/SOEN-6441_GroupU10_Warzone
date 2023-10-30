@@ -259,11 +259,20 @@ public class GameEngine {
         }
     }
     /**
-     * This methods updates the current phase to Order Execution Phase as per State Pattern.
+     * This method updates the present phase to Order Execution Phase as per the State Pattern.
      */
     public void setOrderExecutionPhase(){
         this.setD_logGameEngine("Order Execution Phase", "phase");
-//        setD_PresentPhase(new OrderExecutionPhase(this, d_gameState));
+        setD_PresentPhase(new OrderExecutionPhase(this, d_gameState));
+        getD_PresentPhase().initPhase();
+    }
+
+    /**
+     * This method updates the present phase to Issue Order Phase as per the State Pattern.
+     */
+    public void setIssueOrderPhase(){
+        this.setD_logGameEngine("Issue Order Phase", "phase");
+        setD_PresentPhase(new IssueOrderPhase(this, d_gameState));
         getD_PresentPhase().initPhase();
     }
 }
