@@ -6,7 +6,7 @@ import Models.LogEntryBuffer;
 /**
  * Model class to manage the GameState functions
  *
- * @author Navjot Kamboj
+ * @author Navjot Kamboj, Yatish Chutani
  * @version 1.0.0
  */
 public class GameState {

@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * This abstract class declares abstract methods for each game phase
  *
- * @author Navjot Kamboj
+ * @author Navjot Kamboj, Yatish Chutani
  * @version 2.0.0
  */
 public abstract class Phase {
