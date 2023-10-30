@@ -23,6 +23,12 @@ import java.util.Scanner;
  */
 public class StartUpPhase extends Phase {
 
+    /**
+     * This is a constructor that init the GameEngine context in Phase class.
+     *
+     * @param p_gameEngine GameEngine Context
+     * @param p_gameState current Game State
+     */
     public StartUpPhase(GameEngine p_gameEngine, GameState p_gameState) {
         super(p_gameEngine, p_gameState);
     }
@@ -46,9 +52,31 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEditContinent(Command p_command, Player p_player) throws IOException, InvalidCommand, InvalidMap {
-    //body
+        if (!l_isMapLoaded) {
+            d_gameEngine.setD_logGameEngine("Can not do edit continent at this stage, please perform" +
+                    " `editmap` command first.", "effect");
+        }
+
+        List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+        if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCONTINENT);
+        } else {
+            for (Map<String, String> l_map : l_list_of_operations) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_mapService.editFunctionality(d_gameState, l_map.get(GameConstants.ARGUMENTS),
+                            l_map.get(GameConstants.OPERATION), 1);
+                } else {
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCONTINENT);
+                }
+            }
+        }
     }
 
     @Override
@@ -143,12 +171,50 @@ public class StartUpPhase extends Phase {
 
     @Override
     protected void doEditCountry(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
-    //body
+        if (!l_isMapLoaded) {
+            d_gameEngine.setD_logGameEngine("Can not do edit country at this stage, please perform" +
+                    " `editmap` command first.", "effect");
+        }
+
+        List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+        if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCOUNTRY);
+        } else {
+            for (Map<String, String> l_map : l_list_of_operations) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_mapService.editFunctionality(d_gameState, l_map.get(GameConstants.ARGUMENTS),
+                            l_map.get(GameConstants.OPERATION), 2);
+                } else {
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITCOUNTRY);
+                }
+            }
+        }
     }
 
     @Override
     protected void doEditNeighbour(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
-    //body
+        if (!l_isMapLoaded) {
+            d_gameEngine.setD_logGameEngine("Can not do edit neighbor at this stage, please perform" +
+                    " `editmap` command first.", "effect");
+        }
+
+        List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+        if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITNEIGHBOUR);
+        } else {
+            for (Map<String, String> l_map : l_list_of_operations) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_mapService.editFunctionality(d_gameState, l_map.get(GameConstants.ARGUMENTS),
+                            l_map.get(GameConstants.OPERATION), 3);
+                } else {
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_EDITNEIGHBOUR);
+                }
+            }
+        }
     }
 
     @Override
