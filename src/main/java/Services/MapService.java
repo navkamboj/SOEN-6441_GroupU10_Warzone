@@ -1,6 +1,7 @@
 package Services;
 
 import Constants.GameConstants;
+import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
 import Models.Continent;
 import Models.Country;
@@ -337,38 +338,23 @@ public class MapService {
      * @return Map object with updated continents
      * @throws InvalidMap exception
      */
-    public Map addOrRemoveContinents(Map p_mapToBeModified, String p_operationType,
+    public Map addOrRemoveContinents(GameState p_gameState, Map p_mapToBeModified, String p_operationType,
                                      String p_argument) throws InvalidMap {
-
-        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2) {
-            p_mapToBeModified.addContinent(p_argument.split(" ")[0], Integer.parseInt(p_argument.split(" ")[1]));
-        } else if (p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==1) {
-            p_mapToBeModified.removeContinent(p_argument.split(" ")[0]);
-        } else {
-            System.out.println("Couldn't "+p_operationType+" the continent");
+        try {
+            if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2) {
+                p_mapToBeModified.addContinent(p_argument.split(" ")[0], Integer.parseInt(p_argument.split(" ")[1]));
+                this.setD_LogMapService("Continent "+ p_argument.split(" ")[0]+ " successfully added!", p_gameState);
+            } else if (p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==1) {
+                p_mapToBeModified.removeContinent(p_argument.split(" ")[0]);
+                this.setD_LogMapService("Continent "+ p_argument.split(" ")[0]+ " successfully removed!", p_gameState);
+            } else {
+                throw new InvalidMap("Continent "+p_argument.split(" ")[0]+" couldn't be added or removed." +
+                        " Invalid Command Passed, hence changes are not done.");
+            }
+        } catch (InvalidMap | NumberFormatException l_exception) {
+            this.setD_LogMapService(l_exception.getMessage(), p_gameState);
         }
-
         return p_mapToBeModified;
-    }
-    /**
-     * Method for modifying a chosen map by adding or removing continents using commands within the editmap function
-     * @param p_gameState Gamestate model class object
-     * @param p_argument Arguments provided for the command operation
-     * @param p_operationType Add/remove type operation
-     * @throws IOException given when the filename is not valid / it doesn't exist.
-     * @throws InvalidMap Exception
-     */
-    public void modifyContinent(GameState p_gameState, String p_argument, String p_operationType) throws IOException, InvalidMap {
-        String l_mapName = p_gameState.getD_map().getD_mapFile();
-        Map l_mapToBeModified = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
-                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.mapLoad(p_gameState, l_mapName)
-                : p_gameState.getD_map();
-
-        if(!CommonUtil.isNull(l_mapToBeModified)) {
-            Map l_modifiedMap = addOrRemoveContinents(l_mapToBeModified, p_operationType, p_argument);
-            p_gameState.setD_map(l_modifiedMap);
-            p_gameState.getD_map().setD_mapFile(l_mapName);
-        }
     }
 
     /**
@@ -379,36 +365,21 @@ public class MapService {
      * @return Modified map object
      * @throws InvalidMap
      */
-    public Map addOrRemoveCountry(Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
-        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
-            p_mapToBeModified.addCountry(p_argument.split(" ")[0], p_argument.split(" ")[1]);
-        }else if(p_operationType.equalsIgnoreCase("remove")&& p_argument.split(" ").length==1){
-            p_mapToBeModified.removeCountry(p_argument.split(" ")[0]);
-        }else{
-            System.out.println("Changes can't be saved !!");
+    public Map addOrRemoveCountry(GameState p_gameState, Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
+        try {
+            if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
+                p_mapToBeModified.addCountry(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+                this.setD_LogMapService("Country "+ p_argument.split(" ")[0]+ " successfully added!", p_gameState);
+            }else if(p_operationType.equalsIgnoreCase("remove")&& p_argument.split(" ").length==1){
+                p_mapToBeModified.removeCountry(p_argument.split(" ")[0]);
+                this.setD_LogMapService("Country "+ p_argument.split(" ")[0]+ " successfully removed!", p_gameState);
+            }else{
+                throw new InvalidMap("Country "+p_argument.split(" ")[0]+" could not be "+ p_operationType +"ed!");
+            }
+        } catch (InvalidMap | NumberFormatException l_exception) {
+            this.setD_LogMapService(l_exception.getMessage(), p_gameState);
         }
         return p_mapToBeModified;
-    }
-
-    /**
-     * Method to control modify country command flow i.e. to Add/Remove a country
-     *
-     * @param p_gameState Gamestate model class object
-     * @param p_operation Add/Remove operation
-     * @param p_argument Arguments provided for the command operation
-     * @throws InvalidMap exception
-     */
-    public void modifyCountry(GameState p_gameState, String p_operation, String p_argument) throws InvalidMap{
-        String l_mapName= p_gameState.getD_map().getD_mapFile();
-        Map l_mapToBeModified = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
-                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.mapLoad(p_gameState, l_mapName)
-                : p_gameState.getD_map();
-
-        if(!CommonUtil.isNull(l_mapToBeModified)) {
-            Map l_modifiedMap = addOrRemoveCountry(l_mapToBeModified, p_operation, p_argument);
-            p_gameState.setD_map(l_modifiedMap);
-            p_gameState.getD_map().setD_mapFile(l_mapName);
-        }
     }
 
     /**
@@ -420,34 +391,69 @@ public class MapService {
      * @return modified map object
      * @throws InvalidMap exception
      */
-    public Map addOrRemoveNeighbor(Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
-        if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
-            p_mapToBeModified.addCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
-        }else if(p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==2){
-            p_mapToBeModified.removeCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
-        }else{
-            System.out.println("Changes can't be saved !!");
+    public Map addOrRemoveNeighbor(GameState p_gameState, Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
+        try {
+            if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
+                p_mapToBeModified.addCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+                this.setD_LogMapService("Neighbour Pair "+p_argument.split(" ")[0]+" "+p_argument.split(" ")[1]+" successfully added!", p_gameState);
+            }else if(p_operationType.equalsIgnoreCase("remove") && p_argument.split(" ").length==2){
+                p_mapToBeModified.removeCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
+                this.setD_LogMapService("Neighbour Pair "+p_argument.split(" ")[0]+" "+p_argument.split(" ")[1]+" successfully removed!", p_gameState);
+            }else{
+                throw new InvalidMap("Neighbour could not be "+ p_operationType +"ed!");
+            }
+        } catch (InvalidMap l_exception) {
+            this.setD_LogMapService(l_exception.getMessage(), p_gameState);
         }
         return p_mapToBeModified;
     }
 
     /**
-     * Method for modifying a chosen map by adding or removing neighbors using commands
-     * @param p_gameState Gamestate object
-     * @param p_operation Add/Remove operation type
-     * @param p_argument Arguments provided for the command operation
-     * @throws InvalidMap exception
+     * Manages the Edit Operations: editcontinent, editcountry, editneighbor.
+     *
+     * @param p_gameState Object of the current Game State.
+     * @param p_argument Arguments for the command operation.
+     * @param p_operation Add or Remove operation to be performed.
+     * @param p_switchParameter Type of Edit Operation.
+     * @throws IOException Exception.
+     * @throws InvalidMap invalidmap exception.
+     * @throws InvalidCommand invalid command exception
      */
-    public void modifyNeighbor(GameState p_gameState, String p_operation, String p_argument) throws InvalidMap{
-        String l_mapFileName= p_gameState.getD_map().getD_mapFile();
-        Map l_mapToBeUpdated = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
-                && CommonUtil.isNull(p_gameState.getD_map().getD_countries())) ? this.mapLoad(p_gameState, l_mapFileName)
-                : p_gameState.getD_map();
+    public void editFunctionality(GameState p_gameState, String p_argument, String p_operation, Integer p_switchParameter) throws IOException, InvalidMap, InvalidCommand {
+        Map l_editedMap;
+        String l_mapFileName = p_gameState.getD_map().getD_mapFile();
+        Map l_mapToBeEdited = (CommonUtil.isNull(p_gameState.getD_map().getD_continents())
+                && CommonUtil.isNull(p_gameState.getD_map().getD_countries()))
+                ? this.mapLoad(p_gameState, l_mapFileName) : p_gameState.getD_map();
 
-        if(!CommonUtil.isNull(l_mapToBeUpdated)) {
-            Map l_updatedMap = addOrRemoveNeighbor(l_mapToBeUpdated, p_operation, p_argument);
-            p_gameState.setD_map(l_updatedMap);
+        // Editing Logic for Continent, Country And Neighbor
+        if(!CommonUtil.isNull(l_mapToBeEdited)){
+            switch(p_switchParameter){
+                case 1:
+                    l_editedMap = addOrRemoveContinents(p_gameState, l_mapToBeEdited, p_operation, p_argument);
+                    break;
+                case 2:
+                    l_editedMap = addOrRemoveCountry(p_gameState, l_mapToBeEdited, p_operation, p_argument);
+                    break;
+                case 3:
+                    l_editedMap = addOrRemoveNeighbor(p_gameState, l_mapToBeEdited, p_operation, p_argument);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + p_switchParameter);
+            }
+            p_gameState.setD_map(l_editedMap);
             p_gameState.getD_map().setD_mapFile(l_mapFileName);
         }
+    }
+
+    /**
+     * Setting up logs for map editor methods.
+     *
+     * @param p_MapServiceLog String containing log
+     * @param p_gameState current gamestate instance
+     */
+    public void setD_LogMapService(String p_MapServiceLog, GameState p_gameState){
+        System.out.println(p_MapServiceLog);
+        p_gameState.logUpdate(p_MapServiceLog, "effect");
     }
 }
