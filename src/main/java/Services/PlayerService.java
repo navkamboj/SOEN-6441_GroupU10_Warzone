@@ -3,7 +3,6 @@ package Services;
 import Models.Player;
 import Models.Country;
 import Models.GameState;
-import Models.Order;
 import Models.Continent;
 
 import Constants.GameConstants;
@@ -220,44 +219,44 @@ public class PlayerService{
         }
     }
 
-    /**
-     * When player entered the command for deploy create deployorder
-     *
-     * @param p_enteredCommand Command of the player
-     * @param p_player player by whom deploy order is created
-     */
-    public void deployOrderCreation(String p_enteredCommand, Player p_player) {
-        List<Order> l_orderList = CommonUtil.isEmptyCollection(p_player.getD_executeOrders()) ? new ArrayList<>()
-                : p_player.getD_executeOrders();
-        String l_nameOfCountry = p_enteredCommand.split(" ")[1];
-        String l_totalNoOfArmies = p_enteredCommand.split(" ")[2];
-        if (deployOrderValidation (p_player, l_totalNoOfArmies)) {
-            System.out.println("Number of armies in deploy order are greater than player's allocated armies so order" +
-                    " can not be executed");
-        } else {
-            Order l_objectOrder = new Order(p_enteredCommand.split(" ")[0], l_nameOfCountry,
-                    Integer.parseInt(l_totalNoOfArmies));
-            l_orderList.add(l_objectOrder);
-            p_player.setD_executeOrders(l_orderList);
-            Integer l_allocatedArmies = p_player.getD_noOfAllocatedArmies() - Integer.parseInt(l_totalNoOfArmies);
-            p_player.setD_noOfAllocatedArmies(l_allocatedArmies);
-            System.out.println("Order for execution has been added to queue");
-        }
-    }
-
-    /**
-     * This method is used to validate that player can not deploy more armies than allocated armies to particular player
-     *
-     * @param p_player player by whom deploy order is created
-     * @param p_totalNoOfArmies total number of armies that will be deployed
-     * @return boolean return true if number of deployed armies are greater than number of allocated armies
-     */
-    public boolean deployOrderValidation(Player p_player, String p_totalNoOfArmies) {
-        if(p_player.getD_noOfAllocatedArmies() >= Integer.parseInt(p_totalNoOfArmies))
-            return false;
-        else
-            return true;
-    }
+//    /**
+//     * When player entered the command for deploy create deployorder
+//     *
+//     * @param p_enteredCommand Command of the player
+//     * @param p_player player by whom deploy order is created
+//     */
+//    public void deployOrderCreation(String p_enteredCommand, Player p_player) {
+//        List<Order> l_orderList = CommonUtil.isEmptyCollection(p_player.getD_executeOrders()) ? new ArrayList<>()
+//                : p_player.getD_executeOrders();
+//        String l_nameOfCountry = p_enteredCommand.split(" ")[1];
+//        String l_totalNoOfArmies = p_enteredCommand.split(" ")[2];
+//        if (deployOrderValidation (p_player, l_totalNoOfArmies)) {
+//            System.out.println("Number of armies in deploy order are greater than player's allocated armies so order" +
+//                    " can not be executed");
+//        } else {
+//            Order l_objectOrder = new Order(p_enteredCommand.split(" ")[0], l_nameOfCountry,
+//                    Integer.parseInt(l_totalNoOfArmies));
+//            l_orderList.add(l_objectOrder);
+//            p_player.setD_executeOrders(l_orderList);
+//            Integer l_allocatedArmies = p_player.getD_noOfAllocatedArmies() - Integer.parseInt(l_totalNoOfArmies);
+//            p_player.setD_noOfAllocatedArmies(l_allocatedArmies);
+//            System.out.println("Order for execution has been added to queue");
+//        }
+//    }
+//
+//    /**
+//     * This method is used to validate that player can not deploy more armies than allocated armies to particular player
+//     *
+//     * @param p_player player by whom deploy order is created
+//     * @param p_totalNoOfArmies total number of armies that will be deployed
+//     * @return boolean return true if number of deployed armies are greater than number of allocated armies
+//     */
+//    public boolean deployOrderValidation(Player p_player, String p_totalNoOfArmies) {
+//        if(p_player.getD_noOfAllocatedArmies() >= Integer.parseInt(p_totalNoOfArmies))
+//            return false;
+//        else
+//            return true;
+//    }
 
     /**
      * This method count total number of armies for Countries and continents that are owned by player
