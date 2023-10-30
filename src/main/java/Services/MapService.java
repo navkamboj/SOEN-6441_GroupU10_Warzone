@@ -323,8 +323,9 @@ public class MapService {
      *
      * @param p_gameState object of GameState.
      */
-    public void mapReset(GameState p_gameState) {
+    public void mapReset(GameState p_gameState, String p_mapToLoad) {
         System.out.println("Map cannot be loaded since it is invalid. Please provide a valid map");
+        p_gameState.logUpdate(p_mapToLoad+" map is invalid, it can't be loaded !","effect");
         p_gameState.setD_map(new Models.Map());
     }
 

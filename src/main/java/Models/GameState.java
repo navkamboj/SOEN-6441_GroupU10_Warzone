@@ -28,6 +28,11 @@ public class GameState {
     String d_errorMessage;
 
     /**
+     * Checks if player has use the load command
+     */
+    Boolean d_checkLoadCommand = false;
+
+    /**
      * Getter method to retrieve error message string
      * @return error message
      */
@@ -85,4 +90,21 @@ public class GameState {
     public void logUpdate(String p_messageLog, String p_logType){
         d_logEntryBuffer.currentLog(p_messageLog, p_logType);
     }
+
+    /**
+     * Setter method to set the Boolean load map variable.
+     */
+    public void setD_checkLoadCommand() {
+        this.d_checkLoadCommand = true;
+    }
+
+    /**
+     * Getter method to check if the load command is used.
+     *
+     * @return boolean value
+     */
+    public boolean getD_checkLoadCommand(){
+        return this.d_checkLoadCommand;
+    }
+
 }
