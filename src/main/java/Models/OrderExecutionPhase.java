@@ -12,6 +12,9 @@ import java.util.Scanner;
 
 /**
  * Order Execution Phase implementation for the game using State Pattern.
+ *
+ * @author Pranjalesh Ghansiyal
+ * @version 2.0.0
  */
 public class OrderExecutionPhase extends Phase {
     /**
@@ -129,7 +132,7 @@ public class OrderExecutionPhase extends Phase {
             MapView l_mapView =new MapView(d_gameState);
             l_mapView.showMap();
 
-            if (this.checkGameEnd(d_gameState))
+            if (this.checkForGameEnd(d_gameState))
                 break;
 
             while (!CommonUtil.isEmptyCollection(d_gameState.getD_playerList())) {
@@ -155,10 +158,17 @@ public class OrderExecutionPhase extends Phase {
      * Invokes the order execution logic for all the orders that are not yet executed.
      */
     protected void executeOrders() {
-        addNeutralPlayer(d_gameState);
+        createNeutralPlayer(d_gameState);
         //Executing the orders
         d_gameEngine.setD_logGameEngine("\nStarting to execute the Orders.......", "start");
-        //CODE NEEDS TO BE ADDED
+        while (d_playerService.existanceOfUnexecutedOrder(d_gameState.getD_playerList())) {
+            for (Player l_player : d_gameState.getD_playerList()) {
+                Order l_order =l_player.next_order();
+                if (l_order != null) {
+                    //ORDER CODE TO BE ADDED.
+                }
+            }
+        }
     }
 
     /**
@@ -166,7 +176,7 @@ public class OrderExecutionPhase extends Phase {
      *
      * @param p_gameState GameState
      */
-    public void addNeutralPlayer(GameState p_gameState) {
+    public void createNeutralPlayer(GameState p_gameState) {
         Player l_player = p_gameState.getD_playerList().stream()
                 .filter(l_pl -> l_pl.getD_playerName().equalsIgnoreCase("neutral")).findFirst().orElse(null);
         if (CommonUtil.isNull(l_player)) {
@@ -182,7 +192,7 @@ public class OrderExecutionPhase extends Phase {
      * @param p_gameState Current State of the game
      * @return true if game is to end else false
      */
-    protected Boolean checkGameEnd(GameState p_gameState) {
+    protected Boolean checkForGameEnd(GameState p_gameState) {
         int l_totalCountries = p_gameState.getD_map().getD_countries().size();
         for (Player l_player : p_gameState.getD_playerList()) {
             if (l_player.getD_ownedCountries().size() == l_totalCountries) {
