@@ -32,6 +32,9 @@ public class StartUpPhase extends Phase {
         super(p_gameEngine, p_gameState);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEditMap(Command p_command, Player p_player) throws IOException, InvalidCommand, InvalidMap {
         List<java.util.Map<String, String>> l_listOfOperations = p_command.getParametersAndOperations();
@@ -78,6 +81,9 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doLoadMap(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
         List<Map<String, String>> l_operations_list = p_command.getParametersAndOperations();
@@ -89,7 +95,7 @@ public class StartUpPhase extends Phase {
         } else {
             for (Map<String, String> l_map : l_operations_list) {
                 if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
-                    // Loads the map if it is valid or resets the game state
+                    // Loads a valid map or Resets the gameState
                     Models.Map l_mapToLoad = d_mapService.mapLoad(d_gameState,
                             l_map.get(GameConstants.ARGUMENTS));
                     if (l_mapToLoad.Validate()) {
@@ -109,6 +115,9 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doSaveMap(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
         if (!l_isMapLoaded) {
@@ -136,6 +145,9 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doValidateMap(Command p_command, Player p_player) throws InvalidMap, InvalidCommand, IOException {
         if (!l_isMapLoaded) {
@@ -162,6 +174,9 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doShowMap(Command p_command, Player p_player) {
         MapView l_mapViewInstance = new MapView(d_gameState);
@@ -269,20 +284,32 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doCreateDeploy(String p_command, Player p_player) throws IOException {
         outputStateInvalidCommand();    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doAdvanceOrder(String p_command, Player p_player) throws IOException {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doCardHandle(String p_enteredCommand, Player p_player) throws IOException {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initPhase() {
         Scanner l_scanner = new Scanner(System.in);
