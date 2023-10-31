@@ -164,9 +164,11 @@ public class OrderExecutionPhase extends Phase {
         while (d_playerService.existanceOfUnexecutedOrder(d_gameState.getD_playerList())) {
             for (Player l_player : d_gameState.getD_playerList()) {
                 Order l_order =l_player.next_order();
+
                 if (l_order != null) {
-                    //ORDER CODE TO BE ADDED.
-                }
+                    l_order.printTheOrder();
+                    d_gameState.logUpdate(l_order.logOfOrderExecution(), "effect");
+                    l_order.execute(d_gameState);                }
             }
         }
     }
