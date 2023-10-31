@@ -171,6 +171,7 @@ public class OrderExecutionPhase extends Phase {
                     l_order.execute(d_gameState);                }
             }
         }
+        d_playerService.resetPlayerFlag(d_gameState.getD_playerList());
     }
 
     /**
