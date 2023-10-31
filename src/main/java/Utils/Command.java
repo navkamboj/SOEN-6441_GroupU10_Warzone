@@ -9,6 +9,7 @@ import java.util.*;
  *  @version 1.0.0
  */
 public class Command {
+
     /**
      * d_storeCommand stores the command that user entered.
      */
@@ -101,5 +102,14 @@ public class Command {
         });
 
         return l_commands_list;
+    }
+
+    /**
+     * Getter method to retrieve the command.
+     *
+     * @return command in string
+     */
+    public String getD_command() {
+        return d_storeCommand;
     }
 }

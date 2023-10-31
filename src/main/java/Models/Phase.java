@@ -264,7 +264,7 @@ public abstract class Phase {
         Command l_command = new Command(p_enteredCommand);
         String l_baseCommand = l_command.getBaseCommand();
         l_isMapLoaded = d_gameState.getD_map() != null;
-
+        d_gameState.logUpdate(l_command.getD_command(), "command");
 
         switch (l_baseCommand) {
             case "loadmap": {
@@ -320,6 +320,15 @@ public abstract class Phase {
             case "blockade":
             case "bomb": {
                 doCardHandle(p_enteredCommand, p_player);
+                break;
+            }
+            case "exit": {
+                d_gameEngine.setD_logGameEngine("Exit Command Entered, Game Ends!", "effect");
+                System.exit(0);
+                break;
+            }
+            default: {
+                d_gameEngine.setD_logGameEngine("Invalid Command", "effect");
                 break;
             }
         }
