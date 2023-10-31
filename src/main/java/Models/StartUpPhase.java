@@ -5,12 +5,11 @@ import Controller.GameEngine;
 import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
 import Utils.Command;
+import Utils.CommonUtil;
 import Utils.ExceptionLogHandler;
 import Views.MapView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -18,7 +17,7 @@ import java.util.Scanner;
 /**
  * Implementation of Startup Phase class for GamePlay using State Pattern.
  *
- * @author Navjot Kamboj
+ * @author Navjot Kamboj, Pranjalesh Ghansiyal
  * @version 2.0.0
  */
 public class StartUpPhase extends Phase {
@@ -169,6 +168,9 @@ public class StartUpPhase extends Phase {
         l_mapViewInstance.showMap();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEditCountry(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
         if (!l_isMapLoaded) {
@@ -193,6 +195,9 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEditNeighbour(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
         if (!l_isMapLoaded) {
@@ -217,29 +222,65 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     */
     @Override
     protected void doAssignCountries(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
-    //body
+        List<Map<String, String>> l_list_of_operations= p_command.getParametersAndOperations();
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+        if (CommonUtil.isEmptyCollection(l_list_of_operations)) {
+            d_playerService.countryAssign(d_gameState);
+            d_playerService.colorAssign(d_gameState);
+            d_playerService.armiesAssign(d_gameState);
+            d_gameEngine.setIssueOrderPhase();
+        } else {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_ASSIGNCOUNTRIES);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     */
     @Override
     protected void createGamePlayers(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
-    //body
+        if (!l_isMapLoaded) {
+            d_gameEngine.setD_logGameEngine("No map available. Please perform `loadmap` command before" +
+                    " adding players.", "effect");
+        }
+
+        List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+        if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
+        } else {
+            for (Map<String, String> l_map : l_list_of_operations) {
+                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                    d_playerService.playerListUpdation(d_gameState, l_map.get(GameConstants.OPERATION),
+                            l_map.get(GameConstants.ARGUMENTS));
+                } else {
+                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
+                }
+            }
+        }
     }
 
     @Override
     protected void doCreateDeploy(String p_command, Player p_player) throws IOException {
-    //body
-    }
+        outputStateInvalidCommand();    }
 
     @Override
     protected void doAdvanceOrder(String p_command, Player p_player) throws IOException {
-    //body
+        outputStateInvalidCommand();
     }
 
     @Override
     protected void doCardHandle(String p_enteredCommand, Player p_player) throws IOException {
-        //body
+        outputStateInvalidCommand();
     }
 
     @Override
