@@ -13,17 +13,17 @@ public class Advance implements Order {
     /**
      * Parameterized constructor to initialize all data members required to execute an order
      *
-     * @param d_playerName player name that provides orders
-     * @param d_sourceCountry source country that attacks
-     * @param d_targetCountry target country that gets attacked
-     * @param d_countOfArmies number of armies to be deployed
+     * @param p_playerName player name that provides orders
+     * @param p_sourceCountry source country that attacks
+     * @param p_targetCountry target country that gets attacked
+     * @param p_countOfArmies number of armies to be deployed
      */
-    public Advance(Player d_playerName, String d_sourceCountry, String d_targetCountry,
-                   Integer d_countOfArmies) {
-        this.d_playerName = d_playerName;
-        this.d_sourceCountry = d_sourceCountry;
-        this.d_targetCountry = d_targetCountry;
-        this.d_countOfArmies = d_countOfArmies;
+    public Advance(Player p_playerName, String p_sourceCountry, String p_targetCountry,
+                   Integer p_countOfArmies) {
+        this.d_playerName = p_playerName;
+        this.d_sourceCountry = p_sourceCountry;
+        this.d_targetCountry = p_targetCountry;
+        this.d_countOfArmies = p_countOfArmies;
     }
 
     /**
