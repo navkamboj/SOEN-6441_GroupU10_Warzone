@@ -178,7 +178,7 @@ public class PlayerService {
      * @param p_playerList players list
      * @param p_continents continents list
      */
-    private void assignmentOfContinents(List<Player> p_playerList, List<Continent> p_continents) {
+    public void assignmentOfContinents(List<Player> p_playerList, List<Continent> p_continents) {
         for (Player l_player : p_playerList) {
             List<String> l_ownedCountries = new ArrayList<>();
             if (!CommonUtil.isEmptyCollection(l_player.getD_ownedCountries())) {
