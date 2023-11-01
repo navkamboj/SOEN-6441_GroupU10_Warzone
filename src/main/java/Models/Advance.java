@@ -279,10 +279,10 @@ public class Advance implements Order {
     /**
      * generate result after advance order.
      *
-     * @param p_gameState             current state of the game
+     * @param p_gameState current state of the game
      * @param p_playerHoldingTargetCountry player holding the target country
-     * @param p_targetCountry         target country given in order
-     * @param p_sourceCountry         source country given in order
+     * @param p_targetCountry target country given in order
+     * @param p_sourceCountry source country given in order
      */
     private void generateOrderResult(GameState p_gameState, Player p_playerHoldingTargetCountry, Country p_targetCountry,
                                     Country p_sourceCountry) {
@@ -336,6 +336,4 @@ public class Advance implements Order {
             p_gameState.logUpdate(logOfOrderExecution(), "effect");
         }
     }
-
-
 }
