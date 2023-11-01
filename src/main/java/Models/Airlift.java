@@ -52,7 +52,7 @@ public class Airlift implements Card{
      */
     @Override
     public void execute(GameState p_gameState) {
-        if (valid(p_gameState)) {
+        if (isValid(p_gameState)) {
             Country l_originCountry = p_gameState.getD_map().getCountryByName(d_countryNameOfSource);
             Country l_destinationCountry = p_gameState.getD_map().getCountryByName(d_countryNameOfTarget);
 
@@ -78,7 +78,7 @@ public class Airlift implements Card{
      * @return boolean value of false and if it's valid it will return true.
      */
     @Override
-    public Boolean valid(GameState p_gameState){
+    public boolean isValid(GameState p_gameState){
         Country l_originCountry=d_playerName.getD_ownedCountries().stream()
                 .filter(l_player->l_player.getD_countryName().equalsIgnoreCase(this.d_countryNameOfSource.toString()))
                 .findFirst().orElse(null);

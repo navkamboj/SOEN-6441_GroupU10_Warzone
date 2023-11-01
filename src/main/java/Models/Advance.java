@@ -155,7 +155,7 @@ public class Advance implements Order {
      * @param p_targetCountry         target country
      * @param p_playerHoldingTargetCountry player owning the target country
      */
-    public void handleSurvivingArmies(Integer p_attackerRemainingArmies, Integer p_defenderRemainingArmies,
+    public void handleRemainingArmies(Integer p_attackerRemainingArmies, Integer p_defenderRemainingArmies,
                                       Country p_sourceCountry, Country p_targetCountry, Player p_playerHoldingTargetCountry) {
         if (p_defenderRemainingArmies == 0) {
             p_playerHoldingTargetCountry.getD_ownedCountries().remove(p_targetCountry);
@@ -174,14 +174,78 @@ public class Advance implements Order {
             p_sourceCountry.setD_numberOfArmies(l_sourceArmiesToUpdate);
             String l_country1 = "Country : " + p_targetCountry.getD_countryName() + " is left with "
 
-                    + p_targetCountry.getD_numberOfArmies() + " armies and is still owned by player : "
+                    + p_targetCountry.getD_numberOfArmies() + " armies and is still controlled by player : "
                     + p_playerHoldingTargetCountry.getD_playerName();
             String l_country2 = "Country : " + p_sourceCountry.getD_countryName() + " is left with "
-                    + p_sourceCountry.getD_numberOfArmies() + " armies and is still owned by player : "
+                    + p_sourceCountry.getD_numberOfArmies() + " armies and is still controlled by player : "
                     + this.d_playerName.getD_playerName();
             this.setD_logOfOrderExecution(l_country1 + System.lineSeparator() + l_country2, "default");
         }
     }
+
+    /**
+     * Give the recent executed advance order.
+     *
+     * @return advance order command
+     */
+    private String recentOrder() {
+        return "Advance Order : " + "advance" + " " + this.d_sourceCountry + " " + this.d_targetCountry + " "
+                + this.d_countOfArmies;
+    }
+
+    /**
+     * Display info related to order.
+     */
+    @Override
+    public void printTheOrder() {
+        this.d_logOfOrderExecution = "\n---------- Advance order issued by player " + this.d_playerName.getD_playerName()
+                + " ----------\n" + System.lineSeparator() + "Move " + this.d_countOfArmies + " armies from "
+                + this.d_sourceCountry + " to " + this.d_targetCountry;
+        System.out.println(System.lineSeparator() + this.d_logOfOrderExecution);
+    }
+
+    /**
+     * Validates whether country given for deploy belongs to players countries or
+     * not.
+     *
+     * @return boolean if given advance command is valid or not.
+     */
+
+    @Override
+    public boolean isValid(GameState p_gameState) {
+        Country l_country = d_playerName.getD_ownedCountries().stream()
+                .filter(l_pl -> l_pl.getD_countryName().equalsIgnoreCase(this.d_sourceCountry.toString()))
+                .findFirst().orElse(null);
+        if (l_country == null) {
+            this.setD_logOfOrderExecution(this.recentOrder() + " is not executed since Source country : "
+                    + this.d_sourceCountry + " given in advance command does not belongs to the player : "
+                    + d_playerName.getD_playerName(), "error");
+            p_gameState.logUpdate(logOfOrderExecution(), "effect");
+            return false;
+        }
+        if (this.d_countOfArmies > l_country.getD_numberOfArmies()) {
+            this.setD_logOfOrderExecution(this.recentOrder()
+                    + " is not executed as armies given in advance order exceeds armies of source country : "
+                    + this.d_sourceCountry, "error");
+            p_gameState.logUpdate(logOfOrderExecution(), "effect");
+            return false;
+        }
+        if (this.d_countOfArmies == l_country.getD_numberOfArmies()) {
+            this.setD_logOfOrderExecution(this.recentOrder() + " is not executed as source country : "
+                            + this.d_sourceCountry + " has " + l_country.getD_numberOfArmies()
+                            + " army units and all of those cannot be given advance order, atleast one army unit has to retain the territory.",
+                    "error");
+            p_gameState.logUpdate(logOfOrderExecution(), "effect");
+            return false;
+        }
+        if(!d_playerName.negotiationValidation(this.d_targetCountry)){
+            this.setD_logOfOrderExecution(this.recentOrder() + " is not executed as "+ d_playerName.getD_playerName()+ " has negotiation pact with the target country's player!", "error");
+            p_gameState.logUpdate(logOfOrderExecution(), "effect");
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * generate the result of battle between attacker and defender
@@ -207,7 +271,7 @@ public class Advance implements Order {
                 l_defenderRemainingArmies++;
             }
         }
-        this.handleSurvivingArmies(l_attackerRemainingArmies, l_defenderRemainingArmies, p_sourceCountry, p_targetCountry,
+        this.handleRemainingArmies(l_attackerRemainingArmies, l_defenderRemainingArmies, p_sourceCountry, p_targetCountry,
                 p_playerHoldingTargetCountry);
     }
 
@@ -233,6 +297,14 @@ public class Advance implements Order {
 
         p_gameState.logUpdate(logOfOrderExecution(), "effect");
         this.modifyContinents(this.d_playerName, p_playerHoldingTargetCountry, p_gameState);
+    }
+
+    /**
+     * Retrieve order name.
+     */
+    @Override
+    public String orderName() {
+        return "advance";
     }
 
 
