@@ -40,7 +40,7 @@ public class Blockade implements Card{
      */
     @Override
     public void execute(GameState p_gameState){
-        if(valid(p_gameState)){
+        if(isValid(p_gameState)){
             Country l_countryNameOfTarget = p_gameState.getD_map().getCountryByName(d_countryNameOfTarget);
             Integer l_targetCountryArmies = l_countryNameOfTarget.getD_numberOfArmies()==0?1:l_countryNameOfTarget.getD_numberOfArmies();
             l_countryNameOfTarget.setD_numberOfArmies(3*l_targetCountryArmies);
@@ -73,7 +73,7 @@ public class Blockade implements Card{
      * @return returns true if target country belongs to player otherwise it will return false.
      */
     @Override
-    public Boolean valid(GameState p_gameState){
+    public boolean isValid(GameState p_gameState){
 
         //This method will check that target country is owned by player or not.
 

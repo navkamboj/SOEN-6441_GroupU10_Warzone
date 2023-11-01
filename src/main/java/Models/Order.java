@@ -21,7 +21,7 @@ public interface Order{
      * @param p_gameState current game state.
      * @return Boolean true if its valid otherwise it will return false.
      */
-    public Boolean isValid(GameState p_gameState);
+    public boolean isValid(GameState p_gameState);
 
     /**
      *This method is used to print the order information.
