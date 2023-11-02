@@ -42,6 +42,15 @@ public class Deploy implements Order{
     }
 
     /**
+     * Display deploy Order.
+     */
+    @Override
+    public void printTheOrder() {
+        this.d_logOfOrderExecution = "\n---------- Deploy order given by player " + this.d_playerName.getD_playerName()+" ----------\n"+System.lineSeparator()+"Deploy " + this.d_countOfArmies + " armies to " + this.d_targetCountry;
+        System.out.println(this.d_logOfOrderExecution);
+    }
+
+    /**
      * Overriding the execute method of order interface to deploy order.
      *
      * @param p_gameState current game state.
@@ -72,5 +81,16 @@ public class Deploy implements Order{
         p_gameState.logUpdate(logOfOrderExecution(), "effect");
     }
 
+
+    /**
+     * Checks if deploying country is owned by player or not
+     */
+    @Override
+    public boolean isValid(GameState p_gameState) {
+        Country l_tempCountry = d_playerName.getD_ownedCountries().stream()
+                .filter(l_pl -> l_pl.getD_countryName().equalsIgnoreCase(this.d_targetCountry.toString()))
+                .findFirst().orElse(null);
+        return l_tempCountry != null;
+    }
 
 }
