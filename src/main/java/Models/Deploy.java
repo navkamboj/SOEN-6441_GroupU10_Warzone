@@ -1,5 +1,13 @@
 package Models;
 
+/**
+ * Implemented Command pattern.
+ *
+ * @author Harsh Tank
+ * @version 2.0.0
+ *
+ */
+
 public class Deploy implements Order{
     Player d_playerName;
     String d_logOfOrderExecution;
@@ -91,6 +99,16 @@ public class Deploy implements Order{
                 .filter(l_pl -> l_pl.getD_countryName().equalsIgnoreCase(this.d_targetCountry.toString()))
                 .findFirst().orElse(null);
         return l_tempCountry != null;
+    }
+
+    /**
+     * Retrieves name of order.
+     *
+     * @return String
+     */
+    @Override
+    public String orderName() {
+        return "deploy";
     }
 
 }
