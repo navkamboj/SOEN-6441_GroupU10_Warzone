@@ -37,5 +37,7 @@ public class GameConstants {
     public static final String BLUE_BOLD = "\033[1;34m";
     public static final String PURPLE_BOLD = "\033[1;35m";
     public static final String CYAN_BOLD = "\033[1;36m";
+    public static final List<String> CARDS = Arrays.asList("bomb", "blockade", "airlift", "negotiate");
+    public static final int SIZE = CARDS.size();
     public static final List<String> COLORS_LIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
 }

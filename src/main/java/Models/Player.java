@@ -1,5 +1,6 @@
 package Models;
 
+import Constants.GameConstants;
 import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
 import Utils.CommonUtil;
@@ -7,6 +8,7 @@ import Utils.CommonUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -67,10 +69,14 @@ public class Player {
     List<String> d_cardsOwned = new ArrayList<String>();
 
     /**
+     * A String holding Log for individual Player methods.
+     */
+    String d_logPlayer;
+
+    /**
      * Player order list
      */
     List<Order> d_orderedPlayerList;
-
 
     /**
      * String to store log for individual Player methods.
@@ -101,6 +107,15 @@ public class Player {
      */
     public void clearNegotiation(){
         d_negotiatedWith.clear();
+    }
+
+    /**
+     * This method specifies the countries player cannot issue an order on.
+     *
+     * @param p_playerNegotiation The player to negotiate with.
+     */
+    public void addPlayerNegotiation(Player p_playerNegotiation){
+        this.d_negotiatedWith.add(p_playerNegotiation);
     }
 
     /**
@@ -339,12 +354,43 @@ public class Player {
     }
 
     /**
+     * This method uses random function to assign any random card from the set of available cards to
+     * the player once he acquires a territory.
+     *
+     */
+    public void assignCard(){
+        if(!d_oneCardPerTurn){
+            Random l_random = new Random();
+            this.d_cardsOwned.add(GameConstants.CARDS.get(l_random.nextInt(GameConstants.SIZE)));
+            this.setD_playerLog("Player: " + this.d_name + " has obtained a card as a reward for a triumphant conquest- " + this.d_cardsOwned.get(this.d_cardsOwned.size()-1), "log");
+            this.setD_oneCardPerTurn(true);
+        }else{
+            this.setD_playerLog("Player: " + this.d_name + " has reached the maximum allowable card acquisition limit for a single turn", "error");
+        }
+    }
+
+    /**
      * Remove the card which is used.
      *
      * @param p_cardName name of the card to remove.
      */
     public void removeCard(String p_cardName){
         this.d_cardsOwned.remove(p_cardName);
+    }
+
+    /**
+     * This method checks if the order issued on country is possible or not.
+     *
+     * @param p_nameOfTargetCountry The country to attack
+     * @return The boolean value if it can attack
+     */
+    public boolean negotiationValidation(String p_nameOfTargetCountry){
+        boolean l_canAttack = true;
+        for(Player p: d_negotiatedWith){
+            if(p.getNamesOfCountries().contains(p_nameOfTargetCountry))
+                l_canAttack = false;
+        }
+        return l_canAttack;
     }
 
     /**
