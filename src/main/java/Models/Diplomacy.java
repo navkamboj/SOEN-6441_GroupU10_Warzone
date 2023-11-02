@@ -40,7 +40,7 @@ public class Diplomacy implements Card{
         PlayerService l_serviceForThePlayer = new PlayerService();
         Player l_targetPlayerName = l_serviceForThePlayer.findPlayerByName(d_targetPlayerName,p_gameState);
         l_targetPlayerName.addPlayerNegotiation(d_playerName);
-        d_playerName.addPlayerNegotiation(d_targetPlayerName);
+        d_playerName.addPlayerNegotiation(l_targetPlayerName);
 
         d_playerName.removeCard("negotiate");
 
