@@ -5,6 +5,9 @@ import Utils.CommonUtil;
 /**
  * When player use this Bomb card on target country then target
  * country will lose half of their armies.
+ *
+ * @author Nihal Galani
+ * @version 2.0.0
  */
 public class Bomb implements Card{
 

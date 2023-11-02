@@ -3,6 +3,9 @@ package Models;
 /**
  * The execute and validation of Airlift is handle by this class.
  * Airlift card can airlift number of armies from source country to target country.
+ *
+ * @author Nihal Galani
+ * @version 2.0.0
  */
 public class Airlift implements Card{
 

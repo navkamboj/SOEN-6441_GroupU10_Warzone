@@ -2,6 +2,9 @@ package Models;
 
 /**
  * This interface handles all the card that player can have
+ *
+ * @author Nihal Galani
+ * @version 2.0.0
  */
 public interface Card extends Order{
     /**
