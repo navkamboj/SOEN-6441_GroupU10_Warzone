@@ -3,6 +3,13 @@ import java.util.*;
 
 import Utils.CommonUtil;
 import Services.PlayerService;
+
+/**
+ * Implemented Command pattern.
+ *
+ * @author Harsh Tank
+ * @version 2.0.0
+ */
 public class Advance implements Order {
     Player d_playerName;
     String d_logOfOrderExecution;
