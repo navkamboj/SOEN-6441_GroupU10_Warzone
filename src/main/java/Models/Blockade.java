@@ -3,10 +3,12 @@ package Models;
 import Utils.CommonUtil;
 
 /**
- * This blockade class is used to neutral one of the territories of  the player and triplet the number of armies on that territory.
+ * This blockade class is used to neutral one of the territories of the player and triplet the number of armies on that territory.
+ *
+ * @author Nihal Galani
+ * @version 2.0.0
  */
 public class Blockade implements Card{
-
     /**
      *Card is owned by this player.
      */

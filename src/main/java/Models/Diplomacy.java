@@ -4,6 +4,9 @@ import Services.PlayerService;
 
 /**
  * This class is used to handle Diplomacy command
+ *
+ *  @author Nihal Galani
+ *  @version 2.0.0
  */
 public class Diplomacy implements Card{
 
