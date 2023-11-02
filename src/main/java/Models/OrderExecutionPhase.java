@@ -68,6 +68,9 @@ public class OrderExecutionPhase extends Phase {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doShowMap(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
         MapView l_mapView = new MapView(d_gameState);
@@ -114,16 +117,25 @@ public class OrderExecutionPhase extends Phase {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doCardHandle(String p_enteredCommand, Player p_player) throws IOException {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doAdvanceOrder(String p_command, Player p_player) {
         outputStateInvalidCommand();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initPhase() {
         while (d_gameEngine.getD_PresentPhase() instanceof OrderExecutionPhase) {
