@@ -19,7 +19,7 @@ import java.util.Scanner;
  * This serves as the starting point for the game and manages the current state of the game.
  *
  * @author Harsh Tank, Pranjalesh Ghansiyal, Yatish Chutani
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class GameEngine {
 
@@ -65,7 +65,19 @@ public class GameEngine {
         l_gameEngine.getD_PresentPhase().initPhase();
     }
 
-    public void setD_logGameEngine(String p_logGameEngine, String p_logType){}
+    /**
+     * This setter method displays and writes GameEngine Logs.
+     *
+     * @param p_logGameEngine The string of Log message.
+     * @param p_logType The type of Log.
+     */
+    public void setD_logGameEngine(String p_logGameEngine, String p_logType){
+        d_presentPhase.getD_gameState().logUpdate(p_logGameEngine, p_logType);
+        String l_consoleLogging = p_logType.toLowerCase().equals("phase")
+                ? "\n######### " + p_logGameEngine + " #########\n"
+                : p_logGameEngine;
+        System.out.println(l_consoleLogging);
+    }
 
     /**
      * This method updates the present phase to Order Execution Phase as per the State Pattern.

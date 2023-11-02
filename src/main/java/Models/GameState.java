@@ -7,14 +7,18 @@ import Models.LogEntryBuffer;
  * Model class to manage the GameState functions
  *
  * @author Navjot Kamboj, Yatish Chutani
- * @version 1.0.0
+ * @version 2.0.0
  */
 public class GameState {
+
     /**
      * List of players
      */
     List<Player> d_playerList;
 
+    /**
+     * Recording Game State as Log Entries.
+     */
     LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
 
     /**
@@ -28,7 +32,7 @@ public class GameState {
     String d_errorMessage;
 
     /**
-     * Checks if player has use the load command
+     * Checks if player has used the load command
      */
     Boolean d_checkLoadCommand = false;
 
@@ -47,7 +51,6 @@ public class GameState {
     public void setD_errorMessage(String p_errorMessage) {
         this.d_errorMessage = p_errorMessage;
     }
-
 
     /**
      * Getter method to retrieve the map object
@@ -92,6 +95,15 @@ public class GameState {
     }
 
     /**
+     * This getter method fetches the latest Log in current GameState.
+     *
+     * @return The recent Log Message
+     */
+    public String getLatestLog(){
+        return d_logEntryBuffer.getD_messageLog();
+    }
+
+    /**
      * Setter method to set the Boolean load map variable.
      */
     public void setD_checkLoadCommand() {
@@ -106,5 +118,4 @@ public class GameState {
     public boolean getD_checkLoadCommand(){
         return this.d_checkLoadCommand;
     }
-
 }
