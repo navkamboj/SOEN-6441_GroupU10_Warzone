@@ -54,7 +54,7 @@ public class Diplomacy implements Card{
      * @param p_gameState current game state
      * @return boolean true
      */
-    public Boolean valid(GameState p_gameState){
+    public boolean isValid(GameState p_gameState){
         return true;
     }
 

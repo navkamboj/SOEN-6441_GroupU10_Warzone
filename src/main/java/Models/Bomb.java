@@ -45,7 +45,7 @@ public class Bomb implements Card{
      */
     @Override
     public void execute(GameState p_gameState){
-        if(valid(p_gameState)){
+        if(isValid(p_gameState)){
             Country l_countryNameOfTarget= p_gameState.getD_map().getCountryByName(d_countryNameOfTarget);
             Integer l_targetCountryArmies = l_countryNameOfTarget.getD_numberOfArmies()==0?1:l_countryNameOfTarget.getD_numberOfArmies();
 
@@ -67,7 +67,8 @@ public class Bomb implements Card{
      * @param p_gameState current game state
      * @return Boolean true if it's valid otherwise it will return false.
      */
-    public Boolean valid(GameState p_gameState){
+    @Override
+    public boolean isValid(GameState p_gameState){
         Country l_playerCountry=d_playerName.getD_ownedCountries().stream()
                 .filter(l_player->l_player.getD_countryName().equalsIgnoreCase(this.d_countryNameOfTarget)).findFirst()
                 .orElse(null);
