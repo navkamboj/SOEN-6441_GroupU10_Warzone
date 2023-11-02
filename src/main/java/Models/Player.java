@@ -100,6 +100,7 @@ public class Player {
         this.d_noOfAllocatedArmies = 0;
         this.d_executeOrders = new ArrayList<>();
         this.d_isMoreOrders = true;
+        this.d_orderedPlayerList=new ArrayList<Order>();
     }
 
     /**
