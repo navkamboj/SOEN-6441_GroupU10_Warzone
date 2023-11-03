@@ -39,11 +39,6 @@ public class Player {
     List<Continent> d_ownedContinents;
 
     /**
-     * List of orders given by the player.
-     */
-    List<Order> d_executeOrders;
-
-    /**
      * Number of armies given to the player.
      */
     Integer d_noOfAllocatedArmies;
@@ -67,11 +62,6 @@ public class Player {
      * Name of the card owned by player
      */
     List<String> d_cardsOwned = new ArrayList<String>();
-
-    /**
-     * A String holding Log for individual Player methods.
-     */
-    String d_logPlayer;
 
     /**
      * Player order list
@@ -98,7 +88,7 @@ public class Player {
     public Player(String p_playerName) {
         this.d_name = p_playerName;
         this.d_noOfAllocatedArmies = 0;
-        this.d_executeOrders = new ArrayList<>();
+        this.d_ownedCountries = new ArrayList<Country>();
         this.d_isMoreOrders = true;
         this.d_orderedPlayerList=new ArrayList<Order>();
     }
@@ -261,7 +251,7 @@ public class Player {
      * @return return execute orders.
      */
     public List<Order> getD_executeOrders() {
-        return d_executeOrders;
+        return d_orderedPlayerList;
     }
 
     /**
@@ -270,7 +260,7 @@ public class Player {
      * @param p_executeOrders set execute orders.
      */
     public void setD_executeOrders(List<Order> p_executeOrders) {
-        this.d_executeOrders = p_executeOrders;
+        this.d_orderedPlayerList = p_executeOrders;
     }
 
     /**
@@ -319,11 +309,11 @@ public class Player {
      * @return First order from the list of orders given by the player.
      */
     public Order next_order() {
-        if (CommonUtil.isEmptyCollection(this.d_executeOrders)) {
+        if (CommonUtil.isEmptyCollection(this.d_orderedPlayerList)) {
             return null;
         }
-        Order l_order = this.d_executeOrders.get(0);
-        this.d_executeOrders.remove(l_order);
+        Order l_order = this.d_orderedPlayerList.get(0);
+        this.d_orderedPlayerList.remove(l_order);
         return l_order;
     }
 
