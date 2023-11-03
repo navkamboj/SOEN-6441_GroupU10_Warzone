@@ -76,7 +76,7 @@ public class PlayerService {
                 insertGamePlayer(l_updatePlayers, l_newPlayerName, l_playerNameExist);
                 break;
             default:
-                System.out.println("Operation is not valid on player list");
+                setD_logPlayer("Operation is not valid on player list");
         }
         return l_updatePlayers;
     }
@@ -95,11 +95,11 @@ public class PlayerService {
             for (Player l_player : p_allExistingPlayersList) {
                 if (l_player.getD_playerName().equalsIgnoreCase(p_newPlayerName)) {
                     p_updatePlayers.remove(l_player);
-                    System.out.println("Player: " + p_newPlayerName + " has been removed successfully.");
+                    setD_logPlayer("Player: " + p_newPlayerName + " has been removed successfully.");
                 }
             }
         } else {
-            System.out.print("Player: " + p_newPlayerName + " does not Exist.");
+            setD_logPlayer("Player: " + p_newPlayerName + " does not Exist.");
         }
     }
 
@@ -113,11 +113,11 @@ public class PlayerService {
     private void insertGamePlayer(List<Player> p_updatePlayers, String p_newPlayerName,
                                   boolean p_playerNameExist) {
         if (p_playerNameExist) {
-            System.out.print("Player: " + p_newPlayerName + " already Exists.");
+            setD_logPlayer("Player: " + p_newPlayerName + " already Exists.");
         } else {
             Player l_addPlayer = new Player(p_newPlayerName);
             p_updatePlayers.add(l_addPlayer);
-            System.out.println("Player: " + p_newPlayerName + " has been added successfully.");
+            setD_logPlayer("Player: " + p_newPlayerName + " has been added successfully.");
         }
     }
 
@@ -274,7 +274,8 @@ public class PlayerService {
     public void armiesAssign(GameState p_gameState) {
         for (Player l_player : p_gameState.getD_playerList()) {
             Integer l_armies = this.armiesCountForPlayer(l_player);
-            System.out.println("Player : " + l_player.getD_playerName() + " has assigned " + l_armies + " armies");
+            this.setD_logPlayer("Player : " + l_player.getD_playerName() + " has assigned " + l_armies + " armies");
+            p_gameState.logUpdate(this.d_logPlayer, "effect");
 
             l_player.setD_noOfAllocatedArmies(l_armies);
         }
@@ -289,13 +290,15 @@ public class PlayerService {
      */
     public void playerListUpdation(GameState p_gameState, String p_operationTask, String p_argumentTask) {
         if (!mapLoadedOrNot(p_gameState)) {
-            System.out.println("Load the map before adding or removing any player  " + p_argumentTask);
+            this.setD_logPlayer("Load the map before adding or removing any player  " + p_argumentTask);
+            p_gameState.logUpdate(this.d_logPlayer, "effect");
             return;
         }
         List<Player> l_playersListUpdation = this.addingRemovingPlayers(p_gameState.getD_playerList(), p_operationTask, p_argumentTask);
 
         if (!CommonUtil.isNull(l_playersListUpdation)) {
             p_gameState.setD_playerList(l_playersListUpdation);
+            p_gameState.logUpdate(d_logPlayer, "effect");
         }
 
     }
