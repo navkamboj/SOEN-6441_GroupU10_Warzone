@@ -60,6 +60,7 @@ public class MapView {
         d_gameState = p_gameState;
         d_map = p_gameState.getD_map();
         d_countries = d_map.getD_countries();
+        d_players=p_gameState.getD_playerList();
         d_continents = d_map.getD_continents();
     }
 
@@ -329,6 +330,11 @@ public class MapView {
         String l_cardsOwnedByPlayer = "Cards Owned : "+ WordWrap.from(l_cards.toString()).maxWidth(GameConstants.CONSOLE_WIDTH).wrap();
         System.out.println(getColorfulString(p_player.getD_color(),l_cardsOwnedByPlayer));
         System.out.println();
+    }
+
+
+    private String retrieveArmiesOfplayer(Player p_player){
+           return "(Armies that are not allocated: "+p_player.getD_noOfAllocatedArmies();
     }
 
 }
