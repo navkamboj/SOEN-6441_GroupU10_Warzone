@@ -272,14 +272,18 @@ public class StartUpPhase extends Phase {
         if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
             throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
         } else {
-            for (Map<String, String> l_map : l_list_of_operations) {
-                if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
-                        && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
-                    d_playerService.playerListUpdation(d_gameState, l_map.get(GameConstants.OPERATION),
-                            l_map.get(GameConstants.ARGUMENTS));
-                } else {
-                    throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
+            if (d_gameState.getD_checkLoadCommand()) {
+                for (Map<String, String> l_map : l_list_of_operations) {
+                    if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                            && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                        d_playerService.playerListUpdation(d_gameState, l_map.get(GameConstants.OPERATION),
+                                l_map.get(GameConstants.ARGUMENTS));
+                    } else {
+                        throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
+                    }
                 }
+            } else {
+                d_gameEngine.setD_logGameEngine("Please load a valid map first using the loadmap command!", "effect");
             }
         }
     }
