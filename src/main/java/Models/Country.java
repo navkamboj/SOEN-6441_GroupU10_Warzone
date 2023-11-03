@@ -66,6 +66,7 @@ public class Country {
         d_countryID = p_countryID;
         d_countryName = p_countryName;
         d_continentID = p_continentID;
+        d_numberOfArmies = 0;
     }
 
     /**
