@@ -257,6 +257,7 @@ public class MapView {
         for(Player p : d_players){
             l_counter++;
             retrieveInfoOfPlayer(l_counter, p);
+            renderCardsOwnedByPlayers(p);
         }
     }
 
@@ -310,4 +311,24 @@ public class MapView {
             System.out.println("There are no continents to show!!");
         }
     }
+
+    /**
+     * Method to render the number of cards owned by the player.
+     *
+     * @param p_player Player Instance
+     */
+    private void renderCardsOwnedByPlayers(Player p_player){
+        StringBuilder l_cards = new StringBuilder();
+
+        for(int i=0; i<p_player.getD_cardsOwned().size(); i++) {
+            l_cards.append(p_player.getD_cardsOwned().get(i));
+            if(i<p_player.getD_cardsOwned().size()-1)
+                l_cards.append(", ");
+        }
+
+        String l_cardsOwnedByPlayer = "Cards Owned : "+ WordWrap.from(l_cards.toString()).maxWidth(GameConstants.CONSOLE_WIDTH).wrap();
+        System.out.println(getColorfulString(p_player.getD_color(),l_cardsOwnedByPlayer));
+        System.out.println();
+    }
+
 }

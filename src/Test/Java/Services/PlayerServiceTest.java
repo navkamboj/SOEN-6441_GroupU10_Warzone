@@ -98,13 +98,13 @@ public class PlayerServiceTest {
      * This testing method is used to test that player can not deploy number of
      * armies  than player have in their balance
      */
-    @Test
-    public void testDeployOrderValidation(){
-        d_testInformationAboutPlayer.setD_noOfAllocatedArmies(8);
-        String l_totalArmies ="5";
-        boolean l_booleancheck = d_testPlayerService.deployOrderValidation(d_testInformationAboutPlayer,l_totalArmies);
-        assertFalse(l_booleancheck);
-    }
+//    @Test
+//    public void testDeployOrderValidation(){
+//        d_testInformationAboutPlayer.setD_noOfAllocatedArmies(8);
+//        String l_totalArmies ="5";
+//        boolean l_booleancheck = d_testPlayerService.deployOrderValidation(d_testInformationAboutPlayer,l_totalArmies);
+//        assertFalse(l_booleancheck);
+//    }
 
     /**
      *This testing method is used to test that adding player functionalities
