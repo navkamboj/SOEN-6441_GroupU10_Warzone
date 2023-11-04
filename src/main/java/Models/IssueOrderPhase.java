@@ -185,7 +185,6 @@ public class IssueOrderPhase extends Phase {
     protected void doCardHandle(String p_enteredCommand, Player p_player) throws IOException {
         if (p_player.getD_cardsOwned().contains(p_enteredCommand.split(" ")[0])) {
             p_player.cardCommandsHandler(p_enteredCommand, d_gameState);
-            d_gameEngine.setD_logGameEngine(p_player.d_playerLog, "effect");
         }
         p_player.checkForMoreOrders();
     }
