@@ -144,7 +144,7 @@ public class MapView {
 
         if(d_players != null){
             String l_armies = " ( " + GameConstants.ARMIES + " : " + retrieveArmiesOfCountries(p_nameCountry) + " ) ";
-            l_indexString = String.format("%02d. %s", p_index, p_nameCountry, l_armies);
+            l_indexString = String.format("%02d. %s %s", p_index, p_nameCountry, l_armies);
         }
         return getColorfulString(retrieveColorCountry(p_nameCountry), String.format("%-30s", l_indexString));
     }

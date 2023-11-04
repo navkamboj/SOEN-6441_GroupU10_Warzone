@@ -148,13 +148,13 @@ public class OrderExecutionPhase extends Phase {
                 break;
 
             while (!CommonUtil.isEmptyCollection(d_gameState.getD_playerList())) {
-                System.out.println("Press Y/y if you want to continue to the next turn or press N/n");
+                System.out.println("Press Y/y if you want to continue to the next turn or press exit.");
                 Scanner l_scanner = new Scanner(System.in);
 
                 String l_continue = l_scanner.nextLine();
 
-                if (l_continue.equalsIgnoreCase("N")) {
-                    break;
+                if (l_continue.equalsIgnoreCase("exit")) {
+                    System.exit(0);
                 } else if (l_continue.equalsIgnoreCase("Y")) {
                     d_playerService.armiesAssign(d_gameState);
                     d_gameEngine.setIssueOrderPhase();
