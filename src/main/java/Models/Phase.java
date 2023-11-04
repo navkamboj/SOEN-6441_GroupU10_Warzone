@@ -322,6 +322,23 @@ public abstract class Phase {
                 doCardHandle(p_enteredCommand, p_player);
                 break;
             }
+            case "help":{
+                d_gameEngine.setD_logGameEngine(
+                        "---------- List of user map creation commands from console ---------- \n" +
+                                "To add or remove a continent : editcontinent -add continentID continentvalue -remove continentID \n" +
+                                "To add or remove a country : editcountry -add countryID continentID -remove countryID \n" +
+                                "To add or remove a neighbor to a country : editneighbor -add countryID neighborcountryID -remove countryID neighborcountryID \n\n" +
+                                "---------- Map Commands(Edit/Save) ----------- \n" +"To edit map: editmap filename \n" +"To save map: savemap filename \n" +
+                                "To show the map: showmap \n" +"To validate map: validatemap \n\n" +"---------- Game Startup Commands ----------- \n"+
+                                "To load the map: loadmap filename \n " +
+                                "To add the players: gameplayer -add playername -remove playername \n" +"To assign countries to the player: assigncountries \n\n"+
+                                "---------- Order Creation Commands ----------\n"+"Deploy order command: deploy countryID numarmies \n" +"Advance order command: advance countrynamefrom countynameto numarmies \n"+
+                                "Bomb order command (requires bomb card): bomb countryID \n"+"Blockade order command (required blockade card): blockade countryID \n" +
+                                "Airlift order command (requires the airlift card): airlift sourcecountryID targetcountryID numarmies \n" +
+                                "Diplomacy order command (requires the diplomacy card): negotiate playerID \n"
+                        ,"effect");
+                break;
+            }
             case "exit": {
                 d_gameEngine.setD_logGameEngine("Exit Command Entered, Game Ends!", "effect");
                 System.exit(0);
