@@ -320,7 +320,7 @@ public class StartUpPhase extends Phase {
 
         while (d_gameEngine.getD_PresentPhase() instanceof StartUpPhase) {
             try {
-                System.out.println("Enter Commands to play the game else type 'exit' to quit");
+                System.out.println("Enter Commands to play the game / Type 'help' for assistance / Type 'exit' to quit");
                 String l_enteredCommand = l_scanner.nextLine();
 
                 handleCommand(l_enteredCommand);
