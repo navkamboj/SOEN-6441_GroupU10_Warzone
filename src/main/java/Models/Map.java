@@ -322,7 +322,7 @@ public class Map {
             d_countries.remove(getCountryByName(p_countryName));
 
         } else {
-            throw new InvalidMap("Country: " + p_countryName + " does not exist");
+            throw new InvalidMap("Country:  " + p_countryName + " does not exist");
         }
     }
 
@@ -330,9 +330,8 @@ public class Map {
      * Method to remove a country as neighbor from all associated countries in Country list
      *
      * @param p_countryID ID of country to be removed from map
-     * @throws InvalidMap indicates Map Object Validation failure
      */
-    public void removeNeighboringCountriesFromAll(Integer p_countryID) throws InvalidMap{
+    public void removeNeighboringCountriesFromAll(Integer p_countryID) throws InvalidMap {
         for (Country country : d_countries) {
             if (!CommonUtil.isNull(country.getD_neighborCountryIDs())) {
                 if (country.getD_neighborCountryIDs().contains(p_countryID)) {
@@ -430,9 +429,8 @@ public class Map {
      * Method to remove particular country as a neighbor from all associated countries
      *
      * @param p_countryID Country to be removed
-     * @throws InvalidMap indicates Map Object Validation failure
      */
-    public void updateNeighboursCount(Integer p_countryID) throws InvalidMap{
+    public void updateNeighboursCount(Integer p_countryID) throws InvalidMap {
         for (Continent country : d_continents) {
             country.removeCountryNeighboursFromAll(p_countryID);
         }
@@ -462,7 +460,7 @@ public class Map {
      * @param p_neighborName Country to be removed as neighbor
      * @throws InvalidMap exception
      */
-    public void  removeCountryNeighbor(String p_countryName, String p_neighborName) throws InvalidMap {
+    public void removeCountryNeighbor(String p_countryName, String p_neighborName) throws InvalidMap {
         if (d_countries != null) {
             if (!CommonUtil.isNull(getCountryByName(p_countryName)) && !CommonUtil.isNull(getCountryByName(p_neighborName))) {
                 d_countries.get(d_countries.indexOf(getCountryByName(p_countryName))).removingNeighbor(getCountryByName(p_neighborName).getD_countryID());
