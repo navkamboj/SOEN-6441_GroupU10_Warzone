@@ -62,6 +62,7 @@ public class StartUpPhase extends Phase {
         if (!l_isMapLoaded) {
             d_gameEngine.setD_logGameEngine("Can not do edit continent at this stage, please perform" +
                     " `editmap` command first.", "effect");
+            return;
         }
 
         List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();

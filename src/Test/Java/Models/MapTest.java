@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * This MapTest class file is used to test some important functionalities of Mapservice file
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @author Nihal Galani
  */
 public class MapTest{
