@@ -67,7 +67,7 @@ public class Airlift implements Card{
 
             d_playerName.removeCard("airlift");
 
-            this.setD_logOfOrderExecution("Airlift operation from " + d_countryNameOfSource + " to " + d_countryNameOfTarget + "is successfully done", "default");
+            this.setD_logOfOrderExecution("Airlift operation from " + d_countryNameOfSource + " to " + d_countryNameOfTarget + " is successfully done", "default");
             p_gameState.logUpdate(d_orderLog, "effect");
         } else {
             this.setD_logOfOrderExecution("Execution of this Airlift command cannot be possible", "error");
@@ -96,7 +96,7 @@ public class Airlift implements Card{
                 filter(l_player->l_player.getD_countryName().equalsIgnoreCase(this.d_countryNameOfTarget.toString())).
                 findFirst().orElse(null);
         if(l_destionationCountry==null){
-            this.setD_logOfOrderExecution(this.currentlyExecutedOrder()+"will not going to be execute because "+this.d_countryNameOfTarget+" given in the" +
+            this.setD_logOfOrderExecution(this.currentlyExecutedOrder()+"will not going to be execute because "+this.d_countryNameOfTarget+" given in the " +
                     "card does not belong to "+d_playerName,"error");
             p_gameState.logUpdate(logOfOrderExecution(), "effect");
             return false;
@@ -155,7 +155,7 @@ public class Airlift implements Card{
 
     private String currentlyExecutedOrder() {
         return "Order of Airlift " + "airlift" + " " + this.d_countryNameOfSource + " " + this.d_countryNameOfTarget + " "
-                + this.d_airliftedArmies;
+                + this.d_airliftedArmies+" ";
     }
 
     /**

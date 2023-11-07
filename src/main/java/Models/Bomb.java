@@ -77,15 +77,15 @@ public class Bomb implements Card{
         //Player cannot attack their own territory
         if(!CommonUtil.isNull(l_playerCountry)){
             this.setD_logOfOrderExecution(this.currentlyExecutedOrder()+"will not going to be execute because "+this.d_countryNameOfTarget+" given in the" +
-                    "card belong to "+this.d_playerName +"reason behind this :- Player can not Bomb their own territory","error");
+                    "card belong to "+this.d_playerName.getD_playerName() +"reason behind this :- Player can not Bomb their own territory","error");
             p_gameState.logUpdate(logOfOrderExecution(),"effect");
             return false;
         }
 
         //Player can not Bomb on the territory with whom they make a pact
         if(!d_playerName.negotiationValidation(this.d_countryNameOfTarget)){
-            this.setD_logOfOrderExecution(this.currentlyExecutedOrder()+"will not going to be execute because "+this.d_playerName+" has a negotiation pact " +
-                    "with target territory: "+this.d_countryNameOfTarget+" 's player","error");
+            this.setD_logOfOrderExecution(this.currentlyExecutedOrder()+" will not going to be execute because "+this.d_playerName.getD_playerName()+" has a negotiation pact " +
+                    "with target territory: "+this.d_countryNameOfTarget+"'s player","error");
             p_gameState.logUpdate(logOfOrderExecution(),"effect");
             return false;
         }
@@ -135,7 +135,7 @@ public class Bomb implements Card{
      */
 
     private String currentlyExecutedOrder() {
-        return "Order of Bomb " + "Bomb" + " " + this.d_countryNameOfTarget;
+        return "Order of Bomb:-" + "Bomb" + " " + this.d_countryNameOfTarget;
     }
 
     /**
