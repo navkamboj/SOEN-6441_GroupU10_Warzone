@@ -80,6 +80,16 @@ public class PlayerTest {
     }
 
     /**
+     * Validate advance command
+     */
+    @Test
+    public void testCreateAdvanceOrder() {
+        Player l_player1 = new Player("Harsh");
+        l_player1.createAdvanceOrder("advance India Srilanka 3", l_currGameState);
+        assertEquals(l_player1.getD_executeOrders().size(), 1);
+    }
+
+    /**
      * Test case to validate that advance order is only executed on neighbouring countries
      */
     @Test
@@ -87,6 +97,18 @@ public class PlayerTest {
         Player l_player = new Player("Harsh");
         assertTrue(l_player.validateAdjacency(l_currGameState, "India", "Srilanka"));
         assertFalse(l_player.validateAdjacency(l_currGameState, "Srilanka", "India"));
+    }
+
+    /**
+     * Test case to validate that invalid command does not enters the list
+     */
+    @Test
+    public void testInvalidCreateAdvanceOrder() {
+        Player l_player1 = new Player("Harsh");
+        // India is not neighbour of Srilanka
+        l_player1.createAdvanceOrder("advance Srilanka India 3", l_currGameState);
+        assertEquals(l_player1.getD_executeOrders().size(), 0);
+        assertNotEquals(l_player1.getD_executeOrders().size(), 1);
     }
 
 }
