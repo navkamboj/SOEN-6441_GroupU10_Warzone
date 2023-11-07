@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 /**
  * This playerServiceTest class file is used to test some important functionalities of playerservice file
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @author Nihal Galani
  */
 

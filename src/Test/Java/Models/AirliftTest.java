@@ -13,6 +13,8 @@ import Exceptions.InvalidMap;
 
 /**
  * This class is used to test the functionalities of Airlift class methods.
+ * @version 2.0.0
+ * @author Nihal Galani
  */
 public class AirliftTest {
     /**
