@@ -45,8 +45,9 @@ public class MapTest{
      */
    @Test( expected = InvalidMap.class)
     public void testValidate() throws InvalidMap{
-      d_map=d_mapService.mapLoad(d_gameState,"connectivityOfContinent.map");
-      d_map.Validate();
+      d_map=d_mapService.mapLoad(d_gameState,"Validate.map");
+      assertEquals(d_map.Validate(),false);
+
    }
 
     /**
@@ -55,7 +56,7 @@ public class MapTest{
      */
     @Test (expected = InvalidMap.class)
     public void testConnectivityOfContinent() throws InvalidMap{
-       d_map = d_mapService.mapLoad(d_gameState,"connectivityOfContinent.map");
+       d_map = d_mapService.mapLoad(d_gameState,"ConnectivityOfContinent.map");
        d_map.Validate();
     }
 
