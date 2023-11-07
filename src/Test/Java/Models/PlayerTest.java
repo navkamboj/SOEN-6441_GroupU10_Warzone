@@ -46,6 +46,47 @@ public class PlayerTest {
         assertFalse(l_bool);
     }
 
+    /**
+     * Test case to validate that after execution order is removed from the list
+     */
+    @Test
+    public void testNext_order() {
 
+        Order l_order1 = new Deploy(d_playerList.get(0), "Canada", 5);
+        Order l_order2 = new Deploy(d_playerList.get(1), "Australia", 5);
+
+        d_orderList.add(l_order1);
+        d_orderList.add(l_order2);
+
+        d_playerList.get(0).setD_executeOrders(d_orderList);
+        d_playerList.get(1).setD_executeOrders(d_orderList);
+
+        Order l_topOrder = d_playerList.get(0).next_order();
+        assertEquals(l_order1, l_topOrder);
+        assertEquals(1, d_playerList.get(0).getD_executeOrders().size());
+    }
+
+    /**
+     * Test case to validate the no of armies after deploy order and size of order list
+     */
+    @Test
+    public void testDeployOrder() {
+        Player l_player1 = new Player("Harsh");
+        l_player1.setD_noOfAllocatedArmies(10);
+        l_player1.deployOrder("Deploy Canada 5");
+        l_player1.deployOrder("Deploy Australia 3");
+        assertEquals(l_player1.getD_noOfAllocatedArmies().toString(), "2");
+        assertEquals(l_player1.getD_executeOrders().size(), 2);
+    }
+
+    /**
+     * Test case to validate that advance order is only executed on neighbouring countries
+     */
+    @Test
+    public void testValidateAdjacency() {
+        Player l_player = new Player("Harsh");
+        assertTrue(l_player.validateAdjacency(l_currGameState, "India", "Srilanka"));
+        assertFalse(l_player.validateAdjacency(l_currGameState, "Srilanka", "India"));
+    }
 
 }
