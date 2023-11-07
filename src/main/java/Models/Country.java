@@ -1,5 +1,7 @@
 package Models;
 
+import Exceptions.InvalidMap;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,12 +178,13 @@ public class Country {
      * Method to removing an existing country from the neighbor country list
      *
      * @param p_countryID
+     * @throws InvalidMap indicates Map Object Validation failure
      */
-    public void removingNeighbor(Integer p_countryID) {
+    public void removingNeighbor(Integer p_countryID) throws InvalidMap{
         if (d_neighborCountryIDs.contains(p_countryID)) {
             d_neighborCountryIDs.remove(d_neighborCountryIDs.indexOf(p_countryID));
         } else {
-            System.out.println("Neighbour" + p_countryID + "doesn't exist");
+            throw new InvalidMap("No Such Neighbour Exists");
         }
     }
 }
