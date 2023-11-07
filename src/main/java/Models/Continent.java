@@ -1,4 +1,5 @@
 package Models;
+import Exceptions.InvalidMap;
 import Utils.CommonUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,8 +162,9 @@ public class Continent{
      * Removes particular country ID from the adjacent neighbor list of all countries in continent.
      *
      * @param p_countryID ID of country to be removed
+     * @throws InvalidMap indicates Map Object Validation failure
      */
-    public void removeCountryNeighboursFromAll(Integer p_countryID){
+    public void removeCountryNeighboursFromAll(Integer p_countryID) throws InvalidMap {
         if(null!=d_countries && !d_countries.isEmpty()){
             for(Country c : d_countries){
                 if(!CommonUtil.isNull(c.d_neighborCountryIDs)){
