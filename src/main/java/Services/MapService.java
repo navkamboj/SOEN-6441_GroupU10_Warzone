@@ -365,7 +365,7 @@ public class MapService {
      * @return Modified map object
      * @throws InvalidMap
      */
-    public Map addOrRemoveCountry(GameState p_gameState, Map p_mapToBeModified,String p_argument, String p_operationType) throws InvalidMap{
+    public Map addOrRemoveCountry(GameState p_gameState, Map p_mapToBeModified, String p_operationType,String p_argument) throws InvalidMap{
         try {
             if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
                 p_mapToBeModified.addCountry(p_argument.split(" ")[0], p_argument.split(" ")[1]);
@@ -391,7 +391,7 @@ public class MapService {
      * @return modified map object
      * @throws InvalidMap exception
      */
-    public Map addOrRemoveNeighbor(GameState p_gameState, Map p_mapToBeModified, String p_argument, String p_operationType) throws InvalidMap{
+    public Map addOrRemoveNeighbor(GameState p_gameState, Map p_mapToBeModified, String p_operationType, String p_argument) throws InvalidMap{
         try {
             if (p_operationType.equalsIgnoreCase("add") && p_argument.split(" ").length==2){
                 p_mapToBeModified.addCountryNeighbor(p_argument.split(" ")[0], p_argument.split(" ")[1]);
