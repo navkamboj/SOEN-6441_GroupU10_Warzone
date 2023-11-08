@@ -322,7 +322,7 @@ public class Map {
             d_countries.remove(getCountryByName(p_countryName));
 
         } else {
-            throw new InvalidMap("Country:  " + p_countryName + " does not exist");
+            throw new InvalidMap("Country: " + p_countryName + " does not exist");
         }
     }
 
