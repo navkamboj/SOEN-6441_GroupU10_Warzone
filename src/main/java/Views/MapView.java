@@ -60,6 +60,7 @@ public class MapView {
         d_gameState = p_gameState;
         d_map = p_gameState.getD_map();
         d_countries = d_map.getD_countries();
+        d_players=p_gameState.getD_playerList();
         d_continents = d_map.getD_continents();
     }
 
@@ -143,7 +144,7 @@ public class MapView {
 
         if(d_players != null){
             String l_armies = " ( " + GameConstants.ARMIES + " : " + retrieveArmiesOfCountries(p_nameCountry) + " ) ";
-            l_indexString = String.format("%02d. %s", p_index, p_nameCountry, l_armies);
+            l_indexString = String.format("%02d. %s %s", p_index, p_nameCountry, l_armies);
         }
         return getColorfulString(retrieveColorCountry(p_nameCountry), String.format("%-30s", l_indexString));
     }
@@ -239,7 +240,7 @@ public class MapView {
      * @param p_player the player object.
      */
     private void retrieveInfoOfPlayer(Integer p_index, Player p_player){
-        String l_infoOfPlayer = String.format("%02d. %-8s %s", p_index, p_player.getPlayerName(), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
+        String l_infoOfPlayer = String.format("%02d. %-8s %s", p_index, p_player.getD_playerName(), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
         System.out.println(l_infoOfPlayer);
     }
 
@@ -257,6 +258,7 @@ public class MapView {
         for(Player p : d_players){
             l_counter++;
             retrieveInfoOfPlayer(l_counter, p);
+            renderCardsOwnedByPlayers(p);
         }
     }
 
@@ -310,4 +312,29 @@ public class MapView {
             System.out.println("There are no continents to show!!");
         }
     }
+
+    /**
+     * Method to render the number of cards owned by the player.
+     *
+     * @param p_player Player Instance
+     */
+    private void renderCardsOwnedByPlayers(Player p_player){
+        StringBuilder l_cards = new StringBuilder();
+
+        for(int i=0; i<p_player.getD_cardsOwned().size(); i++) {
+            l_cards.append(p_player.getD_cardsOwned().get(i));
+            if(i<p_player.getD_cardsOwned().size()-1)
+                l_cards.append(", ");
+        }
+
+        String l_cardsOwnedByPlayer = "Cards Owned : "+ WordWrap.from(l_cards.toString()).maxWidth(GameConstants.CONSOLE_WIDTH).wrap();
+        System.out.println(getColorfulString(p_player.getD_color(),l_cardsOwnedByPlayer));
+        System.out.println();
+    }
+
+
+    private String retrieveArmiesOfplayer(Player p_player){
+           return "(Armies that are not allocated: "+p_player.getD_noOfAllocatedArmies();
+    }
+
 }

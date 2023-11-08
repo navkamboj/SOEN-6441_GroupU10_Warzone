@@ -322,7 +322,7 @@ public class Map {
             d_countries.remove(getCountryByName(p_countryName));
 
         } else {
-            throw new InvalidMap("Country:  " + p_countryName + " does not exist");
+            throw new InvalidMap("Country: " + p_countryName + " does not exist");
         }
     }
 
@@ -331,7 +331,7 @@ public class Map {
      *
      * @param p_countryID ID of country to be removed from map
      */
-    public void removeNeighboringCountriesFromAll(Integer p_countryID) {
+    public void removeNeighboringCountriesFromAll(Integer p_countryID) throws InvalidMap {
         for (Country country : d_countries) {
             if (!CommonUtil.isNull(country.getD_neighborCountryIDs())) {
                 if (country.getD_neighborCountryIDs().contains(p_countryID)) {
@@ -430,7 +430,7 @@ public class Map {
      *
      * @param p_countryID Country to be removed
      */
-    public void updateNeighboursCount(Integer p_countryID) {
+    public void updateNeighboursCount(Integer p_countryID) throws InvalidMap {
         for (Continent country : d_continents) {
             country.removeCountryNeighboursFromAll(p_countryID);
         }

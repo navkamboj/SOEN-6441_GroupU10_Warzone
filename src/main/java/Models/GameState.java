@@ -1,18 +1,25 @@
 package Models;
 
 import java.util.List;
+import Models.LogEntryBuffer;
 
 /**
  * Model class to manage the GameState functions
  *
- * @author Navjot Kamboj
- * @version 1.0.0
+ * @author Navjot Kamboj, Yatish Chutani
+ * @version 2.0.0
  */
 public class GameState {
+
     /**
      * List of players
      */
     List<Player> d_playerList;
+
+    /**
+     * Recording Game State as Log Entries.
+     */
+    LogEntryBuffer d_logEntryBuffer = new LogEntryBuffer();
 
     /**
      * Data member to store Map object
@@ -23,6 +30,11 @@ public class GameState {
      * Error message string
      */
     String d_errorMessage;
+
+    /**
+     * Checks if player has used the load command
+     */
+    Boolean d_checkLoadCommand = false;
 
     /**
      * Getter method to retrieve error message string
@@ -39,7 +51,6 @@ public class GameState {
     public void setD_errorMessage(String p_errorMessage) {
         this.d_errorMessage = p_errorMessage;
     }
-
 
     /**
      * Getter method to retrieve the map object
@@ -71,5 +82,40 @@ public class GameState {
      */
     public void setD_playerList(List<Player> p_playerList) {
         this.d_playerList = p_playerList;
+    }
+
+    /**
+     * It consists of the message to be added in the log.
+     *
+     * @param p_messageLog Set the Log Message within the Object.
+     * @param p_logType Type of Log Message that is to be Added
+     */
+    public void logUpdate(String p_messageLog, String p_logType){
+        d_logEntryBuffer.currentLog(p_messageLog, p_logType);
+    }
+
+    /**
+     * This getter method fetches the latest Log in current GameState.
+     *
+     * @return The recent Log Message
+     */
+    public String getLatestLog(){
+        return d_logEntryBuffer.getD_messageLog();
+    }
+
+    /**
+     * Setter method to set the Boolean load map variable.
+     */
+    public void setD_checkLoadCommand() {
+        this.d_checkLoadCommand = true;
+    }
+
+    /**
+     * Getter method to check if the load command is used.
+     *
+     * @return boolean value
+     */
+    public boolean getD_checkLoadCommand(){
+        return this.d_checkLoadCommand;
     }
 }

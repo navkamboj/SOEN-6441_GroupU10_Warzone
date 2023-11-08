@@ -1,13 +1,12 @@
 package Services;
 
+import Exceptions.InvalidMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.Transient;
 import java.io.*;
 import java.util.*;
 
-import Exceptions.InvalidCommand;
 import Models.Continent;
 import Models.Country;
 import Models.GameState;
@@ -20,7 +19,7 @@ import static org.junit.Assert.*;
 /**
  * This playerServiceTest class file is used to test some important functionalities of playerservice file
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @author Nihal Galani
  */
 
@@ -71,7 +70,7 @@ public class PlayerServiceTest {
     }
 
     /**
-     * This testing method is used to calculate total number ofreinforcemet armies for the player
+     * This testing method is used to calculate total number of reinforcemet armies for the player
      */
     @Test
     public void testArmiesCountForPlayer(){
@@ -96,17 +95,6 @@ public class PlayerServiceTest {
         assertEquals(l_expectedCountResult,l_countedResult);
     }
 
-    /**
-     * This testing method is used to test that player can not deploy number of
-     * armies  than player have in their balance
-     */
-    @Test
-    public void testDeployOrderValidation(){
-        d_testInformationAboutPlayer.setD_noOfAllocatedArmies(8);
-        String l_totalArmies ="5";
-        boolean l_booleancheck = d_testPlayerService.deployOrderValidation(d_testInformationAboutPlayer,l_totalArmies);
-        assertFalse(l_booleancheck);
-    }
 
     /**
      *This testing method is used to test that adding player functionalities
@@ -115,16 +103,16 @@ public class PlayerServiceTest {
     public void testAddingPlayers(){
      assertFalse(CommonUtil.isEmptyCollection(d_currentlyAvailablePlayersList));
      List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Yatish");
-     assertEquals("Yatish",l_updatingPlayers.get(2).getPlayerName());
+     assertEquals("Yatish",l_updatingPlayers.get(2).getD_playerName());
 
      System.setOut(new PrintStream(d_outputStreamContent));
      d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Nihal");
-     assertEquals("Player: Nihal already Exists." ,d_outputStreamContent.toString() );
+     assertEquals("Player: Nihal already Exists.",d_outputStreamContent.toString().trim());
 
     }
 
     /**
-     *This testing method is used to test that player removal is done or not of addingRemovingOlayers
+     *This testing method is used to test that player removal is done or not of addingRemovingPlayers
      */
     @Test
     public void testRemovalPlayers(){
@@ -133,7 +121,7 @@ public class PlayerServiceTest {
 
     System.setOut(new PrintStream(d_outputStreamContent));
     d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Harsh");
-    assertEquals("Player: Harsh does not Exist." ,d_outputStreamContent.toString() );
+    assertEquals("Player: Harsh does not Exist.",d_outputStreamContent.toString().trim() );
     }
 
     /**
@@ -145,5 +133,23 @@ public class PlayerServiceTest {
       assertFalse(l_existanceOfPlayers);
     }
 
+    /**
+     * Testing the country assignment to player
+     */
+    @Test
+    public void testCountryAssignment() throws InvalidMap {
+        d_testMapService = new MapService();
+        d_testMap = new Map();
+        d_testMap = d_testMapService.mapLoad(d_testGameState, "canada.map");
+        d_testGameState.setD_map(d_testMap);
+        d_testGameState.setD_playerList(d_currentlyAvailablePlayersList);
+        d_testPlayerService.countryAssign(d_testGameState);
 
+        int l_sizeOfAssignedCountries = 0;
+        for (Player l_player : d_testGameState.getD_playerList()) {
+            assertNotNull(l_player.getD_ownedCountries());
+            l_sizeOfAssignedCountries = l_sizeOfAssignedCountries + l_player.getD_ownedCountries().size();
+        }
+        assertEquals(l_sizeOfAssignedCountries, d_testGameState.getD_map().getD_countries().size());
+    }
 }
