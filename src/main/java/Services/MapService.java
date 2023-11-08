@@ -24,6 +24,7 @@ import java.util.Scanner;
  * @author Navjot Kamboj, Pranjalesh Ghansiyal, Yatish Chutani
  */
 public class MapService {
+
     /**
      * This method processes the map file.
      *
