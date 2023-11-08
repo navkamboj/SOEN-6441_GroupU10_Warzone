@@ -89,7 +89,7 @@ public class MapServiceTest {
     public void testCountryAddition() throws IOException, InvalidMap, InvalidCommand {
         d_mapService.mapLoad(d_gamestate, "test.map");
         d_mapService.editFunctionality(d_gamestate, "Asia 10", "add", 1 );
-        d_mapService.editFunctionality(d_gamestate, "add", "India Asia", 2);
+        d_mapService.editFunctionality(d_gamestate, "India Asia", "add", 2);
 
         assertEquals(d_gamestate.getD_map().getCountryByName("India").getD_countryName(), "India");
     }
@@ -103,7 +103,7 @@ public class MapServiceTest {
     @Test
     public void testRemovalOfCountry() throws InvalidMap, IOException, InvalidCommand {
         d_mapService.mapLoad(d_gamestate, "test.map");
-        d_mapService.editFunctionality(d_gamestate, "remove", "Pakistan", 2);
+        d_mapService.editFunctionality(d_gamestate, "Pakistan", "remove", 2);
         assertEquals("Country: Pakistan does not exist"+System.lineSeparator(),d_gamestate.getLatestLog() );
     }
 
@@ -117,9 +117,9 @@ public class MapServiceTest {
     public void testAdditionOfNeighbor() throws InvalidMap, IOException, InvalidCommand {
         d_mapService.mapLoad(d_gamestate, "test.map");
         d_mapService.editFunctionality(d_gamestate, "Asia 10", "add", 1 );
-        d_mapService.editFunctionality(d_gamestate, "add", "India Asia",  2);
-        d_mapService.editFunctionality(d_gamestate, "add","Nepal Asia", 2);
-        d_mapService.editFunctionality(d_gamestate, "add", "India Nepal", 3);
+        d_mapService.editFunctionality(d_gamestate, "India Asia", "add",  2);
+        d_mapService.editFunctionality(d_gamestate, "Nepal Asia","add", 2);
+        d_mapService.editFunctionality(d_gamestate, "India Nepal", "add", 3);
 
         assertEquals(d_gamestate.getD_map().getCountryByName("India").getD_neighborCountryIDs().get(0), d_gamestate.getD_map().getCountryByName("Nepal").getD_countryID());
     }
@@ -134,10 +134,10 @@ public class MapServiceTest {
     public void testRemovalOfNeighbor() throws InvalidMap, IOException, InvalidCommand{
         d_mapService.mapModify(d_gamestate, "test.map");
         d_mapService.editFunctionality(d_gamestate, "Asia 15", "add",   1);
-        d_mapService.editFunctionality(d_gamestate, "add", "India Asia", 2);
-        d_mapService.editFunctionality(d_gamestate, "add", "Nepal Asia", 2);
-        d_mapService.editFunctionality(d_gamestate, "add", "India Nepal", 3);
-        d_mapService.editFunctionality(d_gamestate, "remove", "Nepal India", 3);
+        d_mapService.editFunctionality(d_gamestate, "India Asia", "add", 2);
+        d_mapService.editFunctionality(d_gamestate, "Nepal Asia", "add", 2);
+        d_mapService.editFunctionality(d_gamestate, "India Nepal", "add", 3);
+        d_mapService.editFunctionality(d_gamestate, "Nepal India", "remove", 3);
         assertEquals("No Such Neighbour Exists"+System.lineSeparator(), d_gamestate.getLatestLog());
     }
 }
