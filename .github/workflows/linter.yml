@@ -3,7 +3,7 @@ name: Linter
 on:
   push:
     branches:
-      - build2
+      - build3
 
 jobs:
   lint:
