@@ -104,6 +104,26 @@ public class Map {
     }
 
     /**
+     * Method to returns object of type Continent for the provided continent ID.
+     *
+     * @param p_continentID Continent ID to be searched
+     * @return continent object
+     */
+    public Continent getContinentByID(Integer p_continentID){
+        return d_continents.stream().filter(l_continent -> l_continent.getD_continentID().equals(p_continentID)).findFirst().orElse(null);
+    }
+
+    /**
+     * Method to returns object of type Country for the provided country ID.
+     *
+     * @param p_countryID Country ID to be searched
+     * @return country object
+     */
+    public Country getCountryByID(Integer p_countryID){
+        return d_countries.stream().filter(l_country -> l_country.getD_countryID().equals(p_countryID)).findFirst().orElse(null);
+    }
+
+    /**
      * Method to retrieve list of IDs for the countries
      *
      * @return Country ID list

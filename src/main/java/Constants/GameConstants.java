@@ -40,4 +40,6 @@ public class GameConstants {
     public static final List<String> CARDS = Arrays.asList("bomb", "blockade", "airlift", "negotiate");
     public static final int SIZE = CARDS.size();
     public static final List<String> COLORS_LIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
+    public static final String CONQUEST_TERRITORIES = "[Territories]";
+    public static final String CONQUEST_CONTINENTS = "[Continents]";
 }
