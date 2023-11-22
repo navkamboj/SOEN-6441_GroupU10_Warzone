@@ -3,6 +3,12 @@ package Models;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * This is the abstract class of Player Behavior Strategy.
+ *
+ * @author Pranjalesh Ghansiyal
+ * @version 3.0.0
+ */
 public abstract class PlayerBehaviorStrategy implements Serializable {
 
     /**
