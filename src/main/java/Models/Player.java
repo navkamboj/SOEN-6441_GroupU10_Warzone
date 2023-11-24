@@ -15,7 +15,7 @@ import java.util.Scanner;
  * This class depicts the player information and services.
  *
  * @author Pranjalesh Ghansiyal, Navjot Kamboj
- * @version 2.0.0
+ * @version 3.0.0
  */
 public class Player {
     /**
@@ -261,6 +261,19 @@ public class Player {
      */
     public void setD_executeOrders(List<Order> p_executeOrders) {
         this.d_orderedPlayerList = p_executeOrders;
+    }
+
+    /**
+     * Extracts the IDs of countries which are owned by the player.
+     *
+     * @return a list of country IDs
+     */
+    public List<Integer> getCountryIDs() {
+        List<Integer> l_countryIDs = new ArrayList<Integer>();
+        for (Country c : d_ownedCountries) {
+            l_countryIDs.add(c.getD_countryID());
+        }
+        return l_countryIDs;
     }
 
     /**
