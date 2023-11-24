@@ -8,6 +8,7 @@ import Services.PlayerService;
 import Utils.Command;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * This abstract class declares abstract methods for each game phase
@@ -15,7 +16,12 @@ import java.io.IOException;
  * @author Navjot Kamboj, Yatish Chutani
  * @version 2.0.0
  */
-public abstract class Phase {
+public abstract class Phase implements Serializable {
+    /**
+     * Serial version id.
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * d_gameState stores the information about current GameState.
      */
@@ -251,7 +257,7 @@ public abstract class Phase {
     /**
      * This is the main method executed on phase change.
      */
-    public abstract void initPhase();
+    public abstract void initPhase(boolean p_isTournamentMode);
 
     /**
      * This method is used to Log and Print if the command cannot be executed in current phase.

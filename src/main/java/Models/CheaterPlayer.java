@@ -100,11 +100,11 @@ public class CheaterPlayer extends PlayerBehaviorStrategy {
     }
         try {
             conquerNeighboringRivals(p_player, p_gameState);
-        } catch (ConcurrentModificationException l_e){
+        } catch (ConcurrentModificationException l_exception){
         }
 
-       // doubleArmyOnRivalsNeighboredCountries(p_player, p_gameState);
-        // p_player.checkForMoreOrders(true);
+       doubleArmyOnRivalsNeighboredCountries(p_player, p_gameState);
+        p_player.checkForMoreOrders(true);
         return null;
     }
 
@@ -143,9 +143,58 @@ public class CheaterPlayer extends PlayerBehaviorStrategy {
         p_targetPlayer.getD_ownedCountries().remove(p_targetCountry);
         p_cheater.getD_ownedCountries().add(p_targetCountry);
 
-        //this.updateContinents(p_cheaterPlayer, p_targetPlayer, p_gameState);
+        this.continentsUpdate(p_cheater, p_targetPlayer, p_gameState);
     }
 
+    /**
+     * Updates continents for the player based on the results of battle
+     *
+     * @param p_cheater Source country owner
+     * @param p_targetPlayer player owning target country
+     * @param p_gameState             current game state
+     */
+    private void continentsUpdate(Player p_cheater, Player p_targetPlayer,
+                                  GameState p_gameState) {
+        List<Player> l_playerList = new ArrayList<>();
+        p_cheater.setD_ownedContinents(new ArrayList<>());
+        p_targetPlayer.setD_ownedContinents(new ArrayList<>());
+        l_playerList.add(p_cheater);
+        l_playerList.add(p_targetPlayer);
+
+        PlayerService l_playerServiceObject = new PlayerService();
+        l_playerServiceObject.assignmentOfContinents(l_playerList, p_gameState.getD_map().getD_continents());
+    }
+
+    /**
+     * Method to double the armies for country neighboring to rivals .
+     *
+     * @param p_player Player class object
+     * @param p_gameState GameState class object
+     */
+    private void doubleArmyOnRivalsNeighboredCountries(Player p_player, GameState p_gameState){
+        List<Country> l_ownedCountries = p_player.getD_ownedCountries();
+
+        for(Country l_ownedCountry : l_ownedCountries) {
+            ArrayList<Integer> l_countryRivals = getRivals(p_player, l_ownedCountry);
+
+            if(l_countryRivals.size() == 0)
+                continue;
+
+            Integer l_armiesInTerritory = l_ownedCountry.getD_numberOfArmies();
+
+            if(l_armiesInTerritory == 0)
+                continue;
+
+            l_ownedCountry.setD_numberOfArmies(l_armiesInTerritory*2);
+
+            String l_logString = "Cheater Player: " + p_player.getD_playerName() +
+                    " doubled the armies ( Now: " + l_armiesInTerritory*2 +
+                    ") in " + l_ownedCountry.getD_countryName();
+
+            p_gameState.logUpdate(l_logString, "effect");
+
+        }
+    }
 
     /**
      * {@inheritDoc}

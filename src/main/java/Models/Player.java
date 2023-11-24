@@ -74,6 +74,11 @@ public class Player {
     String d_playerLog;
 
     /**
+     * Object of Player Behavior Strategy class.
+     */
+    PlayerBehaviorStrategy d_playerBehaviorStrategy;
+
+    /**
      * This is default constructor.
      */
     public Player() {
@@ -340,20 +345,39 @@ public class Player {
     }
 
     /**
+     * Returns player strategy object.
+     *
+     * @return player strategy
+     */
+    public PlayerBehaviorStrategy getD_playerBehaviorStrategy() {
+        return d_playerBehaviorStrategy;
+    }
+
+    /**
      * Verifies if more orders are to be accepted for player in further turn.
      *
+     * @param p_isTournamentMode boolean if game is played in tournament mode
      * @throws IOException exception to handle I/O operation
      */
-    void checkForMoreOrders() {
-        Scanner l_scanner = new Scanner(System.in);
-        System.out.println("\nDo you want to give more orders for: " + this.getD_playerName()
-                + " in further turns ? \nEnter Y/N");
-        String l_checkNextOrder = l_scanner.nextLine();
-        if (l_checkNextOrder.equalsIgnoreCase("Y") || l_checkNextOrder.equalsIgnoreCase("N")) {
-            this.setD_moreOrders(l_checkNextOrder.equalsIgnoreCase("Y") ? true : false);
+    void checkForMoreOrders(boolean p_isTournamentMode) {
+        String l_checkNextOrder = new String();
+        if (p_isTournamentMode || !this.getD_playerBehaviorStrategy().getPlayerBehavior().equalsIgnoreCase("Human")) {
+            Random l_randomNumber = new Random();
+            System.out.println("Trying to run next boolean logic");
+            boolean l_nextOrders = l_randomNumber.nextBoolean();
+            this.setD_moreOrders(l_nextOrders);
         } else {
-            System.err.println("Enter a valid Input");
-            this.checkForMoreOrders();
+            Scanner l_scanner = new Scanner(System.in);
+            System.out.println("\nDo you want to give more orders for: " + this.getD_playerName()
+                    + " in further turns ? \nEnter Y/N");
+            l_checkNextOrder = l_scanner.nextLine();
+
+            if (l_checkNextOrder.equalsIgnoreCase("Y") || l_checkNextOrder.equalsIgnoreCase("N")) {
+                this.setD_moreOrders(l_checkNextOrder.equalsIgnoreCase("Y") ? true : false);
+            } else {
+                System.err.println("Enter a valid Input");
+                this.checkForMoreOrders(p_isTournamentMode);
+            }
         }
     }
 
@@ -483,7 +507,7 @@ public class Player {
      * Method to verify number of armies entered in deploy command to validate that
      * Player cannot deploy more armies exceeding their reinforcement pool.
      *
-     * @param p_player     player creating the deploy order
+     * @param p_player     player creating the deployment order
      * @param p_noOfArmies number of armies
      * @return boolean to validate armies to deploy
      */
