@@ -9,6 +9,8 @@ import Models.GameState;
 
 /**
  * This Class acts as Writer class to create generic map file.
+ * @author Harsh Tank
+ * @version 3.0.0
  *
  */
 public class MapFileWriter implements Serializable {
