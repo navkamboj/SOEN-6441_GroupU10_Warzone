@@ -142,7 +142,7 @@ public class PlayerService implements Serializable {
                     break;
             }
             p_updatePlayers.add(l_addPlayer);
-            setD_logPlayer("Player: " + p_newPlayerName + "and strategy: "+ l_playerStrategy+ " has been added successfully.");
+            setD_logPlayer("Player: " + p_newPlayerName + " and strategy: "+ l_playerStrategy+ " has been added successfully.");
         }
     }
 
