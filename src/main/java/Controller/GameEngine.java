@@ -2,6 +2,8 @@ package Controller;
 
 import Models.*;
 
+import java.io.Serializable;
+
 
 /**
  * This serves as the starting point for the game and manages the current state of the game.
@@ -9,7 +11,7 @@ import Models.*;
  * @author Harsh Tank, Pranjalesh Ghansiyal, Yatish Chutani, Navjot Kamboj
  * @version 3.0.0
  */
-public class GameEngine {
+public class GameEngine implements Serializable {
 
     /**
      * d_gameState Records the data pertaining to the current game.
