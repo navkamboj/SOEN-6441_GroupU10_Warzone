@@ -1,19 +1,7 @@
 package Controller;
 
-import Constants.GameConstants;
-import Exceptions.InvalidMap;
-import Exceptions.InvalidCommand;
 import Models.*;
-import Services.MapService;
-import Services.PlayerService;
-import Utils.Command;
-import Utils.CommonUtil;
-import Views.MapView;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 /**
  * This serves as the starting point for the game and manages the current state of the game.
@@ -90,7 +78,7 @@ public class GameEngine {
      *
      * @param p_phase new Phase in Game context
      */
-    private void setD_PresentPhase(Phase p_phase){
+    public void setD_PresentPhase(Phase p_phase){
         d_presentPhase = p_phase;
     }
 
