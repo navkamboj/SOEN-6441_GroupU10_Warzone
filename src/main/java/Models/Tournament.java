@@ -275,10 +275,7 @@ public class Tournament implements Serializable{
      * @param p_commandType        tournament command
      * @return true if command is valid or else false
      */
-    public boolean validateTournamentArguments
-
-
-    (List<Map<String, String>> p_operations, Command p_commandType) {
+    public boolean validateTournamentArguments(List<Map<String, String>> p_operations, Command p_commandType) {
         String l_keyForArgument = "";
         if (p_operations.size() != 4)
             return false;
