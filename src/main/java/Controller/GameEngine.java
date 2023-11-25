@@ -46,6 +46,25 @@ public class GameEngine {
     public void setD_isTournamentMode(boolean p_isTournamentMode) {
         GameEngine.d_isTournamentMode = p_isTournamentMode;
     }
+
+    /**
+     * Gets current state of the game.
+     *
+     * @return state of the game
+     */
+    public GameState getD_gameState() {
+        return d_gameState;
+    }
+
+    /**
+     * Sets state of the game.
+     *
+     * @param p_gameState state of the game
+     */
+    public void setD_gameState(GameState p_gameState) {
+        this.d_gameState = p_gameState;
+    }
+
     /**
      * Handles load game feature by setting phase from Object stream.
      *
@@ -124,7 +143,7 @@ public class GameEngine {
     /**
      * This method updates the present phase to Issue Order Phase as per the State Pattern.
      */
-    public void setIssueOrderPhase(){
+    public void setIssueOrderPhase(boolean p_isTournamentMode){
         this.setD_logGameEngine("Issue Order Phase", "phase");
         setD_PresentPhase(new IssueOrderPhase(this, d_gameState));
         getD_PresentPhase().initPhase(d_isTournamentMode);
