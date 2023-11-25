@@ -275,7 +275,7 @@ public class StartUpPhase extends Phase {
                 }
             }
         } else {
-            throw new InvalidCommand(GameConstants.INVALID_MAP_EMPTY);
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_VALIDATEMAP);
         }
     }
 
