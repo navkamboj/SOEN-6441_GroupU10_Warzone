@@ -140,10 +140,11 @@ public class PlayerService {
      *
      * @param p_gameState current game state
      */
-    public void countryAssign(GameState p_gameState) {
-        if (!checkAvailabilityPlayerList(p_gameState))
+    public boolean countryAssign(GameState p_gameState) {
+        if (!checkAvailabilityPlayerList(p_gameState)){
             p_gameState.logUpdate("Countries can only be assigned once players are added.", "effect");
-
+        return false;
+    }
         List<Country> l_countrylist = p_gameState.getD_map().getD_countries();
         int l_playerListSize = p_gameState.getD_playerList().size();
         Player l_neutralPlayer = p_gameState.getD_playerList().stream()
@@ -158,6 +159,7 @@ public class PlayerService {
 
         p_gameState.logUpdate(d_assignmentLog, "effect");
         System.out.println("Countries have been assigned to all individual players");
+        return true;
     }
 
     /**

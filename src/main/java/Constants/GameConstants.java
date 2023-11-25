@@ -22,6 +22,8 @@ public class GameConstants implements Serializable {
     public static final String INVALID_COMMAND_ASSIGNCOUNTRIES = "Invalid command! Please provide command in Format of : assigncountries";
     public static final String INVALID_MAP_EMPTY = "A valid map is not present. Please load a valid map to perform a check.";
     public static final String INVALID_COMMAND_TOURNAMENT_MODE = "Invalid Command. Please submit your command in the Format of : tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns";
+    public static final String INVALID_COMMAND_LOADGAME = "Invalid command. Please submit your command in Format of : loadgame filename";
+    public static final String INVALID_COMMAND_SAVEGAME = "Invalid command. Please submit your command in Format of : savegame filename";
     public static final String VALID_MAP = "The loaded map is valid!";
     public static final int CONSOLE_WIDTH = 80;
     public static final String ARGUMENTS = "arguments";
