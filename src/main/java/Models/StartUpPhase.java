@@ -4,6 +4,7 @@ import Constants.GameConstants;
 import Controller.GameEngine;
 import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
+import Services.GameService;
 import Utils.Command;
 import Utils.CommonUtil;
 import Utils.ExceptionLogHandler;
@@ -30,6 +31,61 @@ public class StartUpPhase extends Phase {
      */
     public StartUpPhase(GameEngine p_gameEngine, GameState p_gameState) {
         super(p_gameEngine, p_gameState);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doLoadGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
+        List<java.util.Map<String, String>> l_operations = p_command.getParametersAndOperations();
+
+        if (l_operations == null || l_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_LOADGAME);
+        }
+
+        for (Map<String, String> l_mapFile : l_operations) {
+            if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_mapFile)) {
+                String l_filename = l_mapFile.get(GameConstants.ARGUMENTS);
+
+                try{
+                    Phase l_gamePhase= GameService.loadGame(l_filename);
+                    this.d_gameEngine.setD_logGameEngine("Map has been loaded ! You can play the game..", "effect");
+                    this.d_gameEngine.loadPhase(l_gamePhase);
+                } catch (ClassNotFoundException l_exception) {
+                    l_exception.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doSaveGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
+        List<java.util.Map<String, String>> l_operations = p_command.getParametersAndOperations();
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+
+        if (l_operations == null || l_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+        }
+
+        for (Map<String, String> l_mapFile : l_operations) {
+            if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_mapFile)) {
+                String l_filename = l_mapFile.get(GameConstants.ARGUMENTS);
+                GameService.saveGame(this, l_filename);
+                d_gameEngine.setD_logGameEngine("Gameplay has been saved Successfully to "+l_filename, "effect");
+            } else {
+                throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+            }
+        }
+    }
+
+    @Override
+    protected void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap {
+        //missing implementation...
     }
 
     /**
@@ -243,17 +299,26 @@ public class StartUpPhase extends Phase {
      *
      */
     @Override
-    protected void doAssignCountries(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
+    protected void doAssignCountries(Command p_command, Player p_player,boolean p_isTournamentMode,
+                                     GameState p_gameState) throws InvalidCommand, IOException, InvalidMap {
+        if (p_gameState.getD_checkLoadCommand()) {
         List<Map<String, String>> l_list_of_operations= p_command.getParametersAndOperations();
-
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
-        if (CommonUtil.isEmptyCollection(l_list_of_operations)) {
-            d_playerService.countryAssign(d_gameState);
+
+        if (CommonUtil.isEmptyCollection(l_list_of_operations)|| p_isTournamentMode) {
+            d_gameEngine.setD_gameState(p_gameState);
+            d_gameEngine.setD_isTournamentMode(p_isTournamentMode);
+
+            if(d_playerService.countryAssign(d_gameState)){
             d_playerService.colorAssign(d_gameState);
             d_playerService.armiesAssign(d_gameState);
-            d_gameEngine.setIssueOrderPhase();
+            d_gameEngine.setIssueOrderPhase(p_isTournamentMode);
+        }
         } else {
             throw new InvalidCommand(GameConstants.INVALID_COMMAND_ASSIGNCOUNTRIES);
+        }
+    }else {
+            d_gameEngine.setD_logGameEngine("Please load a valid map first using the loadmap command!", "effect");
         }
     }
 
@@ -263,17 +328,13 @@ public class StartUpPhase extends Phase {
      */
     @Override
     protected void createGamePlayers(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
-        if (!l_isMapLoaded) {
-            d_gameEngine.setD_logGameEngine("No map available. Please perform `loadmap` command before" +
-                    " adding players.", "effect");
-        }
 
         List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
-        if (l_list_of_operations == null || l_list_of_operations.isEmpty()) {
+
+        if (CommonUtil.isCollectionEmpty(l_list_of_operations)) {
             throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
         } else {
-            if (d_gameState.getD_checkLoadCommand()) {
                 for (Map<String, String> l_map : l_list_of_operations) {
                     if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
                             && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
@@ -283,9 +344,6 @@ public class StartUpPhase extends Phase {
                         throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
                     }
                 }
-            } else {
-                d_gameEngine.setD_logGameEngine("Please load a valid map first using the loadmap command!", "effect");
-            }
         }
     }
 
@@ -316,7 +374,7 @@ public class StartUpPhase extends Phase {
      * {@inheritDoc}
      */
     @Override
-    public void initPhase() {
+    public void initPhase(boolean p_isTournamentMode) {
         Scanner l_scanner = new Scanner(System.in);
 
         while (d_gameEngine.getD_PresentPhase() instanceof StartUpPhase) {
