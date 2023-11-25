@@ -6,6 +6,7 @@ import Exceptions.InvalidMap;
 import Utils.CommonUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ import java.util.Scanner;
  * @author Pranjalesh Ghansiyal, Navjot Kamboj
  * @version 3.0.0
  */
-public class Player {
+public class Player implements Serializable {
     /**
      * Color to show the details with on the map.
      */
@@ -112,6 +113,15 @@ public class Player {
      */
     public void addPlayerNegotiation(Player p_playerNegotiation){
         this.d_negotiatedWith.add(p_playerNegotiation);
+    }
+
+    /**
+     * Returns the boolean if a player has received a card or not.
+     *
+     * @return bool if player has earned one card
+     */
+    public boolean getD_oneCardPerTurn() {
+        return d_oneCardPerTurn;
     }
 
     /**
