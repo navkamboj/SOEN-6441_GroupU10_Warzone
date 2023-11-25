@@ -2,6 +2,7 @@ package Models;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -63,9 +64,9 @@ public class RandomPlayer extends PlayerBehaviorStrategy{
                         break;
                 }
             } else{
-                Random l_random = new Random();
-                Boolean l_randomBoolean = l_random.nextBoolean();
-                if(l_randomBoolean){
+                Random l_randomNum = new Random();
+                Boolean l_randomBool = l_randomNum.nextBoolean();
+                if(l_randomBool){
                     l_commandEntered = createOrderDeploy(p_player, p_gameState);
                 }else{
                     l_commandEntered = createOrderAdvance(p_player, p_gameState);
@@ -75,24 +76,87 @@ public class RandomPlayer extends PlayerBehaviorStrategy{
         return l_commandEntered;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String createOrderDeploy(Player p_player, GameState p_gameState) {
-        return null;
+        if (p_player.getD_noOfAllocatedArmies()>0) {
+            Random l_randomNum = new Random();
+            System.out.println(p_player.getD_ownedCountries().size());
+            Country l_randomCountry = getRandomCountry(p_player.getD_ownedCountries());
+            d_deployOrderCountries.add(l_randomCountry);
+            int l_armiesToBeDeployed = 1;
+            if (p_player.getD_noOfAllocatedArmies()>1) {
+                l_armiesToBeDeployed = l_randomNum.nextInt(p_player.getD_noOfAllocatedArmies() - 1) + 1;
+            }
+            return String.format("deploy %s %d", l_randomCountry.getD_countryName(), l_armiesToBeDeployed);
+        } else {
+            return createOrderAdvance(p_player,p_gameState);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String createOrderAdvance(Player p_player, GameState p_gameState) {
-        return null;
+        int l_armiesToBeSent;
+        Random l_random = new Random();
+        Country l_randomOwnCountry = getRandomCountry(d_deployOrderCountries);
+        int l_randomIndex = l_random.nextInt(l_randomOwnCountry.getD_neighborCountryIDs().size());
+        Country l_randomNeighbor;
+        if (l_randomOwnCountry.getD_neighborCountryIDs().size()>1) {
+            l_randomNeighbor = p_gameState.getD_map().getCountry(l_randomOwnCountry.getD_neighborCountryIDs().get(l_randomIndex));
+        } else {
+            l_randomNeighbor = p_gameState.getD_map().getCountry(l_randomOwnCountry.getD_neighborCountryIDs().get(0));
+        }
+
+        if (l_randomOwnCountry.getD_numberOfArmies()>1) {
+            l_armiesToBeSent = l_random.nextInt(l_randomOwnCountry.getD_numberOfArmies() - 1) + 1;
+        } else {
+            l_armiesToBeSent = 1;
+        }
+        return "advance "+l_randomOwnCountry.getD_countryName()+" "+l_randomNeighbor.getD_countryName()+" "+ l_armiesToBeSent;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String createOrderCard(Player p_player, GameState p_gameState, String p_cardName) {
+        int l_armiesToBeSent;
+        Random l_random = new Random();
+        Country l_randomOwnCountry = getRandomCountry(p_player.getD_ownedCountries());
+
+        Country l_randomNeighbour = p_gameState.getD_map().getCountry(l_randomOwnCountry.getD_neighborCountryIDs().get(l_random.nextInt(l_randomOwnCountry.getD_neighborCountryIDs().size())));
+        Player l_randomPlayer = getRandomPlayer(p_player, p_gameState);
+
+        if (l_randomOwnCountry.getD_numberOfArmies()>1) {
+            l_armiesToBeSent = l_random.nextInt(l_randomOwnCountry.getD_numberOfArmies() - 1) + 1;
+        } else {
+            l_armiesToBeSent = 1;
+        }
+        switch(p_cardName){
+            case "bomb":
+                return "bomb "+ l_randomNeighbour.getD_countryName();
+            case "blockade":
+                return "blockade "+ l_randomOwnCountry.getD_countryName();
+            case "airlift":
+                return "airlift "+ l_randomOwnCountry.getD_countryName()+" "+getRandomCountry(p_player.getD_ownedCountries()).getD_countryName()+" "+l_armiesToBeSent;
+            case "negotiate":
+                return "negotiate"+" "+l_randomPlayer.getD_playerName();
+        }
         return null;
     }
 
+    /**
+     * Method to return behavior of the player
+     * @return Random as player behavior
+     */
     @Override
     public String getPlayerBehavior() {
-        return null;
+        return "Random";
     }
 
     /**
@@ -106,5 +170,35 @@ public class RandomPlayer extends PlayerBehaviorStrategy{
             return true;
         }
         return false;
+    }
+
+    /**
+     *
+     * Method returning a random country owned by player.
+     *
+     * @param p_countriesList countries owned by player
+     * @return a random country the given list
+     */
+    private Country getRandomCountry(List<Country> p_countriesList){
+        Random l_randomNum = new Random();
+        return p_countriesList.get(l_randomNum.nextInt(p_countriesList.size()));
+    }
+
+    /**
+     * Method to select a random player for negotiation
+     *
+     * @param p_player player object
+     * @param p_gameState current game state.
+     * @return  A player object
+     */
+    private Player getRandomPlayer(Player p_player, GameState p_gameState){
+        ArrayList<Player> l_listOfPlayers = new ArrayList<Player>();
+        Random l_randomNum = new Random();
+
+        for(Player l_player : p_gameState.getD_playerList()){
+            if(!l_player.equals(p_player))
+                l_listOfPlayers.add(p_player);
+        }
+        return l_listOfPlayers.get(l_randomNum.nextInt(l_listOfPlayers.size()));
     }
 }
