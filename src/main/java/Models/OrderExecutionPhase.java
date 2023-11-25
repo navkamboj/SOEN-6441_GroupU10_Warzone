@@ -1,20 +1,27 @@
 package Models;
 
+import Constants.GameConstants;
 import Controller.GameEngine;
 import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
+import Services.GameService;
 import Utils.Command;
 import Utils.CommonUtil;
+import Utils.ExceptionLogHandler;
 import Views.MapView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
  * Order Execution Phase implementation for the game using State Pattern.
  *
  * @author Pranjalesh Ghansiyal
- * @version 2.0.0
+ * @version 3.0.0
  */
 public class OrderExecutionPhase extends Phase {
     /**
@@ -93,11 +100,8 @@ public class OrderExecutionPhase extends Phase {
         outputStateInvalidCommand();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void doAssignCountries(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
+    protected void doAssignCountries(Command p_command, Player p_player, boolean p_isTournamentMode, GameState p_gameState) throws InvalidCommand, IOException, InvalidMap {
         outputStateInvalidCommand();
     }
 
@@ -125,45 +129,96 @@ public class OrderExecutionPhase extends Phase {
         outputStateInvalidCommand();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void doAdvanceOrder(String p_command, Player p_player) {
+    public void initPhase(boolean p_isTournamentMode) {
+        executeOrders();
+
+        MapView l_map_view = new MapView(d_gameState);
+        l_map_view.showMap();
+
+        if (this.checkForGameEnd(d_gameState))
+            return;
+
+        try {
+            String l_continue = this.iterateForNextTurn(p_isTournamentMode);
+            if (l_continue.equalsIgnoreCase("N") && p_isTournamentMode) {
+                d_gameEngine.setD_logGameEngine("Start Up Phase", "phase");
+                d_gameEngine.setD_PresentPhase(new StartUpPhase(d_gameEngine, d_gameState));
+            } else if (l_continue.equalsIgnoreCase("N") && !p_isTournamentMode) {
+                d_gameEngine.setStartUpPhase();
+
+            } else if (l_continue.equalsIgnoreCase("Y")) {
+                System.out.println("\n" + d_gameState.getD_countOfRemainingTurns() + " Turns are remaining for this" +
+                        " game. Continuing for the next Turn.\n");
+                d_playerService.armiesAssign(d_gameState);
+                d_gameEngine.setIssueOrderPhase(p_isTournamentMode);
+            } else {
+                System.out.println("Invalid Input");
+            }
+        }  catch (IOException l_e) {
+            System.out.println("Invalid Input");
+        }
+    }
+
+    /**
+     * Checks if there is a next turn to be played or not.
+     *
+     * @param isTournamentMode if tournament is being played
+     * @return Yes or no based on user input or tournament turns left
+     * @throws IOException indicates failure in I/O operation
+     */
+    private String iterateForNextTurn(boolean isTournamentMode) throws IOException {
+        String l_continue;
+        if (isTournamentMode) {
+            d_gameState.setD_countOfRemainingTurns(d_gameState.getD_countOfRemainingTurns() - 1);
+            l_continue = d_gameState.getD_countOfRemainingTurns() == 0 ? "N" : "Y";
+        } else {
+            System.out.println("Enter Y/y if you want to continue for the next turn or else enter N/n");
+            BufferedReader l_reader = new BufferedReader(new InputStreamReader(System.in));
+            l_continue = l_reader.readLine();
+        }
+        return l_continue;
+    }
+
+    @Override
+    protected void doLoadGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
         outputStateInvalidCommand();
+    }
+
+    @Override
+    protected void doSaveGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
+        List<java.util.Map<String, String>> l_operationsList = p_command.getParametersAndOperations();
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+
+        if (l_operationsList == null || l_operationsList.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+        }
+
+        for (Map<String, String> l_map : l_operationsList) {
+            if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)) {
+                String l_filename = l_map.get(GameConstants.ARGUMENTS);
+                GameService.saveGame(this, l_filename);
+                d_gameEngine.setD_logGameEngine("Game Saved Successfully to "+l_filename, "effect");
+            } else {
+                throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+            }
+        }
+
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void initPhase() {
-        while (d_gameEngine.getD_PresentPhase() instanceof OrderExecutionPhase) {
-            executeOrders();
+    protected void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap, IOException {
+    }
 
-            MapView l_mapView =new MapView(d_gameState);
-            l_mapView.showMap();
-
-            if (this.checkForGameEnd(d_gameState))
-                break;
-
-            while (!CommonUtil.isEmptyCollection(d_gameState.getD_playerList())) {
-                System.out.println("Press Y/y if you want to continue to the next turn or press exit.");
-                Scanner l_scanner = new Scanner(System.in);
-
-                String l_continue = l_scanner.nextLine();
-
-                if (l_continue.equalsIgnoreCase("exit")) {
-                    System.exit(0);
-                } else if (l_continue.equalsIgnoreCase("Y")) {
-                    d_playerService.armiesAssign(d_gameState);
-                    d_gameEngine.setIssueOrderPhase();
-                } else {
-                    System.out.println("Invalid Input.");
-                }
-
-            }
-        }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doAdvanceOrder(String p_command, Player p_player) {
+        outputStateInvalidCommand();
     }
 
     /**
