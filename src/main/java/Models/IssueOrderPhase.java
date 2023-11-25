@@ -1,12 +1,17 @@
 package Models;
 
+import Constants.GameConstants;
 import Controller.GameEngine;
 import Exceptions.InvalidCommand;
 import Exceptions.InvalidMap;
+import Services.GameService;
 import Utils.Command;
+import Utils.ExceptionLogHandler;
 import Views.MapView;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -36,26 +41,28 @@ public class IssueOrderPhase extends Phase {
      * @throws InvalidMap     indicates failure in using the invalid map
      */
     public void inputOrder(Player p_player) throws InvalidCommand, IOException, InvalidMap {
-        Scanner l_scanner = new Scanner(System.in);
-        System.out.println("\nInput command to issue order for player : " + p_player.getD_playerName()
-                + " or Input showmap command to view current state of the game.");
-        String l_enteredCommand = l_scanner.nextLine();
+
+        String l_enteredCommand = p_player.getPlayerOrder(d_gameState);
+        if(l_enteredCommand == null) return;
 
         d_gameState.logUpdate("(Player: " + p_player.getD_playerName() + ") " + l_enteredCommand, "order");
-
         handleCommand(l_enteredCommand, p_player);
     }
 
     /**
      * Method to accept Orders from players
      */
-    protected void issueOrders() {
+    protected void issueOrders(boolean p_isTournamentMode) {
         // Issues order for every player
         do {
             for (Player l_player : d_gameState.getD_playerList()) {
+                if(l_player.getD_ownedCountries().size()==0){
+                    l_player.setD_moreOrders(false);
+                }
                 if (l_player.getD_moreOrders() && !l_player.getD_playerName().equals("Neutral")) {
                     try {
                         l_player.issue_order(this);
+                        l_player.checkForMoreOrders(p_isTournamentMode);
                     } catch (InvalidCommand | IOException | InvalidMap l_exception) {
                         d_gameEngine.setD_logGameEngine(l_exception.getMessage(), "effect");
                     }
@@ -144,7 +151,7 @@ public class IssueOrderPhase extends Phase {
      * {@inheritDoc}
      */
     @Override
-    protected void doAssignCountries(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap {
+    protected void doAssignCountries(Command p_command, Player p_player, boolean p_isTournamentMode, GameState p_gameState) throws InvalidCommand, IOException, InvalidMap {
         outputStateInvalidCommand();
         inputOrder(p_player);
     }
@@ -165,7 +172,6 @@ public class IssueOrderPhase extends Phase {
     protected void doCreateDeploy(String p_command, Player p_player) throws IOException {
         p_player.deployOrder(p_command);
         d_gameState.logUpdate(p_player.getD_playerLog(), "effect");
-        p_player.checkForMoreOrders();
     }
 
     /**
@@ -175,7 +181,6 @@ public class IssueOrderPhase extends Phase {
     protected void doAdvanceOrder(String p_command, Player p_player) throws IOException {
         p_player.createAdvanceOrder(p_command, d_gameState);
         d_gameState.logUpdate(p_player.getD_playerLog(), "effect");
-        p_player.checkForMoreOrders();
     }
 
     /**
@@ -186,16 +191,53 @@ public class IssueOrderPhase extends Phase {
         if (p_player.getD_cardsOwned().contains(p_enteredCommand.split(" ")[0])) {
             p_player.cardCommandsHandler(p_enteredCommand, d_gameState);
         }
-        p_player.checkForMoreOrders();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void initPhase() {
+    public void initPhase(boolean p_isTournamentMode) {
         while (d_gameEngine.getD_PresentPhase() instanceof IssueOrderPhase) {
-            issueOrders();
+            issueOrders(p_isTournamentMode);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doLoadGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
+        outputStateInvalidCommand();
+        inputOrder(p_player);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doSaveGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException {
+        List<java.util.Map<String, String>> l_operations = p_command.getParametersAndOperations();
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+
+        if (l_operations == null || l_operations.isEmpty()) {
+            throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+        }
+
+        for (Map<String, String> l_mapFile : l_operations) {
+            if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_mapFile)) {
+                String l_fileName = l_mapFile.get(GameConstants.ARGUMENTS);
+                GameService.saveGame(this, l_fileName);
+                d_gameEngine.setD_logGameEngine("Game is saved Successfully to "+l_fileName, "effect");
+
+            } else {
+                throw new InvalidCommand(GameConstants.INVALID_COMMAND_SAVEGAME);
+            }
+        }
+    }
+
+    @Override
+    protected void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap {
     }
 }
