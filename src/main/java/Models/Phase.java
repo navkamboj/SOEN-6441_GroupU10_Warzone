@@ -300,7 +300,7 @@ public abstract class Phase implements Serializable {
      * @throws InvalidCommand invalid command exception
      * @throws InvalidMap invalid map
      */
-    protected abstract void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap;
+    protected abstract void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap, IOException;
 
     /**
      * Method to handle the command entered by user and

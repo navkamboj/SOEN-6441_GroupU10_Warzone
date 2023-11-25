@@ -9,6 +9,7 @@ import Utils.Command;
 import Utils.CommonUtil;
 import Utils.ExceptionLogHandler;
 import Views.MapView;
+import Views.TournamentView;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,9 +84,56 @@ public class StartUpPhase extends Phase {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap {
-        //missing implementation...
+    protected void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap, IOException {
+
+        if (d_gameState.getD_playerList() != null && d_gameState.getD_playerList().size() > 1) {
+            List<Map<String, String>> l_operationsList = p_command.getParametersAndOperations();
+            boolean l_successfulParsing = false;
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionLogHandler(d_gameState));
+            if (CommonUtil.isCollectionEmpty(l_operationsList)
+                    && !d_tournament.validateTournamentArguments(l_operationsList, p_command)) {
+                throw new InvalidCommand(GameConstants.INVALID_COMMAND_TOURNAMENT_MODE);
+            } else {
+                for (Map<String, String> l_map : l_operationsList) {
+                    if (p_command.isKeywordAvailable(GameConstants.ARGUMENTS, l_map)
+                            && p_command.isKeywordAvailable(GameConstants.OPERATION, l_map)) {
+                        l_successfulParsing = d_tournament.parseTournamentCommand(d_gameState,
+                                l_map.get(GameConstants.OPERATION), l_map.get(GameConstants.ARGUMENTS),
+                                d_gameEngine);
+                        if (!l_successfulParsing)
+                            break;
+
+                    } else {
+                        throw new InvalidCommand(GameConstants.INVALID_COMMAND_TOURNAMENT_MODE);
+                    }
+                }
+            }
+            if (l_successfulParsing) {
+                for (GameState l_gameState : d_tournament.getD_gameStates()) {
+                    d_gameEngine.setD_logGameEngine(
+                            "\nStarting New Game on map : " + l_gameState.getD_map().getD_mapFile()
+                                    + " ........\n", "effect");
+                    doAssignCountries(new Command("assigncountries"),
+                            null, true, l_gameState);
+
+                    d_gameEngine.setD_logGameEngine(
+                            "\nGame Completed on the map : " + l_gameState.getD_map().getD_mapFile()
+                                    + " .........\n", "effect");
+                }
+                d_gameEngine.setD_logGameEngine("---------------- Tournament Completed ----------------",
+                        "effect");
+                TournamentView l_tournamentView = new TournamentView(d_tournament);
+                l_tournamentView.tournamentView();
+                d_tournament = new Tournament();
+            }
+        } else {
+            d_gameEngine.setD_logGameEngine("Please add 2 or more players in the game to begin.",
+                    "effect");
+        }
     }
 
     /**
