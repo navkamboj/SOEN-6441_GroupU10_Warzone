@@ -138,8 +138,8 @@ public class GameEngineTest {
      */
     @Test(expected = InvalidCommand.class)
     public void testInvalidCommandForAssignCountries() throws IOException, InvalidMap, InvalidCommand {
+        d_gamestate.getD_gameState().setD_checkLoadCommand();
         d_gamestate.handleCommand("assigncountries -add india");
-        ;
     }
 
     /**
