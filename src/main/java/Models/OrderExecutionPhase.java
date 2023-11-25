@@ -174,8 +174,8 @@ public class OrderExecutionPhase extends Phase {
             l_continue = d_gameState.getD_countOfRemainingTurns() == 0 ? "N" : "Y";
         } else {
             System.out.println("Enter Y/y if you want to continue for the next turn or else enter N/n");
-            BufferedReader l_reader = new BufferedReader(new InputStreamReader(System.in));
-            l_continue = l_reader.readLine();
+            Scanner l_scanner = new Scanner(System.in);
+            l_continue = l_scanner.nextLine();
         }
         return l_continue;
     }
@@ -251,6 +251,7 @@ public class OrderExecutionPhase extends Phase {
                 .filter(l_pl -> l_pl.getD_playerName().equalsIgnoreCase("neutral")).findFirst().orElse(null);
         if (CommonUtil.isNull(l_player)) {
             Player l_neutralPlayer = new Player("Neutral");
+            l_neutralPlayer.setStrategy(new HumanPlayer());
             l_neutralPlayer.setD_moreOrders(false);
             p_gameState.getD_playerList().add(l_neutralPlayer);
         }
@@ -264,8 +265,10 @@ public class OrderExecutionPhase extends Phase {
      */
     protected Boolean checkForGameEnd(GameState p_gameState) {
         int l_totalCountries = p_gameState.getD_map().getD_countries().size();
+        d_playerService.updatePlayersInGame(p_gameState);
         for (Player l_player : p_gameState.getD_playerList()) {
             if (l_player.getD_ownedCountries().size() == l_totalCountries) {
+                d_gameState.setD_winningPlayer(l_player);
                 d_gameEngine.setD_logGameEngine("Player : " + l_player.getD_playerName()
                         + " Wins the Game by conquering all the countries. Exiting Game .....", "end");
                 return true;
