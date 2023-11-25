@@ -397,14 +397,10 @@ public class Player implements Serializable {
      *
      */
     public void assignCard(){
-        if(!d_oneCardPerTurn){
             Random l_random = new Random();
             this.d_cardsOwned.add(GameConstants.CARDS.get(l_random.nextInt(GameConstants.SIZE)));
-            this.setD_playerLog("Player: " + this.d_name + " has obtained a card as a reward for a triumphant conquest- " + this.d_cardsOwned.get(this.d_cardsOwned.size()-1), "log");
-            this.setD_oneCardPerTurn(true);
-        }else{
-            this.setD_playerLog("Player: " + this.d_name + " has reached the maximum allowable card acquisition limit for a single turn", "error");
-        }
+            this.setD_playerLog("Player: " + this.d_name + " has obtained a card as a reward for a " +
+                    "triumphant conquest- " + this.d_cardsOwned.get(this.d_cardsOwned.size()-1), "log");
     }
 
     /**
@@ -511,6 +507,7 @@ public class Player implements Serializable {
                         && validateAdjacency(p_gameState, l_sourceCountry, l_targetCountry)) {
                     this.d_orderedPlayerList
                             .add(new Advance(this, l_sourceCountry, l_targetCountry, Integer.parseInt(l_noOfArmies)));
+                    d_orderedPlayerList.get(d_orderedPlayerList.size() - 1).printTheOrder();
                     this.setD_playerLog("Advance order is added to the queue for execution. For player: " + this.d_name, "log");
                 }
             } else {
@@ -545,12 +542,14 @@ public class Player implements Serializable {
           String  l_noOfArmies = p_enteredCommand.split(" ")[2];
             if (verifyDeployOrderArmies(this, l_noOfArmies)) {
                 this.setD_playerLog(
-                        "Given deploy order cant be executed as armies in deploy order exceeds player's unallocated armies.", "error");
+                        "Given deploy order cant be executed as armies in deploy order exceeds player's" +
+                                " unallocated armies.", "error");
             } else {
                 this.d_orderedPlayerList.add(new Deploy(this, l_targetCountry, Integer.parseInt(l_noOfArmies)));
                 Integer l_armies = this.getD_noOfAllocatedArmies() - Integer.parseInt(l_noOfArmies);
                 this.setD_noOfAllocatedArmies(l_armies);
-                this.setD_playerLog("Deploy order is added to the queue for execution. For player: " + this.d_name, "log");
+                this.setD_playerLog("Deploy order is added to the queue for execution. For player: "
+                        + this.d_name, "log");
 
             }
         } catch (Exception l_e) {
