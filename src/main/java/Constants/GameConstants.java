@@ -21,6 +21,7 @@ public class GameConstants implements Serializable {
     public static final String INVALID_COMMAND_GAMEPLAYER = "Invalid command. Please submit your command in the Format of : gameplayer -add playername -remove playername";
     public static final String INVALID_COMMAND_ASSIGNCOUNTRIES = "Invalid command! Please provide command in Format of : assigncountries";
     public static final String INVALID_MAP_EMPTY = "A valid map is not present. Please load a valid map to perform a check.";
+    public static final String INVALID_COMMAND_TOURNAMENT_MODE = "Invalid Command. Please submit your command in the Format of : tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns";
     public static final String VALID_MAP = "The loaded map is valid!";
     public static final int CONSOLE_WIDTH = 80;
     public static final String ARGUMENTS = "arguments";
@@ -42,4 +43,6 @@ public class GameConstants implements Serializable {
     public static final List<String> COLORS_LIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
     public static final String CONQUEST_TERRITORIES = "[Territories]";
     public static final String CONQUEST_CONTINENTS = "[Continents]";
+    public static final List<String> TOURNAMENT_PLAYER_BEHAVIORS = Arrays.asList("Aggressive", "Random", "Benevolent", "Cheater");
+
 }

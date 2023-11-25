@@ -475,6 +475,15 @@ public class Player {
     }
 
     /**
+     * Sets the strategy of the Player Behavior.
+     *
+     * @param p_playersBehaviorStrategy PlayerBehaviorStrategy class object.
+     */
+    public void setStrategy(PlayerBehaviorStrategy p_playersBehaviorStrategy) {
+        d_playerBehaviorStrategy = p_playersBehaviorStrategy;
+    }
+
+    /**
      * Method to create advance orders for the entered commands
      *
      * @param p_enteredCommand command entered by user on CLI
@@ -608,5 +617,17 @@ public class Player {
         } else{
             this.setD_playerLog("Invalid Card Commands entered. Please enter a valid command", "error");
         }
+    }
+
+    /**
+     * It will return order of the player according to strategy.
+     *
+     * @param p_gameState Current GameState Object
+     * @return String representing Order
+     * @throws IOException Exception
+     */
+    public String getPlayerOrder(GameState p_gameState) throws IOException {
+        String l_orderOfTheString = this.d_playerBehaviorStrategy.createOrder(this, p_gameState);
+        return l_orderOfTheString;
     }
 }
