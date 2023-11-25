@@ -134,6 +134,6 @@ public class GameEngine {
     public void setIssueOrderPhase(boolean p_isTournamentMode){
         this.setD_logGameEngine("Issue Order Phase", "phase");
         setD_PresentPhase(new IssueOrderPhase(this, d_gameState));
-        getD_PresentPhase().initPhase(d_isTournamentMode);
+        getD_PresentPhase().initPhase(p_isTournamentMode);
     }
 }
