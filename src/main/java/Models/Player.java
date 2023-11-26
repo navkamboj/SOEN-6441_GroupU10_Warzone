@@ -370,7 +370,7 @@ public class Player implements Serializable {
      * @throws IOException exception to handle I/O operation
      */
     void checkForMoreOrders(boolean p_isTournamentMode) {
-        String l_checkNextOrder = new String();
+        String l_checkNextOrder;
         if (p_isTournamentMode || !this.getD_playerBehaviorStrategy().getPlayerBehavior().equalsIgnoreCase("Human")) {
             Random l_randomNumber = new Random();
             System.out.println("Trying to run next boolean logic");
