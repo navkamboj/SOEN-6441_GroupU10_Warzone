@@ -89,17 +89,17 @@ public class ConquestMapFileReaderTest {
         assertEquals(l_updatedContinentList.getD_continents().get(8).getD_continentName(), "Africa");
         assertEquals(l_updatedContinentList.getD_continents().get(8).getD_continentValue().toString(), "20");
 
-        l_updatedContinentList = d_mapservice.addOrRemoveCountry(d_gameState, d_gameState.getD_map(), "Remove", "Africa");
+        l_updatedContinentList = d_mapservice.addOrRemoveContinents(d_gameState, d_gameState.getD_map(), "Remove", "Africa");
         assertEquals(l_updatedContinentList.getD_continents().size(), 8);
 
         l_updatedContinentList=d_mapservice.addOrRemoveContinents(d_gameState, d_gameState.getD_map(), "Add", "Africa 20");
         assertEquals(l_updatedContinentList.getD_continents().size(), 9);
 
-        d_mapservice.editFunctionality(d_gameState, "add", "Namibia Africa", 5);
-        d_mapservice.editFunctionality(d_gameState, "add", "Egypt Africa", 4);
+        d_mapservice.editFunctionality(d_gameState, "Namibia Africa", "add", 2);
+        d_mapservice.editFunctionality(d_gameState, "Egypt Africa", "add", 2);
         assertEquals(d_gameState.getD_map().getD_countries().size(), 101);
 
-        d_mapservice.editFunctionality(d_gameState, "remove", "Namibia", 5);
+        d_mapservice.editFunctionality(d_gameState, "Namibia", "remove", 2);
         assertEquals(d_gameState.getD_map().getD_countries().size(), 100);
     }
 }
