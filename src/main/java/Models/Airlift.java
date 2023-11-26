@@ -1,5 +1,7 @@
 package Models;
 
+import java.io.Serializable;
+
 /**
  * The execute and validation of Airlift is handle by this class.
  * Airlift card can airlift number of armies from source country to target country.
@@ -7,7 +9,7 @@ package Models;
  * @author Nihal Galani
  * @version 2.0.0
  */
-public class Airlift implements Card{
+public class Airlift implements Card, Serializable {
 
     /**
      * card is owned by this player.
@@ -167,13 +169,13 @@ public class Airlift implements Card{
     @Override
     public Boolean validateOrder(GameState p_gameState){
         Country l_originCountry=p_gameState.getD_map().getCountryByName(d_countryNameOfSource);
-        Country l_destionationCountry=p_gameState.getD_map().getCountryByName(d_countryNameOfTarget);
+        Country l_destinationCountry=p_gameState.getD_map().getCountryByName(d_countryNameOfTarget);
         if(l_originCountry==null){
             this.setD_logOfOrderExecution("Source country doesn't exist on the map", "error");
             p_gameState.logUpdate(logOfOrderExecution(), "effect");
             return false;
         }
-        if(l_destionationCountry==null){
+        if(l_destinationCountry==null){
             this.setD_logOfOrderExecution("destination country doesn't exist on the map", "error");
             p_gameState.logUpdate(logOfOrderExecution(), "effect");
             return false;
