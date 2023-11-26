@@ -399,7 +399,7 @@ public abstract class Phase implements Serializable {
                                 "---------- Order Creation Commands ----------\n"+"Deploy order command: deploy countryID numarmies \n" +"Advance order command: advance countrynamefrom countynameto numarmies \n"+
                                 "Bomb order command (requires bomb card): bomb countryID \n"+"Blockade order command (required blockade card): blockade countryID \n" +
                                 "Airlift order command (requires the airlift card): airlift sourcecountryID targetcountryID numarmies \n" +
-                                "Diplomacy order command (requires the diplomacy card): negotiate playerID \n" + "---------- Game Save/Load Commands ----------\n"+"savegame filename\n"+"loadgame filename\n\n"+
+                                "Diplomacy order command (requires the diplomacy card): negotiate playerID \n\n" + "---------- Game Save/Load Commands ----------\n"+"savegame filename\n"+"loadgame filename\n\n"+
                                 "---------- Tournament Game Play ----------\n"+"tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns"
                         ,"effect");
                 break;

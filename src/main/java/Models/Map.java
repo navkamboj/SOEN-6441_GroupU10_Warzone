@@ -2,6 +2,7 @@ package Models;
 
 import Exceptions.InvalidMap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Collections;
  * @author Navjot Kamboj
  * @version 1.0.0
  */
-public class Map {
+public class Map implements Serializable {
     /**
      * List of countries
      */
@@ -384,7 +385,7 @@ public class Map {
                     }
                 }
             } else {
-                throw new InvalidMap("Country can't be added to a non-existing continent");
+                throw new InvalidMap("Country "+p_countryName+" can't be added to a non-existing continent");
             }
         } else {
             throw new InvalidMap("This " + p_countryName + " already Exists!");
@@ -406,7 +407,7 @@ public class Map {
             if (CommonUtil.isNull(getContinent(p_continentName))) {
                 d_continents.add(new Continent(l_continentId, p_continentName, p_value));
             } else {
-                throw new InvalidMap("Continent already exists so it can't be added");
+                throw new InvalidMap("Continent"+p_continentName+" already exists so it can't be added");
             }
         } else {
             d_continents = new ArrayList<Continent>();
@@ -468,7 +469,7 @@ public class Map {
             if (!CommonUtil.isNull(getCountryByName(p_countryName)) && !CommonUtil.isNull(getCountryByName(p_neighborName))) {
                 d_countries.get(d_countries.indexOf(getCountryByName(p_countryName))).addingNeighbor(getCountryByName(p_neighborName).getD_countryID());
             } else {
-                throw new InvalidMap("Invalid Neighbour Pair! Either of the Countries Doesn't exist!");
+                throw new InvalidMap("Invalid Neighbour Pair! "+p_countryName+" "+p_neighborName+"! Either of the Countries Doesn't exist!");
             }
         }
     }

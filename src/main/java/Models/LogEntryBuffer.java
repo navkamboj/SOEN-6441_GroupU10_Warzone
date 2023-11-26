@@ -1,6 +1,8 @@
 package Models;
 
 import Views.LogWriter;
+
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Observable;
  * @author Yatish Chutani
  * @version 2.0.0
  */
-public class LogEntryBuffer extends Observable{
+public class LogEntryBuffer extends Observable implements Serializable {
 
     /**
      * The Log Message that will be recorded.
@@ -50,8 +52,10 @@ public class LogEntryBuffer extends Observable{
                 break;
             case "order":
                 d_messageLog = System.lineSeparator() + "The Issued Order : " + p_messageToUpdate + System.lineSeparator();
+                break;
             case "effect":
                 d_messageLog = "Log : " + p_messageToUpdate + System.lineSeparator();
+                break;
             case "start":
             case "end":
                 d_messageLog = p_messageToUpdate + System.lineSeparator();
