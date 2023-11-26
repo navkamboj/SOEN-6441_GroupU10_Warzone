@@ -1,5 +1,6 @@
 package Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import Models.LogEntryBuffer;
@@ -10,7 +11,7 @@ import Models.LogEntryBuffer;
  * @author Navjot Kamboj, Yatish Chutani
  * @version 2.0.0
  */
-public class GameState {
+public class GameState implements Serializable {
 
     /**
      * List of players

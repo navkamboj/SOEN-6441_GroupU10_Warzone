@@ -164,7 +164,7 @@ public class Map implements Serializable {
         if (d_continents == null || d_continents.isEmpty()) {
             throw new InvalidMap("Uploaded map should contain at least one continent!");
         }
-        if (d_countries.isEmpty() || d_countries == null) {
+        if (d_countries == null||d_countries.isEmpty()) {
             throw new InvalidMap("Uploaded map should contain at least one country!");
         }
         for (Country country : d_countries) {

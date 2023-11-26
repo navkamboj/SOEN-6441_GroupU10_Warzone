@@ -42,9 +42,9 @@ public class OrderExecutionPhaseTest {
     public void orderExecutionSetup() throws InvalidMap {
         d_gameState = new GameState();
         d_playerName1 = new Player();
-        d_playerName1.setD_playerName("Nihal");
+        d_playerName1.setD_playerName("Navjot");
         d_playerName2 = new Player();
-        d_playerName2.setD_playerName("Navjot");
+        d_playerName2.setD_playerName("Nihal");
 
         List<Country> l_countries = new ArrayList<Country>();
         Country l_countryName = new Country(0, "India", 1);
@@ -58,6 +58,7 @@ public class OrderExecutionPhaseTest {
         l_countries.add(l_neighbourCountryName);
 
         d_playerName1.setD_ownedCountries(l_countries);
+        d_playerName2.setD_ownedCountries(new ArrayList<Country>());
 
         Map l_newMap = new Map();
         l_newMap.setD_countries(l_countries);

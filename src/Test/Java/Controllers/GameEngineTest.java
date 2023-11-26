@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
+import java.io.FileNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ import Controller.GameEngine;
 
 /**
  * This class is used to test functionality of GameEngineController class functions.
- * @version 2.0.0
+ * @version 3.0.0
  * @author Nihal Galani
  */
 public class GameEngineTest {
@@ -55,31 +56,21 @@ public class GameEngineTest {
     }
 
     /**
-     * Tests the {@link InvalidCommand } in editmap command.
+     * Tests the {@link InvalidCommand } in savemap
      *
-     * @throws IOException    Exception
-     * @throws InvalidCommand Exception
-     */
-    @Test(expected = InvalidCommand.class)
-    public void testInvalidCommandForEditMap() throws IOException, InvalidCommand, InvalidMap {
-        d_gamestate.handleCommand("editmap");
-    }
-
-    /**
-     * Tests the {@link InvalidCommand} in editcontinent command
-     *
-     * @throws IOException    Exception
      * @throws InvalidCommand Exception
      * @throws InvalidMap     Exception
      */
     @Test
-    public void testInvalidCommandForEditContinent() throws InvalidCommand, IOException, InvalidMap {
-        d_gamestate.handleCommand("editcontinent");
+    public void testInvalidCommandForSaveMap() throws InvalidCommand, InvalidMap, IOException {
+        d_gamestate.handleCommand("savemap");
         GameState l_currentState = d_gamestate.getD_gameState();
 
-        assertEquals("Can not do edit continent at this stage, please perform `editmap` command first." + System.lineSeparator(),
+        assertEquals("Log : There is no map to save yet !!, Run `editmap` command first" + System.lineSeparator(),
                 l_currentState.getLatestLog());
+
     }
+
 
     /**
      * Tests the valid editcontinent command
@@ -90,7 +81,7 @@ public class GameEngineTest {
      */
     @Test
     public void testValidCommandForEditContinent() throws IOException, InvalidCommand, InvalidMap {
-        d_map.setD_mapFile("test.map");
+        d_map.setD_mapFile("testing.map");
         GameState l_currentState = d_gamestate.getD_gameState();
 
         l_currentState.setD_map(d_map);
@@ -115,19 +106,14 @@ public class GameEngineTest {
     }
 
     /**
-     * Tests the {@link InvalidCommand } in savemap
+     * Tests the {@link InvalidCommand } in editmap command.
      *
+     * @throws IOException    Exception
      * @throws InvalidCommand Exception
-     * @throws InvalidMap     Exception
      */
-    @Test
-    public void testInvalidCommandForSaveMap() throws InvalidCommand, InvalidMap, IOException {
-        d_gamestate.handleCommand("savemap");
-        GameState l_currentState = d_gamestate.getD_gameState();
-
-        assertEquals("There is no map to save yet !!, Run `editmap` command first" + System.lineSeparator(),
-                l_currentState.getLatestLog());
-
+    @Test(expected = InvalidCommand.class)
+    public void testInvalidCommandForEditMap() throws IOException, InvalidCommand, InvalidMap {
+        d_gamestate.handleCommand("editmap");
     }
 
     /**
@@ -143,10 +129,55 @@ public class GameEngineTest {
     }
 
     /**
+     * Tests loadgame command.
+     *
+     * @throws InvalidCommand Exception
+     * @throws InvalidMap     Exception
+     * @throws IOException Exception
+     */
+    @Test(expected = FileNotFoundException.class)
+    public void testValidationOfLoadGame() throws InvalidCommand, InvalidMap, IOException {
+        d_gamestate.handleCommand("loadgame load_new.txt");
+    }
+
+    /**
      * Validation of correct start up phase
      */
     @Test
     public void testCorrectStartupPhase() {
         assertTrue(d_gameEngine.getD_PresentPhase() instanceof StartUpPhase);
+    }
+
+
+    /**
+     * Tests savegame command.
+     *
+     * @throws InvalidCommand Exception
+     * @throws InvalidMap     Exception
+     * @throws IOException Exception
+     */
+    @Test
+    public void testValidationOfSaveGame() throws InvalidCommand, InvalidMap, IOException {
+        d_gamestate.handleCommand("savegame save_new.txt");
+        GameState l_state = d_gamestate.getD_gameState();
+
+        assertEquals("Log : Gameplay has been saved Successfully to save_new.txt" + System.lineSeparator(),
+                l_state.getLatestLog());
+    }
+
+    /**
+     * Tests the {@link InvalidCommand} in editcontinent command
+     *
+     * @throws IOException    Exception
+     * @throws InvalidCommand Exception
+     * @throws InvalidMap     Exception
+     */
+    @Test
+    public void testInvalidCommandForEditContinent() throws InvalidCommand, IOException, InvalidMap {
+        d_gamestate.handleCommand("editcontinent");
+        GameState l_currentState = d_gamestate.getD_gameState();
+
+        assertEquals("Log : Can not do edit continent at this stage, please perform `editmap` command first." + System.lineSeparator(),
+                l_currentState.getLatestLog());
     }
 }

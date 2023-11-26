@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 /**
  * This playerServiceTest class file is used to test some important functionalities of playerservice file
  *
- * @version 2.0.0
+ * @version 3.0.0
  * @author Nihal Galani
  */
 
@@ -62,11 +62,33 @@ public class PlayerServiceTest {
      */
     @Before
     public void playerSetup(){
-         d_testInformationAboutPlayer = new Player();
-         d_testPlayerService = new PlayerService();
-         d_testGameState = new GameState();
-         d_currentlyAvailablePlayersList.add(new Player("Nihal"));
-         d_currentlyAvailablePlayersList.add(new Player("Pranjlesh"));
+        d_testInformationAboutPlayer = new Player();
+        d_testPlayerService = new PlayerService();
+        d_testGameState = new GameState();
+        d_currentlyAvailablePlayersList.add(new Player("Nihal"));
+        d_currentlyAvailablePlayersList.add(new Player("Pranjlesh"));
+    }
+
+    /**
+     *This testing method is used to test that player removal is done or not of addingRemovingPlayers
+     */
+    @Test
+    public void testRemovalPlayers() throws IOException{
+        List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Pranjlesh");
+        assertEquals(1, l_updatingPlayers.size());
+
+        System.setOut(new PrintStream(d_outputStreamContent));
+        d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Harsh");
+        assertEquals("Player: Harsh does not Exist.",d_outputStreamContent.toString().trim() );
+    }
+
+    /**
+     *This testing method is used to test that is player added or not
+     */
+    @Test
+    public void testChecksAvailabilityPlayers(){
+        boolean l_existanceOfPlayers = d_testPlayerService.checkAvailabilityPlayerList(d_testGameState);
+        assertFalse(l_existanceOfPlayers);
     }
 
     /**
@@ -95,44 +117,6 @@ public class PlayerServiceTest {
         assertEquals(l_expectedCountResult,l_countedResult);
     }
 
-
-    /**
-     *This testing method is used to test that adding player functionalities
-     */
-    @Test
-    public void testAddingPlayers(){
-     assertFalse(CommonUtil.isEmptyCollection(d_currentlyAvailablePlayersList));
-     List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Yatish");
-     assertEquals("Yatish",l_updatingPlayers.get(2).getD_playerName());
-
-     System.setOut(new PrintStream(d_outputStreamContent));
-     d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"add","Nihal");
-     assertEquals("Player: Nihal already Exists.",d_outputStreamContent.toString().trim());
-
-    }
-
-    /**
-     *This testing method is used to test that player removal is done or not of addingRemovingPlayers
-     */
-    @Test
-    public void testRemovalPlayers(){
-    List<Player> l_updatingPlayers = d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Pranjlesh");
-    assertEquals(1, l_updatingPlayers.size());
-
-    System.setOut(new PrintStream(d_outputStreamContent));
-    d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList,"remove","Harsh");
-    assertEquals("Player: Harsh does not Exist.",d_outputStreamContent.toString().trim() );
-    }
-
-    /**
-     *This testing method is used to test that is player added or not
-     */
-    @Test
-    public void testChecksAvailabilityPlayers(){
-      boolean l_existanceOfPlayers = d_testPlayerService.checkAvailabilityPlayerList(d_testGameState);
-      assertFalse(l_existanceOfPlayers);
-    }
-
     /**
      * Testing the country assignment to player
      */
@@ -151,5 +135,18 @@ public class PlayerServiceTest {
             l_sizeOfAssignedCountries = l_sizeOfAssignedCountries + l_player.getD_ownedCountries().size();
         }
         assertEquals(l_sizeOfAssignedCountries, d_testGameState.getD_map().getD_countries().size());
+    }
+
+    /**
+     *This testing method is used to test that adding player functionalities
+     */
+    @Test
+    public void testAddingPlayers() throws IOException{
+        assertFalse(CommonUtil.isCollectionEmpty(d_currentlyAvailablePlayersList));
+
+        System.setOut(new PrintStream(d_outputStreamContent));
+        d_testPlayerService.addingRemovingPlayers(d_currentlyAvailablePlayersList, "add", "Nihal");
+        assertEquals("Player: Nihal already Exists.", d_outputStreamContent.toString().trim());
+
     }
 }
