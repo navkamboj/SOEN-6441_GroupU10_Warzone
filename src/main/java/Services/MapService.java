@@ -48,121 +48,6 @@ public class MapService implements Serializable {
     }
 
     /**
-     * This method retrieves the corresponding map file lines.
-     *
-     * @param p_fileLines this tells about the lines in the map document
-     * @param p_switchCaseParameter the type of lines needed : country, continent, borders
-     * @return the list of required sets of lines
-     */
-    public List<String> retrieveMetaData(List<String> p_fileLines, String p_switchCaseParameter){
-        switch (p_switchCaseParameter) {
-            case "continent":
-                List<String> l_linesOfContinents = p_fileLines.subList(
-                        p_fileLines.indexOf(GameConstants.CONTINENTS) + 1,
-                        p_fileLines.indexOf(GameConstants.COUNTRIES) - 1
-                );
-                return l_linesOfContinents;
-            case "country":
-                List<String> l_linesOfCountries = p_fileLines.subList(
-                        p_fileLines.indexOf(GameConstants.COUNTRIES) + 1,
-                        p_fileLines.indexOf(GameConstants.BORDERS) - 1
-                );
-                return l_linesOfCountries;
-            case "border":
-                List<String> l_linesOfBorders = p_fileLines.subList(
-                        p_fileLines.indexOf(GameConstants.BORDERS) + 1,
-                        p_fileLines.size()
-                );
-                return l_linesOfBorders;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * This method loads the extracted continent data of the map file.
-     *
-     * @param p_listOfContinents this includes a list of continent's data from map file.
-     * @return  a list of processed continent's meta data.
-     */
-    public List<Continent> loadContinentsMetaData(List<String> p_listOfContinents){
-        int l_continentID = 1;
-        List<Continent> l_continents = new ArrayList<Continent>();
-
-        for(String cont : p_listOfContinents){
-            String[] l_metaData = cont.split(" ");
-            l_continents.add(new Continent(l_continentID, l_metaData[0], Integer.parseInt(l_metaData[1])));
-            l_continentID++;
-        }
-        return l_continents;
-    }
-
-    /**
-     * This method loads the extracted border and country data of the map file.
-     *
-     * @param p_listOfCountries this includes a list of country's data from map file.
-     * @return  a list of processed country's meta data.
-     */
-    public List<Country> loadCountriesMetaData(List<String> p_listOfCountries){
-        LinkedHashMap<Integer, List<Integer>> l_neighborOfCountries = new LinkedHashMap<Integer, List<Integer>>();
-        List<Country> l_listOfCountries = new ArrayList<Country>();
-
-        for(String country : p_listOfCountries){
-            String[] l_metaDataCountries =country.split(" ");
-            l_listOfCountries.add(new Country(Integer.parseInt(l_metaDataCountries[0]), l_metaDataCountries[1],
-                    Integer.parseInt(l_metaDataCountries[2])));
-        }
-        return l_listOfCountries;
-    }
-
-    /**
-     * this method links the country's objects to their respective neighbors.
-     *
-     * @param p_listOfCountries this includes a list of country's data from map file
-     * @param p_listOfBorders this includes a list of border's data from map file
-     * @return a list of updated Country Objects
-     */
-    public List<Country> loadBorderMetaData(List<Country> p_listOfCountries, List<String> p_listOfBorders){
-        LinkedHashMap<Integer, List<Integer>> l_neighborOfCountries = new LinkedHashMap<Integer, List<Integer>>();
-
-
-        for(String l_border : p_listOfBorders) {
-            if(null != l_border && !l_border.isEmpty()){
-                ArrayList<Integer> l_neighbors = new ArrayList<Integer>();
-                String[] l_splitString = l_border.split(" ");
-                for(int i = 1; i <= l_splitString.length - 1; i++){
-                    l_neighbors.add(Integer.parseInt(l_splitString[i]));
-                }
-                l_neighborOfCountries.put(Integer.parseInt(l_splitString[0]), l_neighbors);
-            }
-        }
-        for(Country c : p_listOfCountries){
-            List<Integer> l_adjacentCountries = l_neighborOfCountries.get(c.getD_countryID());
-            c.setD_neighborCountryIDs(l_adjacentCountries);
-        }
-        return p_listOfCountries;
-    }
-
-    /**
-     * this method connects countries to the respective continents and sets them in object of
-     * continent.
-     *
-     * @param p_countries this is the total Country Objects
-     * @param p_continents this is the total Continent Objects
-     * @return a list of updated continents
-     */
-    public List<Continent> connectContinentsCountry(List<Country> p_countries, List<Continent> p_continents){
-        for(Country c : p_countries){
-            for(Continent cont : p_continents){
-                if(cont.getD_continentID().equals(c.getD_continentID())){
-                    cont.addCountry(c);
-                }
-            }
-        }
-        return p_continents;
-    }
-
-    /**
      * This method loads and reads the map file.
      *
      * @param p_mapFileName Name of the map file
@@ -200,13 +85,13 @@ public class MapService implements Serializable {
         File l_fileToBeEdited = new File(l_mapFilePath);
 
         if (l_fileToBeEdited.createNewFile()) {
-            System.out.println("File has been created.");
+            System.out.println("The file has been created.");
             Map l_map = new Map();
             l_map.setD_mapFile(p_editMapPath);
             p_gameState.setD_map(l_map);
-            p_gameState.logUpdate(p_editMapPath+ " File has been created for user to edit", "effect");
+            p_gameState.logUpdate(p_editMapPath+ " File has been generated for user to edit", "effect");
         } else {
-            System.out.println("File already exists.");
+            System.out.println("This file already exists.");
             this.mapLoad(p_gameState, p_editMapPath);
             if (null == p_gameState.getD_map()) {
                 p_gameState.setD_map(new Map());
@@ -270,63 +155,10 @@ public class MapService implements Serializable {
             }
             return true;
         } catch (IOException l_ioException) {
-            l_ioException.printStackTrace();
+            this.setD_LogMapService(l_ioException.getMessage(), p_gameState);
+            p_gameState.logUpdate("Could not save map file changes!", "effect");
             p_gameState.setD_errorMessage("Error in saving map file");
             return false;
-        }
-    }
-
-    /**
-     * this method retrieves country and boarder data from the game state and writes it to file writer.
-     *
-     * @param p_gameState this is the current GameState Object
-     * @param p_writer this is the writer object for file
-     * @throws IOException handles I/0
-     */
-    private void countryAndBorderMetaData(GameState p_gameState, FileWriter p_writer) throws IOException{
-        String l_countryMetaData = new String();
-        String l_bordersMetaData = new String();
-        List<String> l_bordersList = new ArrayList<>();
-
-        p_writer.write(System.lineSeparator() + GameConstants.COUNTRIES + System.lineSeparator());
-        for(Country l_country : p_gameState.getD_map().getD_countries()){
-            l_countryMetaData = new String();
-            l_countryMetaData = l_country.getD_countryID().toString().concat(" ").concat(l_country.getD_countryName())
-                    .concat(" ").concat(l_country.getD_continentID().toString());
-            p_writer.write(l_countryMetaData + System.lineSeparator());
-
-            if(null != l_country.getD_neighborCountryIDs() && !l_country.getD_neighborCountryIDs().isEmpty()){
-                l_bordersMetaData = new String();
-                l_bordersMetaData = l_country.getD_countryID().toString();
-                for(Integer l_nghCountry : l_country.getD_neighborCountryIDs()){
-                    l_bordersMetaData = l_bordersMetaData.concat(" ").concat(l_nghCountry.toString());
-                }
-                l_bordersList.add(l_bordersMetaData);
-            }
-        }
-
-        if(null != l_bordersList && !l_bordersList.isEmpty()){
-            p_writer.write(System.lineSeparator() + GameConstants.BORDERS + System.lineSeparator());
-            for(String l_borderString : l_bordersList){
-                p_writer.write(l_borderString + System.lineSeparator());
-            }
-        }
-    }
-
-    /**
-     * this method retrieves continents' data from game state and writes it to file.
-     *
-     * @param p_gameState this is the current GameState
-     * @param p_writer this is the writer object for file
-     * @throws IOException handles I/O
-     */
-    private void continentMetaData(GameState p_gameState, FileWriter p_writer) throws IOException {
-        p_writer.write(System.lineSeparator() + GameConstants.CONTINENTS + System.lineSeparator());
-        for(Continent l_continent : p_gameState.getD_map().getD_continents()){
-            p_writer.write(
-                    l_continent.getD_continentName().concat(" ").concat(l_continent.getD_continentValue().toString())
-                    + System.lineSeparator()
-            );
         }
     }
 
