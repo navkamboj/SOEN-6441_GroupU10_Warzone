@@ -1,14 +1,15 @@
 package Utils;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  *  Class takes input commands from user.
  *
- *  @author Harsh Tank
- *  @version 1.0.0
+ *  @author Harsh Tank, Pranjalesh Ghansiyal
+ *  @version 3.0.0
  */
-public class Command {
+public class Command implements Serializable {
 
     /**
      * d_storeCommand stores the command that user entered.
