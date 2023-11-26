@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * This MapTest class file is used to test some important functionalities of Mapservice file
  *
- * @version 2.0.0
+ * @version 3.0.0
  * @author Nihal Galani
  */
 public class MapTest{
@@ -58,6 +58,21 @@ public class MapTest{
     public void testConnectivityOfContinent() throws InvalidMap{
        d_map = d_mapService.mapLoad(d_gameState,"ConnectivityOfContinent.map");
        d_map.Validate();
+    }
+
+    /**
+     * Checking {@link InvalidMap} if there is no country in the map.
+     *
+     * @throws InvalidMap Exception
+     */
+    @Test (expected = InvalidMap.class)
+    public void testCheckingNoCountryInTheMap() throws InvalidMap{
+        Continent l_continent = new Continent();
+        List <Continent> l_continentList = new ArrayList<Continent>();
+
+        l_continentList.add(l_continent);
+        d_map.setD_continents(l_continentList);
+        d_map.Validate();
     }
 
     /**

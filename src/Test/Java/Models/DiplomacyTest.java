@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * This class is used to test the functionalities of Diplomacy class methods.
- * @version 2.0.0
+ * @version 3.0.0
  * @author Nihal Galani
  */
 public class DiplomacyTest {
@@ -99,6 +99,6 @@ public class DiplomacyTest {
     public void NegotiationWorking(){
         d_diplomacy1.execute(d_gameState);
         d_bomb1.execute(d_gameState);
-        assertEquals(d_gameState.getLatestLog().trim(), "Order of Bomb:-Bomb India will not going to be execute because Harsh has a negotiation pact with target territory: India's player");
+        assertEquals(d_gameState.getLatestLog().trim(), "Log : Order of Bomb:-Bomb India will not going to be execute because Harsh has a negotiation pact with target territory: India's player");
     }
 }
