@@ -1,0 +1,15 @@
+[continents]
+Asia 10
+
+[countries]
+1 India 1
+2 Nepal 1
+3 Srilanka 1
+4 China 1
+
+[borders]
+1 2 3
+2
+3 1 2
+4
+
