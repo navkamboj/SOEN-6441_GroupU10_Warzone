@@ -2,13 +2,15 @@ package Utils;
 
 import Models.GameState;
 
+import java.io.Serializable;
+
 /**
  * A class for logging uncaught exceptions not handled by try/catch blocks
  *
  * @author Yatish Chutani
  * @version 2.0.0
  */
-public class ExceptionLogHandler implements Thread.UncaughtExceptionHandler{
+public class ExceptionLogHandler implements Thread.UncaughtExceptionHandler, Serializable {
 
     /**
      * Exception Log belongs to this GameState.
