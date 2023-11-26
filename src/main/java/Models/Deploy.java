@@ -1,5 +1,7 @@
 package Models;
 
+import java.io.Serializable;
+
 /**
  * Implemented Command pattern.
  *
@@ -8,10 +10,26 @@ package Models;
  *
  */
 
-public class Deploy implements Order{
+public class Deploy implements Order, Serializable {
+
+    /**
+     * Player Initiator.
+     */
     Player d_playerName;
+
+    /**
+     * Sets the Log containing Information about orders.
+     */
     String d_logOfOrderExecution;
+
+    /**
+     * name of the target country.
+     */
     String d_targetCountry;
+
+    /**
+     * number of armies to be placed.
+     */
     Integer d_countOfArmies;
 
     /**
