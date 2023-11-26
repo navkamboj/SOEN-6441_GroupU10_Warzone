@@ -65,20 +65,6 @@ public class MapView {
     }
 
     /**
-     * a parameterized constructor to initialize the MapView with Players.
-     *
-     * @param p_gameState the current GameState
-     * @param p_players the list of Player Objects
-     */
-    public MapView(GameState p_gameState, List<Player> p_players){
-        d_gameState = p_gameState;
-        d_players = p_players;
-        d_map = p_gameState.getD_map();
-        d_countries = d_map.getD_countries();
-        d_continents = d_map.getD_continents();
-    }
-
-    /**
      * It retrieves the Colored String.
      *
      * @param p_color the color to be altered to.
@@ -240,7 +226,7 @@ public class MapView {
      * @param p_player the player object.
      */
     private void retrieveInfoOfPlayer(Integer p_index, Player p_player){
-        String l_infoOfPlayer = String.format("%02d. %-8s %s", p_index, p_player.getD_playerName(), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
+        String l_infoOfPlayer = String.format("%02d. %s %-10s %s", p_index, p_player.getD_playerName(),retrieveArmiesOfplayer(p_player), " -> " + getColorfulString(p_player.getD_color(), "COLOR"));
         System.out.println(l_infoOfPlayer);
     }
 
@@ -256,9 +242,11 @@ public class MapView {
         retrieveSeparator();
 
         for(Player p : d_players){
-            l_counter++;
-            retrieveInfoOfPlayer(l_counter, p);
-            renderCardsOwnedByPlayers(p);
+            if (!d_gameState.getD_listOfPlayersFailed().contains(p)) {
+                l_counter++;
+                retrieveInfoOfPlayer(l_counter, p);
+                renderCardsOwnedByPlayers(p);
+            }
         }
     }
 
@@ -334,7 +322,7 @@ public class MapView {
 
 
     private String retrieveArmiesOfplayer(Player p_player){
-           return "(Armies that are not allocated: "+p_player.getD_noOfAllocatedArmies();
+           return "(Armies that are not allocated: "+p_player.getD_noOfAllocatedArmies()+")";
     }
 
 }

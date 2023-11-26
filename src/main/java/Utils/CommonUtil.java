@@ -1,6 +1,7 @@
 package Utils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -10,9 +11,9 @@ import Constants.GameConstants;
  * Common Utility class that checks all null/empty strings, objects and collections.
  *
  * @author Yatish Chutani
- * @version 1.0.0
+ * @version 3.0.0
  */
-public class CommonUtil {
+public class CommonUtil implements Serializable {
 
     /**
      * Method for checking if the string is empty or not.
