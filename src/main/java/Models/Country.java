@@ -2,6 +2,7 @@ package Models;
 
 import Exceptions.InvalidMap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author Navjot Kamboj
  * @version 1.0.0
  */
-public class Country {
+public class Country implements Serializable {
     /**
      * Name of Country
      */
@@ -68,6 +69,7 @@ public class Country {
         d_countryID = p_countryID;
         d_countryName = p_countryName;
         d_continentID = p_continentID;
+        d_neighborCountryIDs = new ArrayList<>();
         d_numberOfArmies = 0;
     }
 

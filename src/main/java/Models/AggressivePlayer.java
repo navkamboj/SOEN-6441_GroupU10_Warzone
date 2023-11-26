@@ -86,7 +86,7 @@ public class AggressivePlayer extends PlayerBehaviorStrategy{
     @Override
     public String createOrderDeploy(Player p_player, GameState p_gameState) {
         Random l_random = new Random();
-        // process of getting strongest country and deploy
+        // process of getting strong country and deploy
         Country l_mostPowerfulCountry = getMostPowerfulCountry(p_player, p_gameState);
         d_deployCountryList.add(l_mostPowerfulCountry);
         int l_numberOfArmiesToDeploy = 1;

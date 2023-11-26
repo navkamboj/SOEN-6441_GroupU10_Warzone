@@ -2,6 +2,8 @@ package Models;
 
 import Utils.CommonUtil;
 
+import java.io.Serializable;
+
 /**
  * When player use this Bomb card on target country then target
  * country will lose half of their armies.
@@ -9,7 +11,7 @@ import Utils.CommonUtil;
  * @author Nihal Galani
  * @version 2.0.0
  */
-public class Bomb implements Card{
+public class Bomb implements Card, Serializable {
 
     /**
      *Card is owned by this player.

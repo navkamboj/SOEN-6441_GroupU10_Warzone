@@ -1,6 +1,8 @@
 package Models;
 import Exceptions.InvalidMap;
 import Utils.CommonUtil;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * @author Yatish Chutani
  * @version 1.0.0
  */
-public class Continent{
+public class Continent implements Serializable {
     /**
      * Continent ID.
      */
