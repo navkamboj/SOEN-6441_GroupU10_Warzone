@@ -115,6 +115,7 @@ public class Diplomacy implements Card{
         Player l_targetPlayerName =l_playerService.findPlayerByName(d_targetPlayerName,p_gameState);
         if(!p_gameState.getD_playerList().contains(l_targetPlayerName)){
             this.setD_logOfOrderExecution("target player with whom player wants to negotiate doesn't exists.", "error");
+            p_gameState.logUpdate(logOfOrderExecution(), "effect");
             return false;
         }
         return true;

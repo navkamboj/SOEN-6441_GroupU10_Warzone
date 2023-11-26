@@ -90,7 +90,7 @@ public class Tournament implements Serializable{
         if (l_maximumNumberOfTurns >= 10 && l_maximumNumberOfTurns <= 50) {
             for (GameState l_gameState : d_gameStates) {
                 l_gameState.setD_maxCountOfTurns(l_maximumNumberOfTurns);
-                l_gameState.setD_maxCountOfTurns(l_maximumNumberOfTurns);
+                l_gameState.setD_countOfRemainingTurns(l_maximumNumberOfTurns);
             }
             return true;
         } else {
