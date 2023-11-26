@@ -7,9 +7,10 @@ import java.io.*;
 
 /**
  * This class is used to load and save game file.
+ * @version 3.0.0
+ * @author Nihal Galani
  */
 public class GameService {
-
     /**
      * save current game to specific file after serializing.
      *

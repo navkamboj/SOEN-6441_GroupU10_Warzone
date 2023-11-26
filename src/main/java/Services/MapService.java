@@ -154,9 +154,9 @@ public class MapService implements Serializable {
                 }
             }
             return true;
-        } catch (IOException l_ioException) {
-            this.setD_LogMapService(l_ioException.getMessage(), p_gameState);
-            p_gameState.logUpdate("Could not save map file changes!", "effect");
+        } catch (IOException | InvalidMap l_e) {
+            this.setD_LogMapService(l_e.getMessage(), p_gameState);
+            p_gameState.logUpdate("Couldn't save the changes in map file!", "effect");
             p_gameState.setD_errorMessage("Error in saving map file");
             return false;
         }
