@@ -394,6 +394,7 @@ public class StartUpPhase extends Phase {
                         throw new InvalidCommand(GameConstants.INVALID_COMMAND_GAMEPLAYER);
                     }
                 }
+                System.out.println("\n-------------------- To enter Tournament Mode --------------------- \n tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns\n");
         }
     }
 
