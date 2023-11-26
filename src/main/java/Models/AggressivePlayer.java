@@ -163,7 +163,7 @@ public class AggressivePlayer extends PlayerBehaviorStrategy{
     @Override
     public String createOrderCard(Player p_player, GameState p_gameState, String p_nameOfCard) {
         Random l_random = new Random();
-        Country l_MostPowerfulSourceCountry = getMostPowerfulCountry(p_player, p_gameState);
+        Country l_MostPowerfulSourceCountry = getMostPowerfulCountry(p_player, d_gameState);
 
         Country l_arbitraryTargetCountry = p_gameState.getD_map()
                 .getCountry(l_MostPowerfulSourceCountry.getD_neighborCountryIDs()
