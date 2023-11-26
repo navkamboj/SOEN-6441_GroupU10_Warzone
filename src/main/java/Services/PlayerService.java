@@ -4,9 +4,7 @@ import Models.*;
 
 import Constants.GameConstants;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,8 +182,8 @@ public class PlayerService implements Serializable {
     public boolean countryAssign(GameState p_gameState) {
         if (!checkAvailabilityPlayerList(p_gameState)){
             p_gameState.logUpdate("Countries can only be assigned once players are added.", "effect");
-        return false;
-    }
+            return false;
+        }
         List<Country> l_countrylist = p_gameState.getD_map().getD_countries();
         int l_playerListSize = p_gameState.getD_playerList().size();
         Player l_neutralPlayer = p_gameState.getD_playerList().stream()
@@ -353,19 +351,6 @@ public class PlayerService implements Serializable {
                 p_gameState.removePlayer(l_player);
             }
         }
-    }
-
-    /**
-     * This method is used for checking whether map is loaded or not
-     *
-     * @param p_gameState current game state
-     * @return boolean map returns true if map is loaded otherwise it will returns false
-     */
-    public boolean mapLoadedOrNot(GameState p_gameState) {
-        if (CommonUtil.isNull(p_gameState.getD_map()))
-            return false;
-        else
-            return true;
     }
 
     /**
