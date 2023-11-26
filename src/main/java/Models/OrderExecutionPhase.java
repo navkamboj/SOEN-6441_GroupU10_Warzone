@@ -163,13 +163,13 @@ public class OrderExecutionPhase extends Phase {
     /**
      * Checks if there is a next turn to be played or not.
      *
-     * @param isTournamentMode if tournament is being played
+     * @param p_isTournamentMode if tournament is being played
      * @return Yes or no based on user input or tournament turns left
      * @throws IOException indicates failure in I/O operation
      */
-    private String iterateForNextTurn(boolean isTournamentMode) throws IOException {
-        String l_continue;
-        if (isTournamentMode) {
+    private String iterateForNextTurn(boolean p_isTournamentMode) throws IOException {
+        String l_continue = new String();
+        if (p_isTournamentMode) {
             d_gameState.setD_countOfRemainingTurns(d_gameState.getD_countOfRemainingTurns() - 1);
             l_continue = d_gameState.getD_countOfRemainingTurns() == 0 ? "N" : "Y";
         } else {
