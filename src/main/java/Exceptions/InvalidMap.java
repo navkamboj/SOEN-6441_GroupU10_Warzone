@@ -1,12 +1,14 @@
 package Exceptions;
 
+import java.io.Serializable;
+
 /**
  * This class throws Invalid Map Exceptions
  *
  * @author Yatish Chutani
  * @version 1.0.0
  */
-public class InvalidMap extends Exception {
+public class InvalidMap extends Exception implements Serializable {
 
     /**
      * InvalidMap constructor prints message when the  exception is caught in an Invalid Map case
