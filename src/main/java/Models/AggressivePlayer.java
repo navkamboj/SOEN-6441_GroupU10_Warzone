@@ -11,7 +11,8 @@ import java.util.Collections;
 /**
  * This is the class of Aggressive Player,this player gathers all his armies and
  * attacks from his the strongest territory and maximize his force on one country for winning purpose.
- *
+ * @version 3.0.0
+ * @author Nihal Galani
  */
 public class AggressivePlayer extends PlayerBehaviorStrategy{
     /**
