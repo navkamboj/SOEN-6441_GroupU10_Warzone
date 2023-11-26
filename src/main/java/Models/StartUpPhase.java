@@ -296,6 +296,7 @@ public class StartUpPhase extends Phase {
         if (!l_isMapLoaded) {
             d_gameEngine.setD_logGameEngine("Can not do edit country at this stage, please perform" +
                     " `editmap` command first.", "effect");
+            return;
         }
 
         List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
@@ -323,6 +324,7 @@ public class StartUpPhase extends Phase {
         if (!l_isMapLoaded) {
             d_gameEngine.setD_logGameEngine("Can not do edit neighbor at this stage, please perform" +
                     " `editmap` command first.", "effect");
+            return;
         }
 
         List<Map<String, String>> l_list_of_operations = p_command.getParametersAndOperations();
@@ -357,10 +359,10 @@ public class StartUpPhase extends Phase {
             d_gameEngine.setD_gameState(p_gameState);
             d_gameEngine.setD_isTournamentMode(p_isTournamentMode);
 
-            if(d_playerService.countryAssign(d_gameState)){
-            d_playerService.colorAssign(d_gameState);
-            d_playerService.armiesAssign(d_gameState);
-            d_gameEngine.setIssueOrderPhase(p_isTournamentMode);
+            if(d_playerService.countryAssign(p_gameState)){
+                d_playerService.colorAssign(p_gameState);
+                d_playerService.armiesAssign(p_gameState);
+                d_gameEngine.setIssueOrderPhase(p_isTournamentMode);
         }
         } else {
             throw new InvalidCommand(GameConstants.INVALID_COMMAND_ASSIGNCOUNTRIES);
