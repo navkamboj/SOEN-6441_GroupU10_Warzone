@@ -1,4 +1,5 @@
 package Models;
+import java.io.Serializable;
 import java.util.*;
 
 import Utils.CommonUtil;
@@ -10,11 +11,31 @@ import Services.PlayerService;
  * @author Harsh Tank
  * @version 2.0.0
  */
-public class Advance implements Order {
+public class Advance implements Order, Serializable {
+
+    /**
+     * Player.
+     */
     Player d_playerName;
+
+    /**
+     * Sets the Log containing Information about orders.
+     */
     String d_logOfOrderExecution;
+
+    /**
+     * name of the target country.
+     */
     String d_targetCountry;
+
+    /**
+     * name of the source country.
+     */
     String d_sourceCountry;
+
+    /**
+     * number of armies to be placed.
+     */
     Integer d_countOfArmies;
 
     /**
@@ -335,12 +356,57 @@ public class Advance implements Order {
                 deployArmiesOnTargetCountry(l_targetCountry);
             } else if (l_targetCountry.getD_numberOfArmies() == 0) {
                 occupyTargetCountry(p_gameState, l_playerOfTargetCountry, l_targetCountry);
-                this.d_playerName.assignCard();
+                this.d_playerName.setD_oneCardPerTurn(true);
             } else {
-                generateOrderResult(p_gameState, l_playerOfTargetCountry, l_targetCountry, l_sourceCountry);
+                Random l_random = new Random();
+                if(l_random.nextBoolean()) {
+                    generateOrderResult(p_gameState, l_playerOfTargetCountry, l_targetCountry, l_sourceCountry);
+                } else {
+                    generateAdvanceResult(p_gameState, l_playerOfTargetCountry, l_targetCountry, l_sourceCountry);
+                }
             }
         } else {
             p_gameState.logUpdate(logOfOrderExecution(), "effect");
         }
+    }
+
+    /**
+     * Produces advance order result.
+     *
+     * @param p_gameState             current state of the game
+     * @param p_playerOfTargetCountry player of the target country
+     * @param p_targetCountry         target country given in order
+     * @param p_sourceCountry         source country given in order
+     */
+    private void generateAdvanceResult(GameState p_gameState, Player p_playerOfTargetCountry, Country p_targetCountry,
+                                      Country p_sourceCountry) {
+        Integer l_attackingArmies = (int) Math.round(d_countOfArmies * 0.6);
+        Integer l_defendingArmies = (int) Math.round(p_targetCountry.getD_numberOfArmies() * 0.7);
+
+        if(l_attackingArmies > l_defendingArmies) {
+            Integer l_attackingArmiesLeft = l_attackingArmies - l_defendingArmies;
+            p_targetCountry.setD_numberOfArmies(l_attackingArmiesLeft);
+            p_playerOfTargetCountry.getD_ownedCountries().remove(p_targetCountry);
+            d_playerName.getD_ownedCountries().add(p_targetCountry);
+            this.d_playerName.setD_oneCardPerTurn(true);
+            this.setD_logOfOrderExecution(
+                    "Player : " + this.d_playerName.getD_playerName() + " is assigned with Country : "
+                            + p_targetCountry.getD_countryName() + " and armies : " + p_targetCountry.getD_numberOfArmies(),
+                    "default");
+        }
+        else if (l_attackingArmies <= l_defendingArmies) {
+            Integer l_defendersArmiesLeft = l_defendingArmies - l_attackingArmies;
+            p_targetCountry.setD_numberOfArmies(l_defendersArmiesLeft);
+
+            String l_country1 = "Country : " + p_targetCountry.getD_countryName() + " is left with "
+                    + p_targetCountry.getD_numberOfArmies() + " armies and is still owned by player : "
+                    + p_playerOfTargetCountry.getD_playerName();
+            String l_country2 = "Country : " + p_sourceCountry.getD_countryName() + " is left with "
+                    + p_sourceCountry.getD_numberOfArmies() + " armies and is still owned by player : "
+                    + this.d_playerName.getD_playerName();
+            this.setD_logOfOrderExecution(l_country1 + System.lineSeparator() + l_country2, "default");
+        }
+        p_gameState.logUpdate(logOfOrderExecution(), "effect");
+        this.modifyContinents(this.d_playerName, p_playerOfTargetCountry, p_gameState);
     }
 }
