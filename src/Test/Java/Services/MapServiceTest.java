@@ -13,10 +13,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.text.DateFormat;
+import java.util.*;
 
 
 import static org.junit.Assert.assertEquals;
@@ -125,9 +123,11 @@ public class MapServiceTest {
      */
     @Test
     public void testRemovalOfCountry() throws InvalidMap, IOException, InvalidCommand {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_mapService.mapLoad(d_gamestate, "testing.map");
         d_mapService.editFunctionality(d_gamestate, "Pakistan", "remove", 2);
-        assertEquals("Log : Country: Pakistan does not exist"+System.lineSeparator(),d_gamestate.getLatestLog() );
+        assertEquals(f.format(c.getTime()) + " " + "Log : Country: Pakistan does not exist"+System.lineSeparator(),d_gamestate.getLatestLog() );
     }
 
     /**
@@ -138,13 +138,15 @@ public class MapServiceTest {
      */
     @Test
     public void testRemovalOfNeighbor() throws InvalidMap, IOException, InvalidCommand{
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_mapService.mapModify(d_gamestate, "test.map");
         d_mapService.editFunctionality(d_gamestate, "Asia 15", "add",   1);
         d_mapService.editFunctionality(d_gamestate, "India Asia", "add", 2);
         d_mapService.editFunctionality(d_gamestate, "Nepal Asia", "add", 2);
         d_mapService.editFunctionality(d_gamestate, "India Nepal", "add", 3);
         d_mapService.editFunctionality(d_gamestate, "Nepal India", "remove", 3);
-        assertEquals("Log : No Such Neighbour Exists"+System.lineSeparator(), d_gamestate.getLatestLog());
+        assertEquals(f.format(c.getTime()) + " " + "Log : No Such Neighbour Exists"+System.lineSeparator(), d_gamestate.getLatestLog());
     }
 
     /**
@@ -216,11 +218,13 @@ public class MapServiceTest {
      */
     @Test
     public void testSaveInvalidMap() throws InvalidMap {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         Map l_temp=new Map();
         l_temp.setD_mapFile("testing.map");
         d_gamestate.setD_map(l_temp);
         d_mapService.mapSave(d_gamestate, "testing.map");
-        assertEquals("Log : Couldn't save the changes in map file!"+System.lineSeparator(), d_gamestate.getLatestLog());
+        assertEquals(f.format(c.getTime()) + " " + "Log : Couldn't save the changes in map file!"+System.lineSeparator(), d_gamestate.getLatestLog());
     }
 
     /**
