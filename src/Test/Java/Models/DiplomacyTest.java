@@ -4,8 +4,11 @@ import Exceptions.InvalidMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
@@ -97,8 +100,10 @@ public class DiplomacyTest {
      */
     @Test
     public void NegotiationWorking(){
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_diplomacy1.execute(d_gameState);
         d_bomb1.execute(d_gameState);
-        assertEquals(d_gameState.getLatestLog().trim(), "Log : Order of Bomb:-Bomb India will not going to be execute because Harsh has a negotiation pact with target territory: India's player");
+        assertEquals(d_gameState.getLatestLog().trim(), f.format(c.getTime()) + " " + "Log : Order of Bomb:-Bomb India will not going to be execute because Harsh has a negotiation pact with target territory: India's player");
     }
 }

@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.io.FileNotFoundException;
+import java.util.TimeZone;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,10 +66,12 @@ public class GameEngineTest {
      */
     @Test
     public void testInvalidCommandForSaveMap() throws InvalidCommand, InvalidMap, IOException {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_gamestate.handleCommand("savemap");
         GameState l_currentState = d_gamestate.getD_gameState();
 
-        assertEquals("Log : There is no map to save yet !!, Run `editmap` command first" + System.lineSeparator(),
+        assertEquals(f.format(c.getTime()) + " " + "Log : There is no map to save yet !!, Run `editmap` command first" + System.lineSeparator(),
                 l_currentState.getLatestLog());
 
     }
@@ -158,10 +163,12 @@ public class GameEngineTest {
      */
     @Test
     public void testValidationOfSaveGame() throws InvalidCommand, InvalidMap, IOException {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_gamestate.handleCommand("savegame save_new.txt");
         GameState l_state = d_gamestate.getD_gameState();
 
-        assertEquals("Log : Gameplay has been saved Successfully to save_new.txt" + System.lineSeparator(),
+        assertEquals(f.format(c.getTime()) + " " + "Log : Gameplay has been saved Successfully to save_new.txt" + System.lineSeparator(),
                 l_state.getLatestLog());
     }
 
@@ -174,10 +181,12 @@ public class GameEngineTest {
      */
     @Test
     public void testInvalidCommandForEditContinent() throws InvalidCommand, IOException, InvalidMap {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         d_gamestate.handleCommand("editcontinent");
         GameState l_currentState = d_gamestate.getD_gameState();
 
-        assertEquals("Log : Can not do edit continent at this stage, please perform `editmap` command first." + System.lineSeparator(),
+        assertEquals(f.format(c.getTime()) + " " + "Log : Can not do edit continent at this stage, please perform `editmap` command first." + System.lineSeparator(),
                 l_currentState.getLatestLog());
     }
 }
