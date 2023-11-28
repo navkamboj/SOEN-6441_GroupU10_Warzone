@@ -3,7 +3,10 @@ package Models;
 import Views.LogWriter;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Observable;
+import java.util.TimeZone;
 
 /**
  * The class records and stores logs for different phases of the game
@@ -42,23 +45,25 @@ public class LogEntryBuffer extends Observable implements Serializable {
      * @param p_logType The Type of Log : Order, Command, Phase or Effect
      */
     public void currentLog(String p_messageToUpdate, String p_logType){
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 
         switch(p_logType.toLowerCase()){
             case "phase":
-                d_messageLog = System.lineSeparator() + "=====" + p_messageToUpdate + "=====" + System.lineSeparator() + System.lineSeparator();
+                d_messageLog = f.format(c.getTime()) + " " + System.lineSeparator() + "=====" + p_messageToUpdate + "=====" + System.lineSeparator() + System.lineSeparator();
                 break;
             case "command":
-                d_messageLog = System.lineSeparator() + "The Entered Command : " + p_messageToUpdate + System.lineSeparator();
+                d_messageLog = f.format(c.getTime()) + " " + System.lineSeparator() + "The Entered Command : " + p_messageToUpdate + System.lineSeparator();
                 break;
             case "order":
-                d_messageLog = System.lineSeparator() + "The Issued Order : " + p_messageToUpdate + System.lineSeparator();
+                d_messageLog = f.format(c.getTime()) + " " + System.lineSeparator() + "The Issued Order : " + p_messageToUpdate + System.lineSeparator();
                 break;
             case "effect":
-                d_messageLog = "Log : " + p_messageToUpdate + System.lineSeparator();
+                d_messageLog = f.format(c.getTime()) + " " + "Log : " + p_messageToUpdate + System.lineSeparator();
                 break;
             case "start":
             case "end":
-                d_messageLog = p_messageToUpdate + System.lineSeparator();
+                d_messageLog = f.format(c.getTime()) + " " + p_messageToUpdate + System.lineSeparator();
                 break;
         }
         setChanged();
