@@ -8,7 +8,19 @@ import Models.Continent;
 import Models.Country;
 import Models.GameState;
 
+/**
+ * Writer to read and create conquest map file.
+ *
+ */
 public class ConquestMapFileWriter implements Serializable{
+    /**
+     * This method reads conquest map, parses it and stores it in conquest type of map file.
+     *
+     * @param p_gameState The current state of the game
+     * @param p_writer The writer object for file
+     * @param p_formatOfMap Specifies the format in which map file has to be saved
+     * @throws IOException IOException
+     */
     public void parseMapToFile(GameState p_gameState, FileWriter p_writer, String p_formatOfMap) throws IOException{
         if (null != p_gameState.getD_map().getD_continents() && !p_gameState.getD_map().getD_continents().isEmpty()){
             writeMetadataContinent(p_gameState, p_writer);
@@ -18,6 +30,13 @@ public class ConquestMapFileWriter implements Serializable{
         }
     }
 
+    /**
+     * This method retrieves country and boarder data from game state and writes it to file writer.
+     *
+     * @param p_gameState The current GameState Object
+     * @param p_writer The writer object for file
+     * @throws IOException It handles I/0Exception
+     */
     private void writeMetaDataCountryAndBorder(GameState p_gameState, FileWriter p_writer) throws IOException{
         String l_countryMetaData = new String();
 
@@ -35,6 +54,13 @@ public class ConquestMapFileWriter implements Serializable{
         }
     }
 
+    /**
+     * This method retrieves continents' data from game state and writes it to file.
+     *
+     * @param p_gameState The current GameState
+     * @param p_writer The writer object for file
+     * @throws IOException It handles I/OException
+     */
     private void writeMetadataContinent(GameState p_gameState, FileWriter p_writer) throws IOException {
         p_writer.write(System.lineSeparator() + GameConstants.CONQUEST_CONTINENTS + System.lineSeparator());
         for (Continent l_continent : p_gameState.getD_map().getD_continents()){
