@@ -11,6 +11,8 @@ import Models.GameState;
 /**
  * Writer to read and create conquest map file.
  *
+ * @author Yatish Chutani
+ * @version 3.0.0
  */
 public class ConquestMapFileWriter implements Serializable{
     /**

@@ -11,6 +11,8 @@ import Models.Map;
 /**
  * Reader class to read and parse conquest map file.
  *
+ * @author Yatish Chutani
+ * @version 3.0.0
  */
 public class ConquestMapFileReader implements Serializable{
     /**
