@@ -367,7 +367,6 @@ public class Player implements Serializable {
      * Verifies if more orders are to be accepted for player in further turn.
      *
      * @param p_isTournamentMode boolean if game is played in tournament mode
-     * @throws IOException exception to handle I/O operation
      */
     void checkForMoreOrders(boolean p_isTournamentMode) {
         String l_checkNextOrder;

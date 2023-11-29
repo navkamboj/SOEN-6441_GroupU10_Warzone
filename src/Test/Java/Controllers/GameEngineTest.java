@@ -48,7 +48,6 @@ public class GameEngineTest {
      *
      *  This method GameEngineSetup called every time before the execution of every test case that
      *  are available in this GameEngineTest class file
-     *  @throws InvalidMap Invalid Map
      *
      */
     @Before
