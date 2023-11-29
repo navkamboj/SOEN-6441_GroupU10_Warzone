@@ -1,26 +1,28 @@
 package Services;
 
-import Models.Player;
-import Models.Country;
-import Models.GameState;
-import Models.Continent;
+import Models.*;
 
 import Constants.GameConstants;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import Utils.CommonUtil;
 
 /**
  * This service is used for handle the players.
  *
- * @author Nihal Galani
- * @version 1.0.0
+ * @author Nihal Galani, Navjot Kamboj
+ * @version 3.0.0
  */
 
-public class PlayerService {
+public class PlayerService implements Serializable {
 
     /**
      * Country Assignment Log.
@@ -60,7 +62,7 @@ public class PlayerService {
      * @param p_argumentTask           name of player which should be remove or add
      * @return updated playerlist will be returned from this method
      */
-    public List<Player> addingRemovingPlayers(List<Player> p_allExistingPlayersList, String p_operationTask, String p_argumentTask) {
+    public List<Player> addingRemovingPlayers(List<Player> p_allExistingPlayersList, String p_operationTask, String p_argumentTask) throws IOException {
         List<Player> l_updatePlayers = new ArrayList<>();
         if (!CommonUtil.isEmptyCollection(p_allExistingPlayersList))
             l_updatePlayers.addAll(p_allExistingPlayersList);
@@ -104,22 +106,61 @@ public class PlayerService {
     }
 
     /**
-     * Process of removing the player if it exists
+     * Process of adding the player if it doesn't exist already
      *
      * @param p_updatePlayers   updated list of player with removal of player name
-     * @param p_newPlayerName   the player name which should be remove
+     * @param p_newPlayerName   the player name which should be added
      * @param p_playerNameExist if player already its value will be true otherwise its value will be false
+     * @throws IOException in case of failure in receiving user input
      */
     private void insertGamePlayer(List<Player> p_updatePlayers, String p_newPlayerName,
-                                  boolean p_playerNameExist) {
+                                  boolean p_playerNameExist) throws IOException {
         if (p_playerNameExist) {
             setD_logPlayer("Player: " + p_newPlayerName + " already Exists.");
         } else {
             Player l_addPlayer = new Player(p_newPlayerName);
+            String l_playerStrategy = getD_playerStrategy(l_addPlayer);
+
+            switch(l_playerStrategy) {
+                case "Human":
+                    l_addPlayer.setStrategy(new HumanPlayer());
+                    break;
+                case "Aggressive":
+                    l_addPlayer.setStrategy(new AggressivePlayer());
+                    break;
+                case "Random":
+                    l_addPlayer.setStrategy(new RandomPlayer());
+                    break;
+                case "Benevolent":
+                    l_addPlayer.setStrategy(new BenevolentPlayer());
+                    break;
+                case "Cheater":
+                    l_addPlayer.setStrategy(new CheaterPlayer());
+                    break;
+                default:
+                    setD_logPlayer("Invalid Player Behavior");
+                    break;
+            }
             p_updatePlayers.add(l_addPlayer);
-            setD_logPlayer("Player: " + p_newPlayerName + " has been added successfully.");
+            setD_logPlayer("Player: " + p_newPlayerName + "and strategy: "+ l_playerStrategy+ " has been added successfully.");
         }
     }
+
+        /**
+         * @param p_addPlayer player to be added
+         * @return strategy of player
+         * @throws IOException in case of failure in receiving user input
+         */
+        private String getD_playerStrategy(Player p_addPlayer) throws IOException {
+            Scanner l_scanner = new Scanner(System.in);
+            System.out.println("Enter the Player's Strategy "+ p_addPlayer.getD_playerName());
+            String l_playerStrategy = l_scanner.nextLine();
+            if(!GameConstants.PLAYER_BEHAVIORS.contains(l_playerStrategy)) {
+                this.setD_logPlayer("Invalid Strategy Entered!");
+                return getD_playerStrategy(p_addPlayer);
+            }
+            return l_playerStrategy;
+        }
 
     /**
      * Check whether playerslist is available or not
@@ -129,7 +170,7 @@ public class PlayerService {
      */
     public boolean checkAvailabilityPlayerList(GameState p_gameState) {
         if (p_gameState.getD_playerList() == null || p_gameState.getD_playerList().isEmpty()) {
-            System.out.println("Please add some players to playerlist");
+            System.out.println("Please add some players to playerlist before assigning countries");
             return false;
         }
         return true;
@@ -140,10 +181,11 @@ public class PlayerService {
      *
      * @param p_gameState current game state
      */
-    public void countryAssign(GameState p_gameState) {
-        if (!checkAvailabilityPlayerList(p_gameState))
+    public boolean countryAssign(GameState p_gameState) {
+        if (!checkAvailabilityPlayerList(p_gameState)){
             p_gameState.logUpdate("Countries can only be assigned once players are added.", "effect");
-
+        return false;
+    }
         List<Country> l_countrylist = p_gameState.getD_map().getD_countries();
         int l_playerListSize = p_gameState.getD_playerList().size();
         Player l_neutralPlayer = p_gameState.getD_playerList().stream()
@@ -158,6 +200,7 @@ public class PlayerService {
 
         p_gameState.logUpdate(d_assignmentLog, "effect");
         System.out.println("Countries have been assigned to all individual players");
+        return true;
     }
 
     /**
@@ -251,8 +294,8 @@ public class PlayerService {
      * @param p_player armies will be calculated for this player
      * @return Integer total armies that is allocated to player
      */
-    public int armiesCountForPlayer(Player p_player) {
-        int l_armies = 0;
+    public Integer armiesCountForPlayer(Player p_player) {
+        Integer l_armies = null != p_player.getD_noOfAllocatedArmies() ? p_player.getD_noOfAllocatedArmies() : 0;
         if (!CommonUtil.isEmptyCollection(p_player.getD_ownedCountries())) {
             l_armies = Math.max(3, Math.round((p_player.getD_ownedCountries().size()) / 3));
         }
@@ -282,18 +325,13 @@ public class PlayerService {
     }
 
     /**
-     * This method is called by controller for updation of gamestate and adding of any player
+     * This method is called by controller for update of gamestate and adding of any player
      *
      * @param p_gameState     current game state
      * @param p_operationTask operation which should be performed either add or remove
-     * @param p_argumentTask  name of player which should be remove or add
+     * @param p_argumentTask  name of player which should be removed or add
      */
-    public void playerListUpdation(GameState p_gameState, String p_operationTask, String p_argumentTask) {
-        if (!mapLoadedOrNot(p_gameState)) {
-            this.setD_logPlayer("Load the map before adding or removing any player  " + p_argumentTask);
-            p_gameState.logUpdate(this.d_logPlayer, "effect");
-            return;
-        }
+    public void playerListUpdation(GameState p_gameState, String p_operationTask, String p_argumentTask) throws IOException{
         List<Player> l_playersListUpdation = this.addingRemovingPlayers(p_gameState.getD_playerList(), p_operationTask, p_argumentTask);
 
         if (!CommonUtil.isNull(l_playersListUpdation)) {
@@ -301,6 +339,20 @@ public class PlayerService {
             p_gameState.logUpdate(d_logPlayer, "effect");
         }
 
+    }
+
+    /**
+     * Adds the lost player to the failed list in gamestate.
+     *
+     * @param p_gameState gamestate object.
+     */
+    public void updatePlayersInGame(GameState p_gameState){
+        for(Player l_player : p_gameState.getD_playerList()){
+            if(l_player.getD_ownedCountries().size()==0 && !l_player.getD_playerName().equals("Neutral") && !p_gameState.getD_listOfPlayersFailed().contains(l_player)){
+                this.setD_logPlayer("Player: "+l_player.getD_playerName()+" has lost the game and is left with no countries!");
+                p_gameState.removePlayer(l_player);
+            }
+        }
     }
 
     /**
@@ -353,7 +405,10 @@ public class PlayerService {
         for (Player l_player : p_playersList) {
             if (!l_player.getD_playerName().equalsIgnoreCase("Neutral"))
                 l_player.setD_moreOrders(true);
-            l_player.setD_oneCardPerTurn(false);
+            if(l_player.getD_oneCardPerTurn()) {
+                l_player.assignCard();
+                l_player.setD_oneCardPerTurn(false);
+            }
             l_player.clearNegotiation();
         }
     }

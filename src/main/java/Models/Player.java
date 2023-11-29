@@ -6,6 +6,7 @@ import Exceptions.InvalidMap;
 import Utils.CommonUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,9 +16,9 @@ import java.util.Scanner;
  * This class depicts the player information and services.
  *
  * @author Pranjalesh Ghansiyal, Navjot Kamboj
- * @version 2.0.0
+ * @version 3.0.0
  */
-public class Player {
+public class Player implements Serializable {
     /**
      * Color to show the details with on the map.
      */
@@ -74,6 +75,11 @@ public class Player {
     String d_playerLog;
 
     /**
+     * Object of Player Behavior Strategy class.
+     */
+    PlayerBehaviorStrategy d_playerBehaviorStrategy;
+
+    /**
      * This is default constructor.
      */
     public Player() {
@@ -107,6 +113,15 @@ public class Player {
      */
     public void addPlayerNegotiation(Player p_playerNegotiation){
         this.d_negotiatedWith.add(p_playerNegotiation);
+    }
+
+    /**
+     * Returns the boolean if a player has received a card or not.
+     *
+     * @return bool if player has earned one card
+     */
+    public boolean getD_oneCardPerTurn() {
+        return d_oneCardPerTurn;
     }
 
     /**
@@ -264,6 +279,19 @@ public class Player {
     }
 
     /**
+     * Extracts the IDs of countries which are owned by the player.
+     *
+     * @return a list of country IDs
+     */
+    public List<Integer> getCountryIDs() {
+        List<Integer> l_countryIDs = new ArrayList<Integer>();
+        for (Country c : d_ownedCountries) {
+            l_countryIDs.add(c.getD_countryID());
+        }
+        return l_countryIDs;
+    }
+
+    /**
      * Extracts the list of names of countries owned by the player.
      *
      * @return list of country names
@@ -327,20 +355,39 @@ public class Player {
     }
 
     /**
+     * Returns player strategy object.
+     *
+     * @return player strategy
+     */
+    public PlayerBehaviorStrategy getD_playerBehaviorStrategy() {
+        return d_playerBehaviorStrategy;
+    }
+
+    /**
      * Verifies if more orders are to be accepted for player in further turn.
      *
+     * @param p_isTournamentMode boolean if game is played in tournament mode
      * @throws IOException exception to handle I/O operation
      */
-    void checkForMoreOrders() {
-        Scanner l_scanner = new Scanner(System.in);
-        System.out.println("\nDo you want to give more orders for: " + this.getD_playerName()
-                + " in further turns ? \nEnter Y/N");
-        String l_checkNextOrder = l_scanner.nextLine();
-        if (l_checkNextOrder.equalsIgnoreCase("Y") || l_checkNextOrder.equalsIgnoreCase("N")) {
-            this.setD_moreOrders(l_checkNextOrder.equalsIgnoreCase("Y") ? true : false);
+    void checkForMoreOrders(boolean p_isTournamentMode) {
+        String l_checkNextOrder = new String();
+        if (p_isTournamentMode || !this.getD_playerBehaviorStrategy().getPlayerBehavior().equalsIgnoreCase("Human")) {
+            Random l_randomNumber = new Random();
+            System.out.println("Trying to run next boolean logic");
+            boolean l_nextOrders = l_randomNumber.nextBoolean();
+            this.setD_moreOrders(l_nextOrders);
         } else {
-            System.err.println("Enter a valid Input");
-            this.checkForMoreOrders();
+            Scanner l_scanner = new Scanner(System.in);
+            System.out.println("\nDo you want to give more orders for: " + this.getD_playerName()
+                    + " in further turns ? \nEnter Y/N");
+            l_checkNextOrder = l_scanner.nextLine();
+
+            if (l_checkNextOrder.equalsIgnoreCase("Y") || l_checkNextOrder.equalsIgnoreCase("N")) {
+                this.setD_moreOrders(l_checkNextOrder.equalsIgnoreCase("Y") ? true : false);
+            } else {
+                System.err.println("Enter a valid Input");
+                this.checkForMoreOrders(p_isTournamentMode);
+            }
         }
     }
 
@@ -350,14 +397,10 @@ public class Player {
      *
      */
     public void assignCard(){
-        if(!d_oneCardPerTurn){
             Random l_random = new Random();
             this.d_cardsOwned.add(GameConstants.CARDS.get(l_random.nextInt(GameConstants.SIZE)));
-            this.setD_playerLog("Player: " + this.d_name + " has obtained a card as a reward for a triumphant conquest- " + this.d_cardsOwned.get(this.d_cardsOwned.size()-1), "log");
-            this.setD_oneCardPerTurn(true);
-        }else{
-            this.setD_playerLog("Player: " + this.d_name + " has reached the maximum allowable card acquisition limit for a single turn", "error");
-        }
+            this.setD_playerLog("Player: " + this.d_name + " has obtained a card as a reward for a " +
+                    "triumphant conquest- " + this.d_cardsOwned.get(this.d_cardsOwned.size()-1), "log");
     }
 
     /**
@@ -438,6 +481,15 @@ public class Player {
     }
 
     /**
+     * Sets the strategy of the Player Behavior.
+     *
+     * @param p_playersBehaviorStrategy PlayerBehaviorStrategy class object.
+     */
+    public void setStrategy(PlayerBehaviorStrategy p_playersBehaviorStrategy) {
+        d_playerBehaviorStrategy = p_playersBehaviorStrategy;
+    }
+
+    /**
      * Method to create advance orders for the entered commands
      *
      * @param p_enteredCommand command entered by user on CLI
@@ -455,6 +507,7 @@ public class Player {
                         && validateAdjacency(p_gameState, l_sourceCountry, l_targetCountry)) {
                     this.d_orderedPlayerList
                             .add(new Advance(this, l_sourceCountry, l_targetCountry, Integer.parseInt(l_noOfArmies)));
+                    d_orderedPlayerList.get(d_orderedPlayerList.size() - 1).printTheOrder();
                     this.setD_playerLog("Advance order is added to the queue for execution. For player: " + this.d_name, "log");
                 }
             } else {
@@ -470,7 +523,7 @@ public class Player {
      * Method to verify number of armies entered in deploy command to validate that
      * Player cannot deploy more armies exceeding their reinforcement pool.
      *
-     * @param p_player     player creating the deploy order
+     * @param p_player     player creating the deployment order
      * @param p_noOfArmies number of armies
      * @return boolean to validate armies to deploy
      */
@@ -489,12 +542,14 @@ public class Player {
           String  l_noOfArmies = p_enteredCommand.split(" ")[2];
             if (verifyDeployOrderArmies(this, l_noOfArmies)) {
                 this.setD_playerLog(
-                        "Given deploy order cant be executed as armies in deploy order exceeds player's unallocated armies.", "error");
+                        "Given deploy order cant be executed as armies in deploy order exceeds player's" +
+                                " unallocated armies.", "error");
             } else {
                 this.d_orderedPlayerList.add(new Deploy(this, l_targetCountry, Integer.parseInt(l_noOfArmies)));
                 Integer l_armies = this.getD_noOfAllocatedArmies() - Integer.parseInt(l_noOfArmies);
                 this.setD_noOfAllocatedArmies(l_armies);
-                this.setD_playerLog("Deploy order is added to the queue for execution. For player: " + this.d_name, "log");
+                this.setD_playerLog("Deploy order is added to the queue for execution. For player: "
+                        + this.d_name, "log");
 
             }
         } catch (Exception l_e) {
@@ -571,5 +626,17 @@ public class Player {
         } else{
             this.setD_playerLog("Invalid Card Commands entered. Please enter a valid command", "error");
         }
+    }
+
+    /**
+     * It will return order of the player according to strategy.
+     *
+     * @param p_gameState Current GameState Object
+     * @return String representing Order
+     * @throws IOException Exception
+     */
+    public String getPlayerOrder(GameState p_gameState) throws IOException {
+        String l_orderOfTheString = this.d_playerBehaviorStrategy.createOrder(this, p_gameState);
+        return l_orderOfTheString;
     }
 }

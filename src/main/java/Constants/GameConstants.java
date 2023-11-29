@@ -1,14 +1,14 @@
 package Constants;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * This class is used to initialise all the constants that are going to be used throughout the code base.
  *
  * @version 1.0.0
  */
-public class GameConstants {
+public class GameConstants implements Serializable {
     public static final String SRC_MAIN_RESOURCES = "src/main/resources";
     public static final String INVALID_COMMAND_DEPLOY_ORDER = "Invalid command. Please submit your command in the format of : deploy countryID <CountryName> <num> (until every army has been deployed)";
     public static final String INVALID_COMMAND_EDITCOUNTRY = "Invalid command. Please submit your command in Appropriate Format like : editcountry -add countrytID continentID -remove countryID";
@@ -21,6 +21,9 @@ public class GameConstants {
     public static final String INVALID_COMMAND_GAMEPLAYER = "Invalid command. Please submit your command in the Format of : gameplayer -add playername -remove playername";
     public static final String INVALID_COMMAND_ASSIGNCOUNTRIES = "Invalid command! Please provide command in Format of : assigncountries";
     public static final String INVALID_MAP_EMPTY = "A valid map is not present. Please load a valid map to perform a check.";
+    public static final String INVALID_COMMAND_TOURNAMENT_MODE = "Invalid Command. Please submit your command in the Format of : tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns";
+    public static final String INVALID_COMMAND_LOADGAME = "Invalid command. Please submit your command in Format of : loadgame filename";
+    public static final String INVALID_COMMAND_SAVEGAME = "Invalid command. Please submit your command in Format of : savegame filename";
     public static final String VALID_MAP = "The loaded map is valid!";
     public static final int CONSOLE_WIDTH = 80;
     public static final String ARGUMENTS = "arguments";
@@ -40,4 +43,8 @@ public class GameConstants {
     public static final List<String> CARDS = Arrays.asList("bomb", "blockade", "airlift", "negotiate");
     public static final int SIZE = CARDS.size();
     public static final List<String> COLORS_LIST = Arrays.asList(RED_BOLD, GREEN_BOLD, YELLOW_BOLD, BLUE_BOLD, PURPLE_BOLD, CYAN_BOLD);
+    public static final String CONQUEST_TERRITORIES = "[Territories]";
+    public static final String CONQUEST_CONTINENTS = "[Continents]";
+    public static final List<String> TOURNAMENT_PLAYER_BEHAVIORS = Arrays.asList("Aggressive", "Random", "Benevolent", "Cheater");
+    public static final List<String> PLAYER_BEHAVIORS = Arrays.asList("Human", "Aggressive", "Random", "Benevolent", "Cheater");
 }

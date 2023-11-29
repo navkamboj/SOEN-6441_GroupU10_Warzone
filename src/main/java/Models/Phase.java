@@ -8,6 +8,7 @@ import Services.PlayerService;
 import Utils.Command;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * This abstract class declares abstract methods for each game phase
@@ -15,7 +16,12 @@ import java.io.IOException;
  * @author Navjot Kamboj, Yatish Chutani
  * @version 2.0.0
  */
-public abstract class Phase {
+public abstract class Phase implements Serializable {
+    /**
+     * Serial version id.
+     */
+    private static final long serialVersionUID = 1L;
+
     /**
      * d_gameState stores the information about current GameState.
      */
@@ -40,6 +46,11 @@ public abstract class Phase {
      * Flag to check if map is loaded
      */
     boolean l_isMapLoaded;
+
+    /**
+     * Tournament containing multiple game states.
+     */
+    Tournament d_tournament = new Tournament();
 
     /**
      * Constructor of class to initialize current game engine value
@@ -201,7 +212,7 @@ public abstract class Phase {
      * @throws InvalidMap     exception to handle invalid map
      * @throws IOException    exception to handle invalid I/O
      */
-    protected abstract void doAssignCountries(Command p_command, Player p_player) throws InvalidCommand, IOException, InvalidMap;
+    protected abstract void doAssignCountries(Command p_command, Player p_player, boolean p_isTournamentMode, GameState p_gameState) throws InvalidCommand, IOException, InvalidMap;
 
     /**
      * Declaration of function to check <strong>gameplayer</strong> command
@@ -251,7 +262,7 @@ public abstract class Phase {
     /**
      * This is the main method executed on phase change.
      */
-    public abstract void initPhase();
+    public abstract void initPhase(boolean p_isTournamentMode);
 
     /**
      * This method is used to Log and Print if the command cannot be executed in current phase.
@@ -260,6 +271,47 @@ public abstract class Phase {
         d_gameEngine.setD_logGameEngine("Invalid command for the Current State", "effect");
     }
 
+    /**
+     * Method to handle Game Load Feature.
+     *
+     * @param p_command command entered on CLI
+     * @param p_player player instance
+     * @throws InvalidCommand exception to handle invalid command
+     * @throws InvalidMap exception to handle invalid map
+     * @throws IOException    exception to handle invalid I/O
+     */
+    protected abstract void doLoadGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException;
+
+    /**
+     * Method to handle Game Save Feature.
+     *
+     * @param p_command command entered on CLI
+     * @param p_player player instance
+     * @throws InvalidCommand exception to handle invalid command
+     * @throws InvalidMap exception to handle invalid map
+     * @throws IOException    exception to handle invalid I/O
+     */
+    protected abstract void doSaveGame(Command p_command, Player p_player) throws InvalidCommand, InvalidMap, IOException;
+
+    /**
+     * Tournament playing logic.
+     *
+     * @param p_command tournament command
+     * @throws InvalidCommand invalid command exception
+     * @throws InvalidMap invalid map
+     */
+    protected abstract void tournamentGameMode(Command p_command) throws InvalidCommand, InvalidMap, IOException;
+
+    /**
+     * Method to handle the command entered by user and
+     * redirects them to specific phase implementations.
+     *
+     * @param p_enteredCommand command entered on CLI
+     * @param p_player         player instance
+     * @throws InvalidCommand exception to handle invalid command
+     * @throws InvalidMap     exception to handle invalid map
+     * @throws IOException    exception to handle invalid I/O
+     */
     private void commandHandler(String p_enteredCommand, Player p_player) throws InvalidMap, InvalidCommand, IOException {
         Command l_command = new Command(p_enteredCommand);
         String l_baseCommand = l_command.getBaseCommand();
@@ -304,7 +356,7 @@ public abstract class Phase {
                 break;
             }
             case "assigncountries": {
-                doAssignCountries(l_command, p_player);
+                doAssignCountries(l_command, p_player,false,d_gameState);
                 break;
             }
             case "deploy": {
@@ -315,11 +367,23 @@ public abstract class Phase {
                 doAdvanceOrder(p_enteredCommand, p_player);
                 break;
             }
+            case "savegame": {
+                doSaveGame(l_command, p_player);
+                break;
+            }
+            case "loadgame": {
+                doLoadGame(l_command, p_player);
+                break;
+            }
             case "negotiate":
             case "airlift":
             case "blockade":
             case "bomb": {
                 doCardHandle(p_enteredCommand, p_player);
+                break;
+            }
+            case "tournament": {
+                tournamentGameMode(l_command);
                 break;
             }
             case "help":{
@@ -335,7 +399,8 @@ public abstract class Phase {
                                 "---------- Order Creation Commands ----------\n"+"Deploy order command: deploy countryID numarmies \n" +"Advance order command: advance countrynamefrom countynameto numarmies \n"+
                                 "Bomb order command (requires bomb card): bomb countryID \n"+"Blockade order command (required blockade card): blockade countryID \n" +
                                 "Airlift order command (requires the airlift card): airlift sourcecountryID targetcountryID numarmies \n" +
-                                "Diplomacy order command (requires the diplomacy card): negotiate playerID \n"
+                                "Diplomacy order command (requires the diplomacy card): negotiate playerID \n" + "---------- Game Save/Load Commands ----------\n"+"savegame filename\n"+"loadgame filename\n\n"+
+                                "---------- Tournament Game Play ----------\n"+"tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns"
                         ,"effect");
                 break;
             }

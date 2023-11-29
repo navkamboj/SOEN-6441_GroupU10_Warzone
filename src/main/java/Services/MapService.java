@@ -12,18 +12,16 @@ import Utils.CommonUtil;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The MapService class is used to load, read, parse, edit and the save map file.
  *
  * @version 1.0.0
- * @author Navjot Kamboj, Pranjalesh Ghansiyal, Yatish Chutani
+ * @author Harsh Tank, Navjot Kamboj, Pranjalesh Ghansiyal, Yatish Chutani
  */
-public class MapService {
+public class MapService implements Serializable {
 
     /**
      * This method processes the map file.
@@ -31,25 +29,20 @@ public class MapService {
      * @param p_gameState this is the current state of the game
      * @param p_mapFileName this is the map file name
      * @return Map object after processing the map file.
+     * @throws InvalidMap shows that Map Validation has been failure
      */
-    public Map mapLoad(GameState p_gameState, String p_mapFileName) {
+    public Map mapLoad(GameState p_gameState, String p_mapFileName) throws InvalidMap {
 
         Map l_map = new Map();
-        List<String> l_linesOfFile = mapFile(p_mapFileName);
-        if (null != l_linesOfFile && !l_linesOfFile.isEmpty()) {
-            // Parses the file and stores information in objects
-            List<String> l_continentData = retrieveMetaData(l_linesOfFile, "continent");
-            List<Continent> l_continentObjects = loadContinentsMetaData(l_continentData);
-            List<String> l_countryData = retrieveMetaData(l_linesOfFile, "country");
-            List<String> l_bordersMetaData = retrieveMetaData(l_linesOfFile, "border");
-            List<Country> l_countryObjects = loadCountriesMetaData(l_countryData);
+        List<String> l_fileLines = mapFile(p_mapFileName);
 
-            // Updates the neighbour of countries in Objects
-            l_countryObjects = loadBorderMetaData(l_countryObjects, l_bordersMetaData);
-            l_continentObjects = connectContinentsCountry(l_countryObjects, l_continentObjects);
-            l_map.setD_continents(l_continentObjects);
-            l_map.setD_countries(l_countryObjects);
-            p_gameState.setD_map(l_map);
+        if (null != l_fileLines && !l_fileLines.isEmpty()) {
+            if(l_fileLines.contains("[Territories]")) {
+                MapReaderAdaptor l_mapReaderAdapter = new MapReaderAdaptor(new ConquestMapFileReader());
+                l_mapReaderAdapter.parseMapFile(p_gameState, l_map, l_fileLines);
+            } else if(l_fileLines.contains("[countries]")) {
+                new MapFileReader().mapFileParse(p_gameState, l_map, l_fileLines);
+            }
         }
         return l_map;
     }
@@ -174,22 +167,22 @@ public class MapService {
      *
      * @param p_mapFileName Name of the map file
      * @return All the lines in List from the map file.
+     * @throws InvalidMap shows Map Validation has been failed
      */
-    public List<String> mapFile(String p_mapFileName) {
+    public List<String> mapFile(String p_mapFileName) throws InvalidMap{
 
-        String l_mapFilePath = CommonUtil.getMapFilePath(p_mapFileName);
-        List<String> l_lineList = new ArrayList<>();
+        String l_filePath = CommonUtil.getMapFilePath(p_mapFileName);
+        List<String> l_listOfLines = new ArrayList<>();
+
+        BufferedReader l_reader;
         try {
-            Scanner l_scannerObject = new Scanner(new FileReader(l_mapFilePath));
-            while(l_scannerObject.hasNextLine()) {
-                String line = l_scannerObject.nextLine();
-                l_lineList.add(line);
-            }
-            l_scannerObject.close();
-        } catch (IOException l_ioException) {
-            System.out.println("File not Found!");
+            l_reader = new BufferedReader(new FileReader(l_filePath));
+            l_listOfLines = l_reader.lines().collect(Collectors.toList());
+            l_reader.close();
+        } catch (IOException l_e1) {
+            throw new InvalidMap("Map File not Found!");
         }
-        return l_lineList;
+        return l_listOfLines;
     }
 
     /**
@@ -198,17 +191,20 @@ public class MapService {
      *
      * @param p_gameState Current state of the game.
      * @param p_editMapPath contains the filepath.
+     * @throws InvalidMap shows Map Validation has been failed
      * @throws IOException
      */
-    public void mapModify(GameState p_gameState, String p_editMapPath) throws IOException {
+    public void mapModify(GameState p_gameState, String p_editMapPath) throws IOException,InvalidMap {
 
         String l_mapFilePath = CommonUtil.getMapFilePath(p_editMapPath);
-        File l_fileToEdit = new File(l_mapFilePath);
-        if (l_fileToEdit.createNewFile()) {
-            System.out.println("File has been successfully created.");
+        File l_fileToBeEdited = new File(l_mapFilePath);
+
+        if (l_fileToBeEdited.createNewFile()) {
+            System.out.println("File has been created.");
             Map l_map = new Map();
             l_map.setD_mapFile(p_editMapPath);
             p_gameState.setD_map(l_map);
+            p_gameState.logUpdate(p_editMapPath+ " File has been created for user to edit", "effect");
         } else {
             System.out.println("File already exists.");
             this.mapLoad(p_gameState, p_editMapPath);
@@ -216,6 +212,24 @@ public class MapService {
                 p_gameState.setD_map(new Map());
             }
             p_gameState.getD_map().setD_mapFile(p_editMapPath);
+            p_gameState.logUpdate(p_editMapPath+ " already exists and is loaded for editing", "effect");
+        }
+    }
+
+    /**
+     * This method converts the Map Object to File.
+     *
+     * @param p_gameState current gamestate
+     * @param l_writer file writer object.
+     * @param l_formatOfMap  Map Format
+     * @throws IOException Exception
+     */
+    private void parseMapObjectToFile(GameState p_gameState, FileWriter l_writer, String l_formatOfMap) throws IOException {
+        if(l_formatOfMap.equalsIgnoreCase("ConquestMap")) {
+            MapWriterAdaptor l_mapWriterAdapter = new MapWriterAdaptor(new ConquestMapFileWriter());
+            l_mapWriterAdapter.parseMapToFile(p_gameState, l_writer, l_formatOfMap);
+        } else {
+            new MapFileWriter().parseMapObjectToFile(p_gameState, l_writer, l_formatOfMap);
         }
     }
 
@@ -229,6 +243,7 @@ public class MapService {
      */
     public boolean mapSave(GameState p_gameState, String p_mapFileName) throws InvalidMap {
         try {
+            String l_formatMap = null;
             if (!p_mapFileName.equalsIgnoreCase(p_gameState.getD_map().getD_mapFile())) {
                 p_gameState.setD_errorMessage("Please use the same filename for saving that was provided when making edits.");
                 return false;
@@ -239,20 +254,16 @@ public class MapService {
                     System.out.println("Validating Map...");
                     boolean l_validationStatus = l_currentMap.Validate();
                     if (l_validationStatus) {
+                        l_formatMap = this.getFormatToSave();
                         Files.deleteIfExists(Paths.get(CommonUtil.getMapFilePath(p_mapFileName)));
                         FileWriter l_fileWriter = new FileWriter(CommonUtil.getMapFilePath(p_mapFileName));
 
-                        if (null != p_gameState.getD_map().getD_continents()
-                                && !p_gameState.getD_map().getD_continents().isEmpty()) {
-                            continentMetaData(p_gameState, l_fileWriter);
-                        }
-                        if (null != p_gameState.getD_map().getD_countries()
-                                && !p_gameState.getD_map().getD_countries().isEmpty()) {
-                            countryAndBorderMetaData(p_gameState, l_fileWriter);
-                        }
+                        parseMapObjectToFile(p_gameState, l_fileWriter, l_formatMap);
+                        p_gameState.logUpdate("Map Saved Successfully", "effect");
                         l_fileWriter.close();
                     }
                 } else {
+                    p_gameState.logUpdate("Validation failed! Cannot Save the Map file!", "effect");
                     p_gameState.setD_errorMessage("Validation Failed");
                     return false;
                 }
@@ -323,15 +334,17 @@ public class MapService {
      * Resets Game State Map.
      *
      * @param p_gameState object of GameState.
+     * @param p_loadFile File which couldn't be loaded
      */
-    public void mapReset(GameState p_gameState, String p_mapToLoad) {
+    public void mapReset(GameState p_gameState, String p_loadFile) {
         System.out.println("Map cannot be loaded since it is invalid. Please provide a valid map");
-        p_gameState.logUpdate(p_mapToLoad+" map is invalid, it can't be loaded !","effect");
+        p_gameState.logUpdate(p_loadFile+" map is invalid, it can't be loaded !","effect");
         p_gameState.setD_map(new Models.Map());
     }
 
     /**
      * Method to modify Map based on the operation type ( add/remove) and arguments
+     * @param p_gameState Current GameState Object
      * @param p_mapToBeModified Map under modification
      * @param p_operationType Add/Remove operation
      * @param p_argument Arguments
@@ -359,6 +372,7 @@ public class MapService {
 
     /**
      * Method to add/remove countries in the map
+     * @param p_gameState Current GameState Object
      * @param p_mapToBeModified Map to be modified
      * @param p_operationType Add/Remove type operation
      * @param p_argument Arguments provided for the command operation
@@ -406,6 +420,26 @@ public class MapService {
             this.setD_LogMapService(l_exception.getMessage(), p_gameState);
         }
         return p_mapToBeModified;
+    }
+
+    /**
+     * This method validates what format user wants to save the map file.
+     *
+     * @return String format of the map file
+     * @throws IOException exception while reading inputs from user
+     */
+    public String getFormatToSave() throws IOException {
+        BufferedReader l_tempReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Please enter 1 to save the map as conquest map format or else enter 2");
+        String l_nextOrderCheck = l_tempReader.readLine();
+        if (l_nextOrderCheck.equalsIgnoreCase("1")) {
+            return "ConquestMap";
+        } else if (l_nextOrderCheck.equalsIgnoreCase("2")) {
+            return "NormalMap";
+        } else {
+            System.err.println("Invalid Input Passed.");
+            return this.getFormatToSave();
+        }
     }
 
     /**

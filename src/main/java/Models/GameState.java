@@ -1,5 +1,6 @@
 package Models;
 
+import java.util.ArrayList;
 import java.util.List;
 import Models.LogEntryBuffer;
 
@@ -35,6 +36,26 @@ public class GameState {
      * Checks if player has used the load command
      */
     Boolean d_checkLoadCommand = false;
+
+    /**
+     * Count of turns in tournament.
+     */
+    int d_maxCountOfTurns = 0;
+
+    /**
+     * Count of remaining turns in tournament.
+     */
+    int d_countOfRemainingTurns = 0;
+
+    /**
+     * Maintains a list of players lost in the game.
+     */
+    List<Player> d_listOfPlayersFailed = new ArrayList<Player>();
+
+    /**
+     * Winner Player.
+     */
+    Player d_winningPlayer;
 
     /**
      * Getter method to retrieve error message string
@@ -118,4 +139,78 @@ public class GameState {
     public boolean getD_checkLoadCommand(){
         return this.d_checkLoadCommand;
     }
+
+    /**
+     * Returns max number of turns allowed in tournament.
+     *
+     * @return int number of turns
+     */
+    public int getD_maxCountOfTurns() {
+
+        return d_maxCountOfTurns;
+    }
+
+    /**
+     * Sets max number of turns allowed in tournament.
+     *
+     * @param d_maxCountOfTurns number of turns
+     */
+    public void setD_maxCountOfTurns(int d_maxCountOfTurns) {
+        this.d_maxCountOfTurns = d_maxCountOfTurns;
+    }
+
+    /**
+     * Gets count of turns left at any stage of tournament.
+     *
+     * @return int number of remaining turns
+     */
+    public int getD_countOfRemainingTurns() {
+        return d_countOfRemainingTurns;
+    }
+
+    /**
+     * Sets count of turns left at any stage of tournament.
+     *
+     * @param d_countOfRemainingTurns number of remaining turns
+     */
+    public void setD_countOfRemainingTurns(int d_countOfRemainingTurns) {
+        this.d_countOfRemainingTurns = d_countOfRemainingTurns;
+    }
+
+    /**
+     * Adds the Failed Player in GameState.
+     *
+     * @param p_player player instance to remove
+     */
+    public void removePlayer(Player p_player){
+        d_listOfPlayersFailed.add(p_player);
+    }
+
+    /**
+     * Retrieves the list of players failed.
+     *
+     * @return List of Players that lost game.
+     */
+    public List<Player> getD_listOfPlayersFailed() {
+        return d_listOfPlayersFailed;
+    }
+
+    /**
+     * Sets the winning player object.
+     *
+     * @param p_player winner player object
+     */
+    public void setD_winningPlayer(Player p_player){
+        d_winningPlayer = p_player;
+    }
+
+    /**
+     * Returns the winning player object.
+     *
+     * @return returns winning player
+     */
+    public Player getD_winningPlayer(){
+        return d_winningPlayer;
+    }
+
 }

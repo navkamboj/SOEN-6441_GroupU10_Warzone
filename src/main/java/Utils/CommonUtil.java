@@ -65,6 +65,16 @@ public class CommonUtil {
     }
 
     /**
+     * This function checks whether the collection is empty or not.
+     *
+     * @param p_collection to check collection
+     * @return true if collection is empty else false
+     */
+    public static boolean isCollectionEmpty(Collection<?> p_collection) {
+        return (p_collection == null || p_collection.isEmpty());
+    }
+
+    /**
      * Used for generating an absolute file path from the given map file.
      *
      * @param p_fileName filename to map it with the file path

@@ -1,25 +1,13 @@
 package Controller;
 
-import Constants.GameConstants;
-import Exceptions.InvalidMap;
-import Exceptions.InvalidCommand;
 import Models.*;
-import Services.MapService;
-import Services.PlayerService;
-import Utils.Command;
-import Utils.CommonUtil;
-import Views.MapView;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 /**
  * This serves as the starting point for the game and manages the current state of the game.
  *
- * @author Harsh Tank, Pranjalesh Ghansiyal, Yatish Chutani
- * @version 2.0.0
+ * @author Harsh Tank, Pranjalesh Ghansiyal, Yatish Chutani, Navjot Kamboj
+ * @version 3.0.0
  */
 public class GameEngine {
 
@@ -34,11 +22,63 @@ public class GameEngine {
     Phase d_presentPhase = new StartUpPhase(this, d_gameState);
 
     /**
+     * Tournament mode or single game mode.
+     */
+    static boolean d_isTournamentMode = false;
+
+    /**
+     * Sets tournament mode.
+     *
+     * @param p_isTournamentMode is set true if tournament is being played
+     */
+    public void setD_isTournamentMode(boolean p_isTournamentMode) {
+        GameEngine.d_isTournamentMode = p_isTournamentMode;
+    }
+
+    /**
+     * Gets current state of the game.
+     *
+     * @return state of the game
+     */
+    public GameState getD_gameState() {
+        return d_gameState;
+    }
+
+    /**
+     * Sets state of the game.
+     *
+     * @param p_gameState state of the game
+     */
+    public void setD_gameState(GameState p_gameState) {
+        this.d_gameState = p_gameState;
+    }
+
+    /**
+     * Handles load game feature by setting phase from Object stream.
+     *
+     * @param p_phase new Phase to set in Game context
+     */
+    public void loadPhase(Phase p_phase){
+        d_presentPhase = p_phase;
+        d_gameState = p_phase.getD_gameState();
+        getD_PresentPhase().initPhase(d_isTournamentMode);
+    }
+
+    /**
+     *  Method to update the current phase to StartUp Phase as per State Pattern.
+     */
+    public void setStartUpPhase(){
+        this.setD_logGameEngine("Start Up Phase", "phase");
+        setD_PresentPhase(new StartUpPhase(this, d_gameState));
+        getD_PresentPhase().initPhase(d_isTournamentMode);
+    }
+
+    /**
      * Method to set the current phase
      *
      * @param p_phase new Phase in Game context
      */
-    private void setD_PresentPhase(Phase p_phase){
+    public void setD_PresentPhase(Phase p_phase){
         d_presentPhase = p_phase;
     }
 
@@ -62,7 +102,7 @@ public class GameEngine {
 
         l_gameEngine.getD_PresentPhase().getD_gameState().logUpdate("Loading the Game ......"+System.lineSeparator(), "start");
         l_gameEngine.setD_logGameEngine("Game Startup Phase", "phase");
-        l_gameEngine.getD_PresentPhase().initPhase();
+        l_gameEngine.getD_PresentPhase().initPhase(d_isTournamentMode);
     }
 
     /**
@@ -85,15 +125,15 @@ public class GameEngine {
     public void setOrderExecutionPhase(){
         this.setD_logGameEngine("Order Execution Phase", "phase");
         setD_PresentPhase(new OrderExecutionPhase(this, d_gameState));
-        getD_PresentPhase().initPhase();
+        getD_PresentPhase().initPhase(d_isTournamentMode);
     }
 
     /**
      * This method updates the present phase to Issue Order Phase as per the State Pattern.
      */
-    public void setIssueOrderPhase(){
+    public void setIssueOrderPhase(boolean p_isTournamentMode){
         this.setD_logGameEngine("Issue Order Phase", "phase");
         setD_PresentPhase(new IssueOrderPhase(this, d_gameState));
-        getD_PresentPhase().initPhase();
+        getD_PresentPhase().initPhase(p_isTournamentMode);
     }
 }
